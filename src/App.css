@@ -1,58 +1,832 @@
-.App {
-  text-align: center;
-}
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap");
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: #f5f6fa;
-  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background: #f7fafa;
+  line-height: 1.5;
 }
-.card {
-  border-radius: 1rem;
-  transition: box-shadow 0.2s;
+
+.bookstore-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
 }
-.card:hover {
-  box-shadow: 0 4px 24px #b3d8ff;
+
+/* Header Styles */
+.header {
+  display: flex;
+  padding: 12px 40px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #e5e8eb;
+  background: #f7fafa;
 }
-.btn {
-  border-radius: 2rem;
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.banner {
-  background-size: cover;
-  background-position: center;
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-icon {
+  width: 16px;
+  height: 14px;
+}
+
+.logo-text {
+  color: #141c24;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+}
+
+.header-center {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 32px;
+  flex: 1;
+}
+
+.nav-menu {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  gap: 36px;
+}
+
+.nav-item {
+  color: #141c24;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  color: #405473;
+}
+
+.header-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.action-button {
+  display: flex;
+  height: 40px;
+  max-width: 480px;
+  padding: 0 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 20px;
+  background: #e3e8f2;
+  border: none;
+  cursor: pointer;
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  padding: 20px 160px;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  width: 100%;
+  background: #f7fafa;
+}
+
+.content-container {
+  display: flex;
+  max-width: 960px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.hero-banner {
+  display: flex;
+  padding: 12px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  width: 100%;
+}
+
+.hero-content {
+  display: flex;
+  height: 320px;
+  min-height: 320px;
+  padding: 350px 0 156px;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  border-radius: 12px;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%),
+    url("https://placehold.co/960x670/d4a574/d4a574") lightgray 50% / cover
+      no-repeat;
+  position: relative;
+}
+
+.hero-text {
+  display: flex;
+  width: 928px;
+  padding: 16px;
+  align-items: flex-start;
+  position: absolute;
+  left: 156px;
+  top: 350px;
+  height: 67px;
+}
+
+.hero-title {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 35px;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  max-width: 480px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.primary-button {
+  display: flex;
+  width: 215px;
+  height: 48px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px;
+  background: #f5c754;
+  border: none;
+  cursor: pointer;
+}
+
+.secondary-button {
+  display: flex;
+  width: 221px;
+  height: 48px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px;
+  background: #e3e8f2;
+  border: none;
+  cursor: pointer;
+}
+
+.button-text {
+  color: #141c24;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Search Bar */
+.search-section {
+  display: flex;
+  padding: 12px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.search-container {
+  display: flex;
+  height: 48px;
+  min-width: 160px;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.search-icon-container {
+  display: flex;
+  padding-left: 16px;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  border-radius: 12px 0 0 12px;
+  background: #e3e8f2;
+}
+
+.search-icon {
+  height: 24px;
+  flex: 1;
+}
+
+.search-input {
+  color: #405473;
+  font-family: "Plus Jakarta Sans";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  display: flex;
+  padding: 8px 16px 8px 8px;
+  align-items: center;
+  flex: 1;
+  height: 48px;
+  border-radius: 0 12px 12px 0;
+  background: #e3e8f2;
+  border: none;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #405473;
+}
+
+/* Category Grid */
+.category-section {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.category-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  width: 100%;
+}
+
+.category-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  width: 100%;
+}
+
+.category-card {
+  display: flex;
+  padding: 729px 0 172px;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.category-card.fiction {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x749/8b7355/8b7355") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.self-help {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x749/a68b6b/a68b6b") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.manga {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x749/9c8468/9c8468") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.biographies {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x749/b39a7d/b39a7d") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.history {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x749/8a7254/8a7254") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.romance {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x937/c4a485/c4a485") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.science-fiction {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x937/a89073/a89073") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.children {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x937/d1b896/d1b896") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.young-adult {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x937/b5a082/b5a082") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.mystery {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x937/9e8669/9e8669") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.thriller {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x1125/c7a889/c7a889") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-card.fantasy {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
+    url("https://placehold.co/188x1125/ab9476/ab9476") lightgray 50% / cover
+      no-repeat;
+}
+
+.category-label {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 115px;
+}
+
+/* Book Sections */
+.book-section {
+  width: 100%;
+}
+
+.section-title {
+  color: #141c24;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 28px;
+  display: flex;
+  height: 60px;
+  padding: 20px 16px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.books-container {
+  display: flex;
+  padding: 12px 16px;
+  align-items: flex-start;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.books-scroll {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: max-content;
+}
+
+.book-card {
+  display: flex;
+  width: 96px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.book-image {
+  height: 160px;
+  width: 96px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.book-title {
+  color: #141c24;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  width: 100%;
+}
+
+/* New Releases specific styles */
+.new-releases .books-container {
+  padding: 16px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.new-releases .books-scroll {
+  overflow-x: auto;
+}
+
+.new-releases .book-card {
+  width: 176px;
+  padding-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.new-releases .book-image {
+  height: 235px;
+  width: 176px;
+}
+
+.new-releases .book-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.new-releases .book-title {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.new-releases .book-author {
+  color: #405473;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  width: 100%;
+}
+
+/* Flash Sale */
+.flash-sale {
+  width: 100%;
+}
+
+.countdown-container {
+  display: flex;
+  padding: 24px 16px;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.countdown-number {
+  display: flex;
+  width: 220px;
+  height: 56px;
+  padding: 0 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: #e3e8f2;
+}
+
+.countdown-value {
+  color: #141c24;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+}
+
+.countdown-label-container {
+  display: flex;
+  width: 220px;
+  justify-content: center;
+  align-items: center;
+}
+
+.countdown-label {
+  color: #141c24;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+.sale-books-container {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.sale-books-scroll {
+  display: flex;
+  padding: 16px;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: max-content;
+}
+
+.sale-book-card {
+  display: flex;
+  min-width: 160px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  border-radius: 12px;
+  background: #f7fafa;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.sale-book-image {
+  height: 213px;
+  width: 160px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.sale-book-info {
+  display: flex;
+  padding: 0 16px 16px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1;
+  width: 100%;
+}
+
+.sale-book-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.sale-book-title {
+  color: #141c24;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  width: 100%;
+}
+
+.sale-book-price {
+  color: #405473;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  width: 100%;
+}
+
+.sale-book-button {
+  display: flex;
+  height: 40px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0 16px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 20px;
+  background: #e3e8f2;
+  border: none;
+  cursor: pointer;
+}
+
+.sale-button-text {
+  color: #141c24;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Newsletter */
+.newsletter-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.newsletter-container {
+  display: flex;
+  padding: 80px 40px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 32px;
+  flex: 1;
+  width: 100%;
+}
+
+.newsletter-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.newsletter-title {
+  color: #141c24;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 45px;
+  letter-spacing: -1px;
+  display: flex;
+  width: 720px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  margin: 0 auto;
+}
+
+.newsletter-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  width: 100%;
+}
+
+.newsletter-form {
+  display: flex;
+  height: 64px;
+  min-width: 160px;
+  max-width: 480px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.newsletter-input-wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.newsletter-input {
+  color: #405473;
+  font-family: "Plus Jakarta Sans";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  display: flex;
+  padding: 8px 8px 8px 16px;
+  align-items: center;
+  flex: 1;
+  height: 64px;
+  border-radius: 12px 0 0 12px;
+  background: #e3e8f2;
+  border: none;
+  outline: none;
+}
+
+.newsletter-input::placeholder {
+  color: #405473;
+}
+
+.newsletter-button-container {
+  display: flex;
+  padding-right: 8px;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  border-radius: 0 12px 12px 0;
+  background: #e3e8f2;
+}
+
+.newsletter-button {
+  display: flex;
+  height: 48px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  border-radius: 24px;
+  background: #f5c754;
+  border: none;
+  cursor: pointer;
+}
+
+.newsletter-button-text {
+  color: #141c24;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive adjustments for desktop only */
+@media (max-width: 1200px) {
+  .main-content {
+    padding: 20px 80px;
+  }
+
+  .header {
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 20px 40px;
+  }
+
+  .header-center {
+    gap: 16px;
+  }
+
+  .nav-menu {
+    gap: 20px;
+  }
 }

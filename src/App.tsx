@@ -1,234 +1,218 @@
-import React from 'react';
-import './App.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen, faUser, faShoppingCart, faHeart, faSearch, faStar, faTruck, faCreditCard, faList, faTags, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-
-// Fake data
-const categories = [
-  { name: "Lập trình", icon: faBookOpen },
-  { name: "Kỹ năng sống", icon: faStar },
-  { name: "Thiếu nhi", icon: faHeart },
-  { name: "Kinh tế", icon: faCreditCard },
-  { name: "Tiểu thuyết", icon: faList },
-];
-
-const featuredBooks = [
-  {
-    title: "Clean Code",
-    author: "Robert C. Martin",
-    image: "https://images-na.ssl-images-amazon.com/images/I/41xShlnTZTL._SX374_BO1,204,203,200_.jpg",
-    rating: 5,
-    price: 250000,
-    discount: 10,
-  },
-  {
-    title: "Atomic Habits",
-    author: "James Clear",
-    image: "https://images-na.ssl-images-amazon.com/images/I/51-uspgqWIL._SX329_BO1,204,203,200_.jpg",
-    rating: 4,
-    price: 180000,
-    discount: 0,
-  },
-  {
-    title: "The Pragmatic Programmer",
-    author: "Andrew Hunt",
-    image: "https://images-na.ssl-images-amazon.com/images/I/41as+WafrFL._SX258_BO1,204,203,200_.jpg",
-    rating: 5,
-    price: 320000,
-    discount: 15,
-  },
-];
+import React, { useState } from "react";
+import "./App.css";
+import {
+  Header,
+  HeroSection,
+  SearchBar,
+  CategoryGrid,
+  BookSection,
+  FlashSale,
+  Newsletter,
+  ProductDetailPage,
+  ProductListingPage,
+  ShoppingCartPage,
+  UserAccountPage,
+} from "./components";
 
 function App() {
+  const [currentView, setCurrentView] = useState<
+    "home" | "product" | "listing" | "cart" | "account"
+  >("home");
+
+  const showHome = () => setCurrentView("home");
+  const showProductDetail = () => setCurrentView("product");
+  const showProductListing = () => setCurrentView("listing");
+  const showShoppingCart = () => setCurrentView("cart");
+  const showUserAccount = () => setCurrentView("account");
+
   return (
-    <div className="App" style={{ background: "#f5f6fa" }}>
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container d-flex align-items-center justify-content-between py-2">
-          <a className="navbar-brand fw-bold text-primary fs-3" href="#">
-            <FontAwesomeIcon icon={faBookOpen} /> BookWeb
-          </a>
-          <form className="d-flex flex-grow-1 mx-4" style={{ maxWidth: 500 }}>
-            <input className="form-control rounded-start-pill" type="search" placeholder="Tìm kiếm sách, tác giả, ISBN..." aria-label="Search" />
-            <button className="btn btn-primary rounded-end-pill px-4" type="submit">
-              <FontAwesomeIcon icon={faSearch} />
-            </button>
-          </form>
-          <div>
-            <a className="btn btn-outline-primary me-2" href="#"><FontAwesomeIcon icon={faUser} /> Tài khoản</a>
-            <a className="btn btn-outline-danger me-2" href="#"><FontAwesomeIcon icon={faHeart} /> Wishlist</a>
-            <a className="btn btn-outline-success" href="#"><FontAwesomeIcon icon={faShoppingCart} /> Giỏ hàng</a>
-          </div>
-        </div>
-      </header>
+    <div className="bookstore-app">
+      <Header />
 
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div className="container">
-          <ul className="navbar-nav flex-row">
-            <li className="nav-item mx-2">
-              <a className="nav-link fw-bold text-primary" href="#"><FontAwesomeIcon icon={faList} /> Danh mục</a>
-            </li>
-            <li className="nav-item mx-2">
-              <a className="nav-link text-success" href="#"><FontAwesomeIcon icon={faTags} /> Khuyến mãi</a>
-            </li>
-            <li className="nav-item mx-2">
-              <a className="nav-link text-danger" href="#">Sách mới</a>
-            </li>
-            <li className="nav-item mx-2">
-              <a className="nav-link text-warning" href="#">Bán chạy</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      {/* Navigation Controls */}
+      <div
+        style={{
+          padding: "20px",
+          textAlign: "center",
+          borderBottom: "1px solid #e5e8eb",
+          background: "#f9f9f9",
+        }}
+      >
+        <button
+          onClick={showHome}
+          style={{
+            padding: "10px 15px",
+            margin: "0 3px",
+            border:
+              currentView === "home" ? "2px solid #009963" : "1px solid #ccc",
+            background: currentView === "home" ? "#009963" : "white",
+            color: currentView === "home" ? "white" : "#333",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          Homepage
+        </button>
+        <button
+          onClick={showProductListing}
+          style={{
+            padding: "10px 15px",
+            margin: "0 3px",
+            border:
+              currentView === "listing"
+                ? "2px solid #009963"
+                : "1px solid #ccc",
+            background: currentView === "listing" ? "#009963" : "white",
+            color: currentView === "listing" ? "white" : "#333",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          Product Listing
+        </button>
+        <button
+          onClick={showProductDetail}
+          style={{
+            padding: "10px 15px",
+            margin: "0 3px",
+            border:
+              currentView === "product"
+                ? "2px solid #009963"
+                : "1px solid #ccc",
+            background: currentView === "product" ? "#009963" : "white",
+            color: currentView === "product" ? "white" : "#333",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          Product Detail
+        </button>
+        <button
+          onClick={showShoppingCart}
+          style={{
+            padding: "10px 15px",
+            margin: "0 3px",
+            border:
+              currentView === "cart" ? "2px solid #009963" : "1px solid #ccc",
+            background: currentView === "cart" ? "#009963" : "white",
+            color: currentView === "cart" ? "white" : "#333",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          Shopping Cart
+        </button>
+        <button
+          onClick={showUserAccount}
+          style={{
+            padding: "10px 15px",
+            margin: "0 3px",
+            border:
+              currentView === "account"
+                ? "2px solid #009963"
+                : "1px solid #ccc",
+            background: currentView === "account" ? "#009963" : "white",
+            color: currentView === "account" ? "white" : "#333",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          User Account
+        </button>
+      </div>
 
-      {/* Banner/Slider */}
-      <section className="container my-4">
-        <div className="row g-3">
-          <div className="col-md-8">
-            <div className="banner rounded-4 p-5 text-white" style={{
-              background: "linear-gradient(90deg, #4f8cff 0%, #38e8ff 100%)",
-              minHeight: 220,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center"
-            }}>
-              <h2 className="fw-bold mb-2">Ưu đãi tháng 6: Giảm giá đến 50%!</h2>
-              <p>Mua sách online, nhận quà tặng hấp dẫn, freeship toàn quốc.</p>
-              <a href="#" className="btn btn-light fw-bold mt-2">Khám phá ngay</a>
-            </div>
+      <main className="main-content">
+        {currentView === "home" && (
+          <div className="content-container">
+            <HeroSection />
+            <SearchBar />
+            <CategoryGrid />
+            <BookSection
+              title="Recommended for You"
+              books={generateRecommendedBooks()}
+              showScrollIndicator={true}
+            />
+            <FlashSale />
+            <BookSection
+              title="New Releases"
+              books={generateNewReleases()}
+              variant="new-releases"
+            />
+            <Newsletter />
           </div>
-          <div className="col-md-4 d-flex flex-column gap-3">
-            <div className="rounded-4 p-3 text-center bg-warning text-white shadow-sm">
-              <FontAwesomeIcon icon={faTruck} size="2x" />
-              <div className="fw-bold mt-2">Giao hàng nhanh</div>
-              <small>Chỉ 1-2 ngày tại HN, HCM</small>
-            </div>
-            <div className="rounded-4 p-3 text-center bg-success text-white shadow-sm">
-              <FontAwesomeIcon icon={faCreditCard} size="2x" />
-              <div className="fw-bold mt-2">Thanh toán đa dạng</div>
-              <small>COD, Momo, thẻ ngân hàng</small>
-            </div>
-          </div>
-        </div>
-      </section>
+        )}
 
-      {/* Categories */}
-      <section className="container my-5">
-        <h2 className="mb-4 text-center text-primary">Danh mục nổi bật</h2>
-        <div className="row justify-content-center">
-          {categories.map((cat, idx) => (
-            <div className="col-6 col-md-2 mb-3" key={idx}>
-              <div className="card text-center border-0 shadow-sm h-100 py-3" style={{ background: "#e9f5ff" }}>
-                <FontAwesomeIcon icon={cat.icon} size="2x" className="mb-2 text-primary" />
-                <div className="fw-bold">{cat.name}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+        {currentView === "listing" && (
+          <ProductListingPage searchQuery="fiction books" category="Fiction" />
+        )}
 
-      {/* Featured Books */}
-      <section className="container mb-5">
-        <h2 className="mb-4 text-center text-success">Sách nổi bật</h2>
-        <div className="row">
-          {featuredBooks.map((book, idx) => (
-            <div className="col-md-4 mb-4" key={idx}>
-              <div className="card h-100 shadow border-0 position-relative">
-                {book.discount > 0 && (
-                  <span className="badge bg-danger position-absolute top-0 end-0 m-2">-{book.discount}%</span>
-                )}
-                <img src={book.image} className="card-img-top" alt={book.title} style={{ height: "300px", objectFit: "cover" }} />
-                <div className="card-body">
-                  <h5 className="card-title">{book.title}</h5>
-                  <p className="card-text text-secondary">Tác giả: {book.author}</p>
-                  <div className="mb-2">
-                    {[...Array(book.rating)].map((_, i) => (
-                      <FontAwesomeIcon icon={faStar} color="#ffc107" key={i} />
-                    ))}
-                  </div>
-                  <div className="fw-bold text-danger mb-2">{book.price.toLocaleString()} đ</div>
-                  <button className="btn btn-primary w-100"><FontAwesomeIcon icon={faShoppingCart} /> Thêm vào giỏ</button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+        {currentView === "product" && <ProductDetailPage productId="1" />}
 
-      {/* Features: Wishlist, Đánh giá, Đơn hàng, Địa chỉ, Vận chuyển */}
-      <section className="container my-5">
-        <div className="row g-4">
-          <div className="col-md-3">
-            <div className="card border-0 shadow-sm h-100 text-center py-4">
-              <FontAwesomeIcon icon={faHeart} size="2x" className="mb-2 text-danger" />
-              <h5 className="fw-bold">Wishlist</h5>
-              <p>Lưu lại những cuốn sách bạn yêu thích, mua sau dễ dàng.</p>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card border-0 shadow-sm h-100 text-center py-4">
-              <FontAwesomeIcon icon={faStar} size="2x" className="mb-2 text-warning" />
-              <h5 className="fw-bold">Đánh giá</h5>
-              <p>Đọc và chia sẻ cảm nhận về sách, giúp cộng đồng chọn sách tốt hơn.</p>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card border-0 shadow-sm h-100 text-center py-4">
-              <FontAwesomeIcon icon={faBoxOpen} size="2x" className="mb-2 text-info" />
-              <h5 className="fw-bold">Đơn hàng</h5>
-              <p>Theo dõi trạng thái đơn hàng, lịch sử mua sắm chi tiết.</p>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card border-0 shadow-sm h-100 text-center py-4">
-              <FontAwesomeIcon icon={faTruck} size="2x" className="mb-2 text-success" />
-              <h5 className="fw-bold">Vận chuyển</h5>
-              <p>Giao hàng nhanh, kiểm tra trạng thái vận chuyển mọi lúc.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        {currentView === "cart" && <ShoppingCartPage userId="user123" />}
 
-      {/* Review Section */}
-      <section className="bg-light py-5">
-        <div className="container">
-          <h3 className="text-center mb-4 text-warning">Khách hàng nói gì về BookWeb?</h3>
-          <div className="row justify-content-center">
-            <div className="col-md-4 mb-3">
-              <div className="card border-0 shadow-sm p-3">
-                <div className="mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <FontAwesomeIcon icon={faStar} color="#ffc107" key={i} />
-                  ))}
-                </div>
-                <p>"Giao hàng siêu nhanh, sách mới nguyên, giá lại rẻ hơn ngoài tiệm!"</p>
-                <div className="fw-bold">- Minh Anh</div>
-              </div>
-            </div>
-            <div className="col-md-4 mb-3">
-              <div className="card border-0 shadow-sm p-3">
-                <div className="mb-2">
-                  {[...Array(4)].map((_, i) => (
-                    <FontAwesomeIcon icon={faStar} color="#ffc107" key={i} />
-                  ))}
-                </div>
-                <p>"Nhiều đầu sách hot, giao diện dễ dùng, sẽ ủng hộ lâu dài!"</p>
-                <div className="fw-bold">- Quốc Dũng</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-primary text-white text-center py-3 mt-5">
-        <div className="container">
-          &copy; {new Date().getFullYear()} BookWeb. All rights reserved.
-        </div>
-      </footer>
+        {currentView === "account" && <UserAccountPage />}
+      </main>
     </div>
   );
+}
+
+// Sample data generators
+function generateRecommendedBooks() {
+  return Array.from({ length: 10 }, (_, i) => ({
+    id: `rec-${i + 1}`,
+    title: `Book ${i + 1}`,
+    image: `https://placehold.co/96x160/${getRandomColor()}/${getRandomColor()}`,
+    author: `Author ${i + 1}`,
+    price: (Math.random() * 20 + 5).toFixed(2),
+  }));
+}
+
+function generateNewReleases() {
+  const rows = [
+    Array.from({ length: 5 }, (_, i) => ({
+      id: `new-1-${i + 1}`,
+      title: `New Book ${i + 1}`,
+      image: `https://placehold.co/176x235/${getRandomColor()}/${getRandomColor()}`,
+      author: `Author ${i + 1}`,
+      price: (Math.random() * 25 + 10).toFixed(2),
+    })),
+    Array.from({ length: 5 }, (_, i) => ({
+      id: `new-2-${i + 6}`,
+      title: `New Book ${i + 6}`,
+      image: `https://placehold.co/176x235/${getRandomColor()}/${getRandomColor()}`,
+      author: `Author ${i + 6}`,
+      price: (Math.random() * 25 + 10).toFixed(2),
+    })),
+    Array.from({ length: 2 }, (_, i) => ({
+      id: `new-3-${i + 11}`,
+      title: `New Book ${i + 11}`,
+      image: `https://placehold.co/176x235/${getRandomColor()}/${getRandomColor()}`,
+      author: `Author ${i + 11}`,
+      price: (Math.random() * 25 + 10).toFixed(2),
+    })),
+  ];
+  return rows;
+}
+
+function getRandomColor() {
+  const colors = [
+    "e8e8e8",
+    "e0e0e0",
+    "d8d8d8",
+    "f0f0f0",
+    "ececec",
+    "e4e4e4",
+    "dcdcdc",
+    "f4f4f4",
+    "e6e6e6",
+    "eaeaea",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 export default App;

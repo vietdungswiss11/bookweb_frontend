@@ -1,0 +1,195 @@
+/* CartSummary Styles */
+.cart-summary {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.summary-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.summary-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-row {
+  display: flex;
+  padding: 8px 0px;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.summary-label {
+  font-family: "Epilogue", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: #8a7361;
+}
+
+.summary-value {
+  font-family: "Epilogue", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: #171412;
+  text-align: right;
+}
+
+.discount-row .summary-value.discount {
+  color: #059669;
+  font-weight: 500;
+}
+
+.summary-divider {
+  height: 1px;
+  background: #e5e0db;
+  margin: 8px 0;
+  align-self: stretch;
+}
+
+.total-row {
+  padding: 12px 0;
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #171412;
+}
+
+.total-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #171412;
+}
+
+/* Checkout Section */
+.checkout-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.checkout-btn {
+  display: flex;
+  height: 48px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0px 20px;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  border-radius: 12px;
+  background: #ed872b;
+  color: #171412;
+  border: none;
+  font-family: "Epilogue", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkout-btn:hover {
+  background: #dc7a1e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(237, 135, 43, 0.3);
+}
+
+.checkout-btn:active {
+  transform: translateY(0);
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-text {
+  font-family: "Epilogue", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #8a7361;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.payment-icon {
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid #e5e0db;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  color: #8a7361;
+}
+
+.payment-icon.visa {
+  color: #1a1f71;
+}
+
+.payment-icon.mastercard {
+  color: #eb001b;
+}
+
+.payment-icon.paypal {
+  color: #003087;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cart-summary {
+    padding: 12px;
+  }
+
+  .checkout-btn {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-row {
+    padding: 6px 0;
+  }
+
+  .summary-label,
+  .summary-value {
+    font-size: 13px;
+  }
+
+  .total-label {
+    font-size: 15px;
+  }
+
+  .total-value {
+    font-size: 17px;
+  }
+
+  .checkout-btn {
+    height: 44px;
+    font-size: 15px;
+  }
+}

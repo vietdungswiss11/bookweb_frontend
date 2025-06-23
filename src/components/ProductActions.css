@@ -1,0 +1,242 @@
+/* ProductActions Styles */
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8decf;
+  max-width: 400px;
+}
+
+/* Rating */
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.star-filled,
+.star-half,
+.star-empty {
+  width: 16px;
+  height: 16px;
+}
+
+.rating-text {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #a1824a;
+}
+
+/* Price */
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.current-price {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #009963;
+}
+
+.original-price {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #a1824a;
+  text-decoration: line-through;
+}
+
+/* Short Description */
+.product-short-description {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: #1c170d;
+  margin: 0;
+}
+
+/* Stock Status */
+.stock-status {
+  display: flex;
+  align-items: center;
+}
+
+.stock-indicator {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.stock-indicator.in-stock {
+  color: #009963;
+  background: #f0fff4;
+}
+
+.stock-indicator.out-of-stock {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+/* Quantity Selector */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-selector label {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1c170d;
+}
+
+.quantity-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e8decf;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f5f0e5;
+  color: #1c170d;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: #e8decf;
+}
+
+.quantity-btn:disabled {
+  color: #a1824a;
+  cursor: not-allowed;
+}
+
+.quantity-field {
+  width: 60px;
+  height: 32px;
+  border: none;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1c170d;
+  background: #fff;
+}
+
+.quantity-field:focus {
+  outline: none;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #009963;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #007a4f;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #1c170d;
+  color: #fff;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #2a241a;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: #fff;
+  color: #a1824a;
+  border: 2px solid #e8decf;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #f5f0e5;
+  border-color: #a1824a;
+}
+
+.btn-outline.active {
+  background: #009963;
+  color: #fff;
+  border-color: #009963;
+}
+
+.wishlist-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-actions {
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .action-buttons {
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

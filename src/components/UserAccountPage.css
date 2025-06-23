@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&display=swap");
+
+.user-account-page {
+  font-family:
+    "Epilogue",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  background: #fff;
+  min-height: 100vh;
+}
+
+.account-container {
+  display: flex;
+  min-height: 800px;
+  max-width: 1619px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  gap: 4px;
+  background: #fff;
+}

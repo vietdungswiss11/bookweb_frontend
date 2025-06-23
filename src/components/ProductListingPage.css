@@ -1,0 +1,80 @@
+/* ProductListingPage Styles */
+.product-listing-page {
+  width: 1440px;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: #1c170d;
+}
+
+.listing-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+  padding: 20px 24px;
+}
+
+.listing-content {
+  display: flex;
+  width: 100%;
+  max-width: 1392px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.products-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  max-width: 960px;
+}
+
+.results-header {
+  padding: 20px 16px 12px 16px;
+  align-self: stretch;
+}
+
+.results-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 35px;
+  color: #1c170d;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1440px) {
+  .listing-container {
+    padding: 20px 40px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .listing-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .listing-container {
+    padding: 20px 20px;
+  }
+
+  .products-section {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .listing-container {
+    padding: 15px;
+  }
+
+  .results-title {
+    font-size: 24px;
+    line-height: 30px;
+  }
+}
