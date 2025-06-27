@@ -203,6 +203,56 @@
   color: #1c170d;
 }
 
+.price-range-options {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.price-range-option {
+  display: flex;
+  padding: 12px 0px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  cursor: pointer;
+}
+
+.price-range-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #e8decf;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.price-range-checkbox:checked {
+  background: #009963;
+  border-color: #009963;
+}
+
+.price-range-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.price-range-label {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #1c170d;
+}
+
 /* Rating Filters */
 .rating-filters {
   padding: 0 16px;

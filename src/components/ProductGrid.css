@@ -11,7 +11,7 @@
 .products-grid {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 32px;
   align-self: stretch;
   flex-wrap: wrap;
 }
@@ -72,9 +72,11 @@
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
+
   100% {
     opacity: 1;
   }

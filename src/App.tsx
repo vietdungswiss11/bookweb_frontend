@@ -1,163 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import {
   Header,
   HeroSection,
-  SearchBar,
   CategoryGrid,
   BookSection,
   FlashSale,
   Newsletter,
-  ProductDetailPage,
-  ProductListingPage,
-  ShoppingCartPage,
-  UserAccountPage,
+  CategorySection,
 } from "./components";
+import ProductDetailPage from "./components/ProductDetailPage";
+import ProductListingPage from "./components/ProductListingPage";
+import { UserAccountPage } from "./components/UserAccountPage";
+import { CartProvider } from "./store/CartContext";
+import ShoppingCartPage from "./components/ShoppingCartPage";
+import { getAllCategories } from "./services/categoryService";
+import { getAllBooks } from "./services/bookService";
 
-function App() {
-  const [currentView, setCurrentView] = useState<
-    "home" | "product" | "listing" | "cart" | "account"
-  >("home");
-
-  const showHome = () => setCurrentView("home");
-  const showProductDetail = () => setCurrentView("product");
-  const showProductListing = () => setCurrentView("listing");
-  const showShoppingCart = () => setCurrentView("cart");
-  const showUserAccount = () => setCurrentView("account");
-
+function HomePage() {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [newReleases, setNewReleases] = useState<any[]>([]);
+  useEffect(() => {
+    getAllCategories().then(setCategories);
+    // Lấy 10 sách mới nhất theo id giảm dần
+    getAllBooks({ page: 0, size: 10, sortBy: 'id', sortDir: 'desc' }).then(res => {
+      setNewReleases(res.books || []);
+    });
+  }, []);
   return (
     <div className="bookstore-app">
       <Header />
-
-      {/* Navigation Controls */}
-      <div
-        style={{
-          padding: "20px",
-          textAlign: "center",
-          borderBottom: "1px solid #e5e8eb",
-          background: "#f9f9f9",
-        }}
-      >
-        <button
-          onClick={showHome}
-          style={{
-            padding: "10px 15px",
-            margin: "0 3px",
-            border:
-              currentView === "home" ? "2px solid #009963" : "1px solid #ccc",
-            background: currentView === "home" ? "#009963" : "white",
-            color: currentView === "home" ? "white" : "#333",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
-        >
-          Homepage
-        </button>
-        <button
-          onClick={showProductListing}
-          style={{
-            padding: "10px 15px",
-            margin: "0 3px",
-            border:
-              currentView === "listing"
-                ? "2px solid #009963"
-                : "1px solid #ccc",
-            background: currentView === "listing" ? "#009963" : "white",
-            color: currentView === "listing" ? "white" : "#333",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
-        >
-          Product Listing
-        </button>
-        <button
-          onClick={showProductDetail}
-          style={{
-            padding: "10px 15px",
-            margin: "0 3px",
-            border:
-              currentView === "product"
-                ? "2px solid #009963"
-                : "1px solid #ccc",
-            background: currentView === "product" ? "#009963" : "white",
-            color: currentView === "product" ? "white" : "#333",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
-        >
-          Product Detail
-        </button>
-        <button
-          onClick={showShoppingCart}
-          style={{
-            padding: "10px 15px",
-            margin: "0 3px",
-            border:
-              currentView === "cart" ? "2px solid #009963" : "1px solid #ccc",
-            background: currentView === "cart" ? "#009963" : "white",
-            color: currentView === "cart" ? "white" : "#333",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
-        >
-          Shopping Cart
-        </button>
-        <button
-          onClick={showUserAccount}
-          style={{
-            padding: "10px 15px",
-            margin: "0 3px",
-            border:
-              currentView === "account"
-                ? "2px solid #009963"
-                : "1px solid #ccc",
-            background: currentView === "account" ? "#009963" : "white",
-            color: currentView === "account" ? "white" : "#333",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
-        >
-          User Account
-        </button>
-      </div>
-
       <main className="main-content">
-        {currentView === "home" && (
-          <div className="content-container">
-            <HeroSection />
-            <SearchBar />
-            <CategoryGrid />
-            <BookSection
-              title="Recommended for You"
-              books={generateRecommendedBooks()}
-              showScrollIndicator={true}
-            />
-            <FlashSale />
-            <BookSection
-              title="New Releases"
-              books={generateNewReleases()}
-              variant="new-releases"
-            />
-            <Newsletter />
-          </div>
-        )}
-
-        {currentView === "listing" && (
-          <ProductListingPage searchQuery="fiction books" category="Fiction" />
-        )}
-
-        {currentView === "product" && <ProductDetailPage productId="1" />}
-
-        {currentView === "cart" && <ShoppingCartPage userId="user123" />}
-
-        {currentView === "account" && <UserAccountPage />}
+        <div className="content-container">
+          <HeroSection />
+          <CategoryGrid />
+          <FlashSale />
+          <CategorySection categories={categories} />
+          <BookSection
+            title="New Releases"
+            books={[newReleases]}
+            variant="new-releases"
+          />
+          <Newsletter />
+        </div>
       </main>
     </div>
+  );
+}
+
+function App() {
+  // Lấy danh mục sản phẩm từ generateRecommendedBooks
+  const productCategories = generateRecommendedBooks().map(book => ({
+    id: book.id,
+    name: book.title,
+    icon: '📚',
+  }));
+  return (
+    <CartProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/product/:bookId" element={<ProductDetailPage />} />
+          <Route path="/category/:categoryName" element={<ProductListingPage categories={productCategories} />} />
+          <Route path="/search" element={<ProductListingPage />} />
+          <Route path="/account" element={<UserAccountPage />} />
+          <Route path="/cart" element={<ShoppingCartPage />} />
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 
@@ -173,30 +84,23 @@ function generateRecommendedBooks() {
 }
 
 function generateNewReleases() {
-  const rows = [
-    Array.from({ length: 5 }, (_, i) => ({
-      id: `new-1-${i + 1}`,
-      title: `New Book ${i + 1}`,
-      image: `https://placehold.co/176x235/${getRandomColor()}/${getRandomColor()}`,
-      author: `Author ${i + 1}`,
-      price: (Math.random() * 25 + 10).toFixed(2),
-    })),
-    Array.from({ length: 5 }, (_, i) => ({
-      id: `new-2-${i + 6}`,
-      title: `New Book ${i + 6}`,
-      image: `https://placehold.co/176x235/${getRandomColor()}/${getRandomColor()}`,
-      author: `Author ${i + 6}`,
-      price: (Math.random() * 25 + 10).toFixed(2),
-    })),
-    Array.from({ length: 2 }, (_, i) => ({
-      id: `new-3-${i + 11}`,
-      title: `New Book ${i + 11}`,
-      image: `https://placehold.co/176x235/${getRandomColor()}/${getRandomColor()}`,
-      author: `Author ${i + 11}`,
-      price: (Math.random() * 25 + 10).toFixed(2),
-    })),
-  ];
-  return rows;
+  const books = Array.from({ length: 10 }, (_, i) => {
+    const originalPrice = Math.floor(Math.random() * 100000) + 100000;
+    const discount = Math.floor(Math.random() * 20) + 5;
+    const price = originalPrice * (1 - discount / 100);
+    return {
+      id: `new-${i + 1}`,
+      title: `Sách Mới Phát Hành ${i + 1}`,
+      image: `https://placehold.co/180x180/${getRandomColor()}/${getRandomColor()}`,
+      author: `Tác giả ${i + 1}`,
+      price: price,
+      originalPrice: originalPrice,
+      discount: discount,
+      rating: (Math.random() * 2 + 3).toFixed(1), // Rating from 3.0 to 5.0
+      soldCount: Math.floor(Math.random() * 2000) + 100,
+    };
+  });
+  return [books]; // Return as a single row for grid layout
 }
 
 function getRandomColor() {

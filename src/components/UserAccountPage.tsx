@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import "./UserAccountPage.css";
 import { AccountSidebar } from "./AccountSidebar";
 import { AccountMainContent } from "./AccountMainContent";
+import { Header } from "./index";
 
 export type AccountSection =
   | "profile"
   | "orders"
   | "reviews"
   | "referrals"
-  | "wishlist"
-  | "giftcards";
+  | "giftcards"
+  | "address";
 
 export interface User {
   id: string;
@@ -140,20 +141,23 @@ export const UserAccountPage: React.FC = () => {
   ];
 
   return (
-    <div className="user-account-page">
-      <div className="account-container">
-        <AccountSidebar
-          activeSection={activeSection}
-          onSectionChange={setActiveSection}
-        />
-        <AccountMainContent
-          activeSection={activeSection}
-          user={user}
-          orders={orders}
-          reviews={reviews}
-          credits={credits}
-        />
+    <>
+      <Header />
+      <div className="user-account-page">
+        <div className="account-container">
+          <AccountSidebar
+            activeSection={activeSection}
+            onSectionChange={setActiveSection}
+          />
+          <AccountMainContent
+            activeSection={activeSection}
+            user={user}
+            orders={orders}
+            reviews={reviews}
+            credits={credits}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };

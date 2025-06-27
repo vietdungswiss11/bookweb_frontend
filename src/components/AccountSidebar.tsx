@@ -15,8 +15,8 @@ export const AccountSidebar: React.FC<AccountSidebarProps> = ({
     { id: "profile" as AccountSection, label: "Profile" },
     { id: "orders" as AccountSection, label: "Orders" },
     { id: "reviews" as AccountSection, label: "Reviews" },
+    { id: "address" as AccountSection, label: "Địa chỉ" },
     { id: "referrals" as AccountSection, label: "Referrals" },
-    { id: "wishlist" as AccountSection, label: "Wish lists" },
     { id: "giftcards" as AccountSection, label: "Gift Cards" },
   ];
 

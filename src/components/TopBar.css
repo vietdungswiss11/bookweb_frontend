@@ -1,0 +1,45 @@
+.top-bar {
+    background-color: #d82c2c;
+    color: white;
+    padding: 8px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.top-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.top-bar-content p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.top-bar-promo {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-promo span {
+    background-color: #ffc107;
+    color: #d82c2c;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.top-bar-promo button {
+    background-color: #ffc107;
+    color: #d82c2c;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+}

@@ -202,28 +202,6 @@
   transform: translateY(-1px);
 }
 
-.btn-outline {
-  background: #fff;
-  color: #a1824a;
-  border: 2px solid #e8decf;
-}
-
-.btn-outline:hover:not(:disabled) {
-  background: #f5f0e5;
-  border-color: #a1824a;
-}
-
-.btn-outline.active {
-  background: #009963;
-  color: #fff;
-  border-color: #009963;
-}
-
-.wishlist-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .product-actions {

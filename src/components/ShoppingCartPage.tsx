@@ -3,6 +3,7 @@ import "./ShoppingCartPage.css";
 import Breadcrumbs from "./Breadcrumbs";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
+import Header from "./Header";
 
 export interface CartItemData {
   id: string;
@@ -10,7 +11,9 @@ export interface CartItemData {
     id: string;
     title: string;
     author: string;
-    price: number;
+    discountPrice: number;
+    originalPrice: number;
+    discountPercent: number;
     image: string;
   };
   quantity: number;
@@ -45,11 +48,13 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
           id: "book-1",
           title: "Dune",
           author: "Frank Herbert",
-          price: 14.99,
+          discountPrice: 149900,
+          originalPrice: 199900,
+          discountPercent: 0.25,
           image: "https://placehold.co/70x93/8b7355/8b7355",
         },
         quantity: 1,
-        totalPrice: 14.99,
+        totalPrice: 149900,
       },
       {
         id: "2",
@@ -57,11 +62,13 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
           id: "book-2",
           title: "1984",
           author: "George Orwell",
-          price: 9.99,
+          discountPrice: 99900,
+          originalPrice: 129900,
+          discountPercent: 0.23,
           image: "https://placehold.co/70x93/7a6b5d/7a6b5d",
         },
         quantity: 1,
-        totalPrice: 9.99,
+        totalPrice: 99900,
       },
       {
         id: "3",
@@ -69,17 +76,19 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
           id: "book-3",
           title: "Fahrenheit 451",
           author: "Ray Bradbury",
-          price: 12.99,
+          discountPrice: 129900,
+          originalPrice: 159900,
+          discountPercent: 0.19,
           image: "https://placehold.co/70x93/9c8a7a/9c8a7a",
         },
         quantity: 1,
-        totalPrice: 12.99,
+        totalPrice: 129900,
       },
     ],
-    subtotal: 37.97,
-    tax: 3.0,
+    subtotal: 149900,
+    tax: 11992,
     shipping: 0,
-    total: 40.97,
+    total: 161892,
   };
 
   useEffect(() => {
@@ -103,7 +112,7 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
         return {
           ...item,
           quantity: newQuantity,
-          totalPrice: item.book.price * newQuantity,
+          totalPrice: item.book.discountPrice * newQuantity,
         };
       }
       return item;
@@ -113,7 +122,7 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
       (sum, item) => sum + item.totalPrice,
       0,
     );
-    const newTax = newSubtotal * 0.08; // 8% tax
+    const newTax = Math.round(newSubtotal * 0.08); // 8% tax
     const newTotal = newSubtotal + newTax + cartData.shipping;
 
     setTimeout(() => {
@@ -139,7 +148,7 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
       (sum, item) => sum + item.totalPrice,
       0,
     );
-    const newTax = newSubtotal * 0.08;
+    const newTax = Math.round(newSubtotal * 0.08);
     const newTotal = newSubtotal + newTax + cartData.shipping;
 
     setTimeout(() => {
@@ -206,6 +215,7 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
   if (loading && !cartData) {
     return (
       <div className="shopping-cart-page">
+        <Header />
         <Breadcrumbs items={breadcrumbItems} />
         <div className="cart-loading">
           <div className="loading-spinner"></div>
@@ -217,6 +227,7 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
 
   return (
     <div className="shopping-cart-page">
+      <Header />
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="cart-container">

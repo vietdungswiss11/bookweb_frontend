@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import "./FilterSidebar.css";
 import { FilterState } from "./ProductListingPage";
+import { useNavigate } from "react-router-dom";
 
 interface FilterSidebarProps {
   filters: FilterState;
   onFilterChange: (filters: Partial<FilterState>) => void;
+  categories?: { id: string; name: string; icon?: string }[];
+  activeCategoryId?: string;
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
   filters,
   onFilterChange,
+  categories: propCategories,
+  activeCategoryId,
 }) => {
   const [authorSearch, setAuthorSearch] = useState("");
+  const navigate = useNavigate();
 
-  const categories = [
+  const defaultCategories = [
     { id: "fiction", name: "Fiction", icon: "📚" },
     { id: "thriller", name: "Thriller", icon: "📚" },
     { id: "romantic", name: "Romantic", icon: "📚" },
@@ -23,6 +29,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     { id: "self-help", name: "Self-help", icon: "📚" },
   ];
 
+  const categories = propCategories || defaultCategories;
+
   const languages = [
     { id: "vietnamese", name: "Vietnamese" },
     { id: "english", name: "English" },
@@ -31,8 +39,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   const ratings = [
     { id: 5, name: "5 stars" },
-    { id: 4, name: "4 stars & up" },
-    { id: 3, name: "3 stars & up" },
+    { id: 4, name: "4.5 stars & up" },
+    { id: 3, name: "4 stars & up" },
   ];
 
   const sortOptions = [
@@ -44,11 +52,19 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     { value: "rating", label: "Highest Rated" },
   ];
 
+  const priceRanges = [
+    { id: '0-150000', label: '0đ - 150,000đ', value: [0, 150000] as [number, number] },
+    { id: '150000-300000', label: '150,000đ - 300,000đ', value: [150000, 300000] as [number, number] },
+    { id: '300000-500000', label: '300,000đ - 500,000đ', value: [300000, 500000] as [number, number] },
+    { id: '500000-700000', label: '500,000đ - 700,000đ', value: [500000, 700000] as [number, number] },
+  ];
+
   const handleCategoryChange = (categoryId: string) => {
-    const newCategories = filters.categories.includes(categoryId)
-      ? filters.categories.filter((id) => id !== categoryId)
-      : [...filters.categories, categoryId];
-    onFilterChange({ categories: newCategories });
+    if (categoryId === "tat-ca") {
+      navigate("/category/tat-ca");
+    } else {
+      navigate(`/category/${categoryId}`);
+    }
   };
 
   const handleRatingChange = (rating: number) => {
@@ -62,8 +78,16 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     onFilterChange({ language: newLanguages });
   };
 
-  const handlePriceRangeChange = (min: number, max: number) => {
-    onFilterChange({ priceRange: [min, max] });
+  const handlePriceRangeChange = (rangeValue: [number, number]) => {
+    if (
+      filters.priceRange &&
+      filters.priceRange[0] === rangeValue[0] &&
+      filters.priceRange[1] === rangeValue[1]
+    ) {
+      onFilterChange({ priceRange: null });
+    } else {
+      onFilterChange({ priceRange: rangeValue });
+    }
   };
 
   return (
@@ -75,7 +99,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               key={category.id}
               onClick={() => handleCategoryChange(category.id)}
-              className={`category-pill ${filters.categories.includes(category.id) ? "active" : ""}`}
+              className={`category-pill ${activeCategoryId == category.id ? "active" : ""}`}
             >
               <svg
                 width="14"
@@ -129,54 +153,29 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       {/* Price Range */}
       <div className="filter-section">
-        <h3 className="filter-title">Price Range</h3>
-        <div className="price-range">
-          <div className="price-slider">
-            <div className="slider-track">
-              <div
-                className="slider-fill"
-                style={{
-                  left: `${(filters.priceRange[0] / 50) * 100}%`,
-                  width: `${((filters.priceRange[1] - filters.priceRange[0]) / 50) * 100}%`,
-                }}
+        <h3 className="filter-title">GIÁ</h3>
+        <div className="price-range-options">
+          {priceRanges.map((range) => (
+            <label key={range.id} className="price-range-option">
+              <input
+                type="checkbox"
+                checked={
+                  !!filters.priceRange &&
+                  filters.priceRange[0] === range.value[0] &&
+                  filters.priceRange[1] === range.value[1]
+                }
+                onChange={() => handlePriceRangeChange(range.value)}
+                className="price-range-checkbox"
               />
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="50"
-              value={filters.priceRange[0]}
-              onChange={(e) =>
-                handlePriceRangeChange(
-                  parseInt(e.target.value),
-                  filters.priceRange[1],
-                )
-              }
-              className="range-input range-min"
-            />
-            <input
-              type="range"
-              min="0"
-              max="50"
-              value={filters.priceRange[1]}
-              onChange={(e) =>
-                handlePriceRangeChange(
-                  filters.priceRange[0],
-                  parseInt(e.target.value),
-                )
-              }
-              className="range-input range-max"
-            />
-          </div>
-          <div className="price-values">
-            <span>${filters.priceRange[0]}</span>
-            <span>${filters.priceRange[1]}</span>
-          </div>
+              <span className="price-range-label">{range.label}</span>
+            </label>
+          ))}
         </div>
       </div>
 
       {/* Rating Filter */}
       <div className="filter-section">
+        <h3 className="filter-title">Rating</h3>
         <div className="rating-filters">
           {ratings.map((rating) => (
             <label key={rating.id} className="rating-filter">
@@ -192,25 +191,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       </div>
 
-      {/* Format Type */}
-      <div className="filter-section">
-        <div className="format-filters">
-          <label className="format-filter">
-            <input
-              type="checkbox"
-              checked={filters.format.length === 0}
-              onChange={() => onFilterChange({ format: [] })}
-              className="format-checkbox"
-            />
-            <span className="format-label">
-              Format Type: Paperback, Hardcover, E-book
-            </span>
-          </label>
-        </div>
-      </div>
-
       {/* Language Filter */}
       <div className="filter-section">
+        <h3 className="filter-title">Ngôn ngữ</h3>
         <div className="language-filters">
           {languages.map((language) => (
             <label key={language.id} className="language-filter">
@@ -223,40 +206,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <span className="language-label">{language.name}</span>
             </label>
           ))}
-        </div>
-      </div>
-
-      {/* Sort By */}
-      <div className="filter-section">
-        <h3 className="filter-title">Sort by</h3>
-        <div className="sort-dropdown">
-          <select
-            value={filters.sortBy}
-            onChange={(e) => onFilterChange({ sortBy: e.target.value })}
-            className="sort-select"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <svg
-            className="dropdown-arrow"
-            width="12"
-            height="8"
-            viewBox="0 0 12 8"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 1L6 6L11 1"
-              stroke="#A1824A"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </div>
       </div>
     </div>

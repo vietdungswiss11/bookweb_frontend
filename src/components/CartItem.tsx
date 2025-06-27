@@ -42,7 +42,7 @@ const CartItem: React.FC<CartItemProps> = ({
         {/* Book Info */}
         <div className="cart-item-info">
           <h3 className="book-title">{item.book.title}</h3>
-          <p className="book-price">${item.book.price.toFixed(2)}</p>
+          <p className="book-price">{item.book.discountPrice.toLocaleString('vi-VN')} đ {item.book.originalPrice > item.book.discountPrice && <span className="original-price">{item.book.originalPrice.toLocaleString('vi-VN')} đ</span>} {item.book.discountPercent > 0 && <span className="discount-percent">-{Math.round(item.book.discountPercent * 100)}%</span>}</p>
           <p className="book-author">By: {item.book.author}</p>
         </div>
 
@@ -110,7 +110,7 @@ const CartItem: React.FC<CartItemProps> = ({
           {/* Item Total */}
           <div className="item-total">
             <span className="total-label">Total:</span>
-            <span className="total-price">${item.totalPrice.toFixed(2)}</span>
+            <span className="total-price">{(item.book.discountPrice * item.quantity).toLocaleString('vi-VN')} đ</span>
           </div>
 
           {/* Remove Button */}

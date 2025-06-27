@@ -115,21 +115,14 @@ body {
 
 /* Main Content */
 .main-content {
-  display: flex;
-  padding: 20px 160px;
-  justify-content: center;
-  align-items: flex-start;
-  flex: 1;
-  width: 100%;
-  background: #f7fafa;
+  padding: 0;
+  background-color: #f7fafa;
 }
 
 .content-container {
-  display: flex;
-  max-width: 960px;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1;
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 /* Hero Section */
@@ -160,8 +153,7 @@ body {
   border-radius: 12px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%),
-    url("https://placehold.co/960x670/d4a574/d4a574") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/960x670/d4a574/d4a574") lightgray 50% / cover no-repeat;
   position: relative;
 }
 
@@ -344,85 +336,73 @@ body {
 .category-card.fiction {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x749/8b7355/8b7355") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x749/8b7355/8b7355") lightgray 50% / cover no-repeat;
 }
 
 .category-card.self-help {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x749/a68b6b/a68b6b") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x749/a68b6b/a68b6b") lightgray 50% / cover no-repeat;
 }
 
 .category-card.manga {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x749/9c8468/9c8468") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x749/9c8468/9c8468") lightgray 50% / cover no-repeat;
 }
 
 .category-card.biographies {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x749/b39a7d/b39a7d") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x749/b39a7d/b39a7d") lightgray 50% / cover no-repeat;
 }
 
 .category-card.history {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x749/8a7254/8a7254") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x749/8a7254/8a7254") lightgray 50% / cover no-repeat;
 }
 
 .category-card.romance {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x937/c4a485/c4a485") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x937/c4a485/c4a485") lightgray 50% / cover no-repeat;
 }
 
 .category-card.science-fiction {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x937/a89073/a89073") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x937/a89073/a89073") lightgray 50% / cover no-repeat;
 }
 
 .category-card.children {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x937/d1b896/d1b896") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x937/d1b896/d1b896") lightgray 50% / cover no-repeat;
 }
 
 .category-card.young-adult {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x937/b5a082/b5a082") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x937/b5a082/b5a082") lightgray 50% / cover no-repeat;
 }
 
 .category-card.mystery {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x937/9e8669/9e8669") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x937/9e8669/9e8669") lightgray 50% / cover no-repeat;
 }
 
 .category-card.thriller {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x1125/c7a889/c7a889") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x1125/c7a889/c7a889") lightgray 50% / cover no-repeat;
 }
 
 .category-card.fantasy {
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%),
-    url("https://placehold.co/188x1125/ab9476/ab9476") lightgray 50% / cover
-      no-repeat;
+    url("https://placehold.co/188x1125/ab9476/ab9476") lightgray 50% / cover no-repeat;
 }
 
 .category-label {
@@ -830,3 +810,4 @@ body {
     gap: 20px;
   }
 }
+

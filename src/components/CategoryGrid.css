@@ -1,0 +1,22 @@
+.promo-grid-section {
+    padding: 20px 0;
+}
+
+.promo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.promo-banner-card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.promo-banner-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}

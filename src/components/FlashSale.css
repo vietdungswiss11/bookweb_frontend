@@ -1,0 +1,268 @@
+.flash-sale-container {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    max-width: 100vw;
+    margin-top: 32px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    padding: 24px 0;
+    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+}
+
+.flash-sale-content {
+    width: 100%;
+    margin: 0;
+    position: relative;
+    box-sizing: border-box;
+    padding: 0 8px;
+}
+
+.flash-sale-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 18px 24px;
+    margin-left: 16px;
+    margin-right: 72px;
+    margin-top: 0;
+}
+
+.flash-sale-title {
+    color: #d62727;
+    font-size: 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-style: italic;
+}
+
+.flash-sale-countdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flash-sale-countdown-label {
+    color: #000000;
+    font-size: 15.6px;
+    font-weight: 600;
+}
+
+.flash-sale-countdown-box {
+    background: #000;
+    color: white;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 35px;
+    text-align: center;
+}
+
+.flash-sale-viewall {
+    color: #1478FC;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.flash-sale-viewall:hover {
+    color: #1976d2;
+}
+
+.flash-sale-scroll {
+    position: relative;
+    overflow-x: auto;
+    padding: 0 16px;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.flash-sale-scroll::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.flash-sale-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #666;
+    opacity: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.flash-sale-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.flash-sale-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+.flash-sale-btn:disabled:hover {
+    transform: translateY(-50%) scale(1);
+}
+
+.flash-sale-btn.left {
+    left: 0;
+}
+
+.flash-sale-btn.right {
+    right: 0;
+}
+
+.flash-sale-books {
+    display: flex;
+    gap: 12px;
+    transition: transform 0.3s ease;
+    justify-content: flex-start;
+}
+
+.flash-sale-books.center {
+    justify-content: center;
+}
+
+.flash-sale-book-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    width: 220px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.flash-sale-book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.flash-sale-book-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.flash-sale-book-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: left;
+    line-height: 1.4;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.flash-sale-book-prices {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.flash-sale-book-price {
+    color: #ff3d00;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.flash-sale-book-oldprice {
+    color: #999;
+    font-size: 14px;
+    text-decoration: line-through;
+}
+
+.flash-sale-book-discount {
+    background: #ff3d00;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.flash-sale-progress-bg {
+    width: 100%;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.flash-sale-progress-bar {
+    height: 100%;
+    background: #ff3d00;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.flash-sale-book-sold {
+    font-size: 13px;
+    color: #666;
+    text-align: left;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1280px) {
+    .flash-sale-content {
+        width: calc(100% - 48px);
+        margin: 0 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .flash-sale-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .flash-sale-book-card {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .flash-sale-book-img {
+        height: 180px;
+    }
+}

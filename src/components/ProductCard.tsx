@@ -1,6 +1,8 @@
 import React from "react";
 import "./ProductCard.css";
 import { Product } from "./ProductListingPage";
+import { useCart } from "../store/CartContext";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
@@ -8,6 +10,9 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
@@ -88,25 +93,43 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           loading="lazy"
         />
       </div>
-
       <div className="card-content">
         <h3 className="card-title">{product.title}</h3>
         <p className="card-author">by {product.author}</p>
-
         <div className="card-rating">
           {renderStars(product.rating)}
           <span className="rating-count">({product.reviewCount})</span>
         </div>
-
-        <div className="card-price">
-          <span className="current-price">${product.price}</span>
-          {product.originalPrice && product.originalPrice > product.price && (
-            <span className="original-price">${product.originalPrice}</span>
-          )}
+        <div className="card-price" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {product.originalPrice > product.discountPrice && (
+              <span className="original-price">{product.originalPrice.toLocaleString('vi-VN')} đ</span>
+            )}
+            {product.discountPercent > 0 && (
+              <span className="discount-percent">-{Math.round(product.discountPercent * 100)}%</span>
+            )}
+          </div>
+          <span className="current-price">{product.discountPrice.toLocaleString('vi-VN')} đ</span>
         </div>
-
+        <div className="card-sold">
+          Đã bán {product.sold}
+        </div>
         <div className="card-actions">
-          <button className="btn-add-cart">
+          <button
+            className="btn-add-cart"
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart({
+                id: product.id,
+                title: product.title,
+                author: product.author,
+                price: product.discountPrice,
+                image: product.image,
+                quantity: 1,
+              });
+              navigate("/cart");
+            }}
+          >
             <svg
               width="16"
               height="16"
@@ -122,27 +145,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
               />
             </svg>
             Add to Cart
-          </button>
-
-          <button className="btn-wishlist">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M13.8921 3.07338C13.5516 2.73271 13.1474 2.46248 12.7026 2.27882C12.2579 2.09517 11.7814 2 11.3002 2C10.8189 2 10.3424 2.09517 9.89762 2.27882C9.45289 2.46248 9.04864 2.73271 8.70811 3.07338L7.99981 3.78171L7.29148 3.07338C6.60214 2.38404 5.68495 2.00211 4.72814 2.00211C3.77134 2.00211 2.85414 2.38404 2.16481 3.07338C1.47547 3.76271 1.09354 4.67991 1.09354 5.63671C1.09354 6.59352 1.47547 7.51071 2.16481 8.20005L2.87314 8.90838L7.99981 14.035L13.1265 8.90838L13.8348 8.20005C14.1755 7.85952 14.4457 7.45527 14.6294 7.01054C14.813 6.56582 14.9082 6.08932 14.9082 5.60805C14.9082 5.12678 14.813 4.65028 14.6294 4.20556C14.4457 3.76083 14.1755 3.35658 13.8348 3.01605L13.8921 3.07338Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            </svg>
           </button>
         </div>
       </div>
