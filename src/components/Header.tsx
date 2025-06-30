@@ -3,9 +3,12 @@ import TopBar from "./TopBar";
 import SearchBar from "./SearchBar";
 import './Header.css';
 import { useNavigate } from "react-router-dom";
+import AuthModal from './AuthModal';
+import { useState } from 'react';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const [authOpen, setAuthOpen] = useState(false);
   return (
     <>
       <TopBar />
@@ -29,7 +32,13 @@ const Header: React.FC = () => {
               <i className="icon-cart"></i>
               <span>Giỏ Hàng</span>
             </div>
-            <div className="action-item" onClick={() => navigate('/account')} style={{ cursor: 'pointer' }}>
+            <div className="action-item" onClick={() => {
+              if (localStorage.getItem('token')) {
+                navigate('/account');
+              } else {
+                setAuthOpen(true);
+              }
+            }} style={{ cursor: 'pointer' }}>
               <i className="icon-user"></i>
               <span>Tài khoản</span>
             </div>
@@ -40,6 +49,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );
 };

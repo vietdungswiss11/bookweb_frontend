@@ -16,6 +16,7 @@ interface Book {
   discountPrice?: number;
   discountPercent?: number;
   sold?: number;
+  images?: { url: string }[];
 }
 
 interface BookSectionProps {
@@ -78,7 +79,7 @@ const BookSection: React.FC<BookSectionProps> = ({
             {(books[0] as Book[]).map((book) => (
               <div key={book.id} className="new-release-card" onClick={() => navigate(`/product/${book.id}`)}>
                 <div className="new-release-image-container">
-                  <img src={book.image} alt={book.title} className="new-release-image" />
+                  <img src={book.images && book.images.length > 0 ? book.images[0].url : book.image || 'https://placehold.co/80x110'} alt={book.title} className="new-release-image" />
                 </div>
                 <div className="new-release-info">
                   <h3 className="new-release-title">{book.title}</h3>
@@ -108,7 +109,7 @@ const BookSection: React.FC<BookSectionProps> = ({
                 onClick={() => title === 'Danh mục sản phẩm' ? navigate(`/category/${book.id}`) : navigate(`/product/${book.id}`)}
                 style={{ cursor: 'pointer' }}
               >
-                <img src={book.image} alt={book.title} className="book-image" />
+                <img src={book.images && book.images.length > 0 ? book.images[0].url : book.image || 'https://placehold.co/80x110'} alt={book.title} className="book-image" />
                 <div className="book-info">
                   <div className="book-title">{book.title}</div>
                   {book.author && (

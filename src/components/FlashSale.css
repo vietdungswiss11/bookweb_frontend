@@ -14,7 +14,8 @@
 
 .flash-sale-content {
     width: 100%;
-    margin: 0;
+    max-width: 1230px; 
+    margin: 0 auto;
     position: relative;
     box-sizing: border-box;
     padding: 0 8px;
@@ -30,8 +31,9 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     padding: 18px 24px;
     margin-left: 16px;
-    margin-right: 72px;
+    margin-right: 16px;
     margin-top: 0;
+    max-width: 1230px;
 }
 
 .flash-sale-title {
@@ -82,10 +84,11 @@
 }
 
 .flash-sale-scroll {
-    position: relative;
+    position: relative; 
     overflow-x: auto;
-    padding: 0 16px;
+    padding: 0 12px;
     box-sizing: border-box;
+    width: 100%;
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -157,7 +160,8 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
     width: 220px;
-    padding: 12px;
+    padding: 8px;
+    margin: 0 2px 8px;
     display: flex;
     flex-direction: column;
     position: relative;

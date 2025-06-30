@@ -47,4 +47,9 @@ export async function searchBooks(params: any) {
     const query = new URLSearchParams(params).toString();
     const res = await fetch(`${API_URL}/search?${query}`);
     return res.json();
+}
+
+export async function getBooksOnSale() {
+    const res = await fetch(`${API_URL}/sale`);
+    return res.json();
 } 

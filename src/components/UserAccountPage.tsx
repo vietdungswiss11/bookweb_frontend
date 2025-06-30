@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./UserAccountPage.css";
 import { AccountSidebar } from "./AccountSidebar";
 import { AccountMainContent } from "./AccountMainContent";
 import { Header } from "./index";
+import { getUserById } from '../services/userService';
+import { useNavigate } from "react-router-dom";
 
 export type AccountSection =
   | "profile"
@@ -12,12 +14,21 @@ export type AccountSection =
   | "giftcards"
   | "address";
 
+export interface Address {
+  id: number;
+  recipientName: string;
+  phoneNumber: string;
+  addressLine: string;
+  default?: boolean;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   phoneNumber?: string;
   avatar?: string;
+  addresses?: Address[];
 }
 
 export interface Order {
@@ -42,13 +53,34 @@ export interface Credit {
 
 export const UserAccountPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<AccountSection>("profile");
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
-  // Sample user data
-  const user: User = {
-    id: "1",
-    name: "Jane Cooper",
-    email: "jane.cooper@email.com",
-    phoneNumber: "+1 (555) 123-4567",
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    if (!userId || !token) {
+      navigate('/');
+      return;
+    }
+    getUserById(userId)
+      .then(data => {
+        if (data.error) {
+          navigate('/');
+        } else {
+          setUser(data);
+        }
+      })
+      .catch(() => {
+        navigate('/');
+      });
+  }, [navigate]);
+
+  const refreshUser = () => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      getUserById(userId).then(setUser);
+    }
   };
 
   // Sample orders data
@@ -151,10 +183,11 @@ export const UserAccountPage: React.FC = () => {
           />
           <AccountMainContent
             activeSection={activeSection}
-            user={user}
+            user={user || { id: '', name: "", email: "", phoneNumber: "" }}
             orders={orders}
             reviews={reviews}
             credits={credits}
+            onUserRefresh={refreshUser}
           />
         </div>
       </div>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AccountMainContent.css";
 import { AccountSection, User, Order, Review, Credit } from "./UserAccountPage";
 import { OrderItem } from "./OrderItem";
 import { ReviewItem } from "./ReviewItem";
+import { addAddress } from "../services/addressService";
 
 interface AccountMainContentProps {
   activeSection: AccountSection;
@@ -10,6 +11,14 @@ interface AccountMainContentProps {
   orders: Order[];
   reviews: Review[];
   credits: Credit[];
+  onUserRefresh: () => void;
+}
+
+interface Address {
+  id?: number;
+  recipientName: string;
+  phoneNumber: string;
+  addressLine: string;
 }
 
 export const AccountMainContent: React.FC<AccountMainContentProps> = ({
@@ -18,25 +27,55 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
   orders,
   reviews,
   credits,
+  onUserRefresh,
 }) => {
   console.log("activeSection:", activeSection);
   const [addressForm, setAddressForm] = useState({
-    lastName: "",
-    firstName: "",
+    fullName: "",
     phone: "",
     country: "Việt Nam",
     province: "",
     district: "",
     ward: "",
-    address: "",
-    postalCode: "",
+    address: ""
   });
   const [addressErrors, setAddressErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [mode, setMode] = useState<'list' | 'add' | 'edit'>('list');
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+
+  useEffect(() => {
+    if (activeSection === 'address') {
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      if (userId && token) {
+        fetch(`http://localhost:8080/addresses/user/${userId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+          .then(res => res.json())
+          .then(data => setAddresses(Array.isArray(data) ? data : []));
+      }
+    }
+  }, [activeSection, mode]);
+
+  const handleAddClick = () => {
+    setMode('add');
+    setEditingAddress(null);
+  };
+  const handleEditClick = (address: Address) => {
+    setMode('edit');
+    setEditingAddress(address);
+  };
+  const handleBackToList = () => {
+    setMode('list');
+    setEditingAddress(null);
+  };
 
   const validateAddress = () => {
     const errors: { [key: string]: string } = {};
-    if (!addressForm.lastName) errors.lastName = "Vui lòng nhập họ";
-    if (!addressForm.firstName) errors.firstName = "Vui lòng nhập tên";
+    if (!addressForm.fullName) errors.fullName = "Vui lòng nhập họ và tên";
     if (!addressForm.phone) errors.phone = "Vui lòng nhập số điện thoại";
     else if (!/^0\d{9}$/.test(addressForm.phone)) errors.phone = "Số điện thoại không hợp lệ";
     if (!addressForm.country) errors.country = "Vui lòng chọn quốc gia";
@@ -44,7 +83,6 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     if (!addressForm.district) errors.district = "Vui lòng nhập quận/huyện";
     if (!addressForm.ward) errors.ward = "Vui lòng nhập xã/phường";
     if (!addressForm.address) errors.address = "Vui lòng nhập địa chỉ";
-    if (addressForm.postalCode && !/^\d+$/.test(addressForm.postalCode)) errors.postalCode = "Mã bưu điện phải là số";
     return errors;
   };
 
@@ -52,13 +90,44 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     setAddressForm({ ...addressForm, [e.target.name]: e.target.value });
   };
 
-  const handleAddressSubmit = (e: React.FormEvent) => {
+  const handleAddressSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitMessage(null);
     const errors = validateAddress();
     setAddressErrors(errors);
     if (Object.keys(errors).length === 0) {
-      alert("Lưu địa chỉ thành công!");
-      // Xử lý lưu địa chỉ ở đây
+      setIsSubmitting(true);
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        setSubmitMessage({ type: 'error', text: 'Bạn cần đăng nhập để thực hiện việc này.' });
+        setIsSubmitting(false);
+        return;
+      }
+      const addressLine = `${addressForm.address}, ${addressForm.ward}, ${addressForm.district}, ${addressForm.province}, ${addressForm.country}`;
+      const addressPayload = {
+        recipientName: addressForm.fullName,
+        phoneNumber: addressForm.phone,
+        addressLine: addressLine,
+      };
+      try {
+        await addAddress(userId, addressPayload);
+        setSubmitMessage({ type: 'success', text: 'Lưu địa chỉ thành công!' });
+        setAddressForm({
+          fullName: "",
+          phone: "",
+          country: "Việt Nam",
+          province: "",
+          district: "",
+          ward: "",
+          address: ""
+        });
+        setAddressErrors({});
+        if (typeof onUserRefresh === 'function') onUserRefresh();
+      } catch (error: any) {
+        setSubmitMessage({ type: 'error', text: `Lỗi: ${error.message}` });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -71,8 +140,9 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
           <input
             type="text"
             id="name"
-            defaultValue={user.name}
+            value={user.name || 'Chưa có'}
             className="form-input"
+            readOnly
           />
         </div>
         <div className="form-group">
@@ -80,8 +150,9 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
           <input
             type="email"
             id="email"
-            defaultValue={user.email}
+            value={user.email || 'Chưa có'}
             className="form-input"
+            readOnly
           />
         </div>
         <div className="form-group">
@@ -89,30 +160,31 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
           <input
             type="tel"
             id="phone"
-            defaultValue={user.phoneNumber}
+            value={user.phoneNumber || 'Chưa có'}
             className="form-input"
+            readOnly
           />
         </div>
         <div className="form-group">
           <label>Gender</label>
           <div style={{ display: 'flex', gap: '24px' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="radio" name="gender" value="male" defaultChecked /> Nam
+              <input type="radio" name="gender" value="male" defaultChecked readOnly /> Nam
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="radio" name="gender" value="female" /> Nữ
+              <input type="radio" name="gender" value="female" readOnly /> Nữ
             </label>
           </div>
         </div>
         <div className="form-group">
           <label>Birthday</label>
           <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
-            <input type="text" className="form-input" placeholder="DD" style={{ maxWidth: 80 }} />
-            <input type="text" className="form-input" placeholder="MM" style={{ maxWidth: 80 }} />
-            <input type="text" className="form-input" placeholder="YYYY" style={{ maxWidth: 120 }} />
+            <input type="text" className="form-input" placeholder="DD" style={{ maxWidth: 80 }} readOnly />
+            <input type="text" className="form-input" placeholder="MM" style={{ maxWidth: 80 }} readOnly />
+            <input type="text" className="form-input" placeholder="YYYY" style={{ maxWidth: 120 }} readOnly />
           </div>
         </div>
-        <button className="save-button">Save Changes</button>
+        <button className="save-button" disabled>Save Changes</button>
       </div>
     </div>
   );
@@ -139,65 +211,102 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     </div>
   );
 
-  const renderAddressSection = () => (
-    <div className="profile-section">
-      <h2 className="section-title">Thêm địa chỉ mới</h2>
-      <form className="profile-form" onSubmit={handleAddressSubmit} autoComplete="off">
-        <div className="form-group">
-          <label>Họ*</label>
-          <input type="text" className="form-input" name="lastName" placeholder="Họ*" value={addressForm.lastName} onChange={handleAddressChange} />
+  const renderAddressList = () => {
+    const addresses = Array.isArray(user.addresses) ? user.addresses : [];
+    return (
+      <div className="address-list-section">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <h2 className="section-title" style={{ margin: 0 }}>Sổ địa chỉ</h2>
+          <button
+            style={{
+              color: '#1976d2',
+              background: 'none',
+              border: 'none',
+              fontWeight: 600,
+              fontSize: 16,
+              cursor: 'pointer'
+            }}
+            onClick={handleAddClick}
+          >
+            + Thêm địa chỉ mới
+          </button>
         </div>
-        {addressErrors.lastName && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.lastName}</div>}
-        <div className="form-group">
-          <label>Tên*</label>
-          <input type="text" className="form-input" name="firstName" placeholder="Tên*" value={addressForm.firstName} onChange={handleAddressChange} />
-        </div>
-        {addressErrors.firstName && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.firstName}</div>}
-        <div className="form-group">
-          <label>Điện thoại*</label>
-          <input type="text" className="form-input" name="phone" placeholder="Ex: 0972xxxx" value={addressForm.phone} onChange={handleAddressChange} />
-        </div>
-        {addressErrors.phone && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.phone}</div>}
-        <div className="form-group">
-          <label>Quốc gia*</label>
-          <select className="form-input" name="country" value={addressForm.country} onChange={handleAddressChange}><option>Việt Nam</option></select>
-        </div>
-        {addressErrors.country && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.country}</div>}
-        <div className="form-group">
-          <label>Tỉnh/Thành phố*</label>
-          <select className="form-input" name="province" value={addressForm.province} onChange={handleAddressChange}><option value="">Vui lòng chọn</option><option value="Hà Nội">Hà Nội</option><option value="Hồ Chí Minh">Hồ Chí Minh</option></select>
-        </div>
-        {addressErrors.province && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.province}</div>}
-        <div className="form-group">
-          <label>Quận/Huyện*</label>
-          <input type="text" className="form-input" name="district" value={addressForm.district} onChange={handleAddressChange} />
-        </div>
-        {addressErrors.district && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.district}</div>}
-        <div className="form-group">
-          <label>Xã/Phường*</label>
-          <input type="text" className="form-input" name="ward" value={addressForm.ward} onChange={handleAddressChange} />
-        </div>
-        {addressErrors.ward && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.ward}</div>}
-        <div className="form-group">
-          <label>Địa chỉ*</label>
-          <input type="text" className="form-input" name="address" placeholder="Địa chỉ" value={addressForm.address} onChange={handleAddressChange} />
-        </div>
-        {addressErrors.address && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.address}</div>}
-        <div className="form-group">
-          <label>Mã bưu điện</label>
-          <input type="text" className="form-input" name="postalCode" placeholder="Mã bưu điện VN: 700000" value={addressForm.postalCode} onChange={handleAddressChange} />
-        </div>
-        {addressErrors.postalCode && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.postalCode}</div>}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
-          <a href="#" style={{ color: '#1976d2', textDecoration: 'none', fontWeight: 500 }}>&laquo; Quay lại</a>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <span style={{ color: '#d32f2f', fontSize: 13 }}>(*) bắt buộc</span>
-            <button className="save-button" style={{ background: '#d32f2f', minWidth: 180 }}>LƯU ĐỊA CHỈ</button>
+        {addresses.length === 0 && <div>Bạn chưa có địa chỉ nào.</div>}
+        {addresses.map((addr: Address) => (
+          <div key={addr.id} style={{ border: '1px solid #eee', borderRadius: 8, padding: 16, margin: '16px 0', background: '#fafbfc' }}>
+            <div style={{ fontWeight: 700, fontSize: 16 }}>{addr.recipientName} <span style={{ fontWeight: 500 }}>{addr.phoneNumber}</span></div>
+            <div style={{ margin: '8px 0 4px 0' }}>{addr.addressLine}</div>
+            <button style={{ color: '#1976d2', background: 'none', border: 'none', fontWeight: 500, cursor: 'pointer' }} onClick={() => handleEditClick(addr)}>Sửa</button>
           </div>
-        </div>
-      </form>
-    </div>
-  );
+        ))}
+      </div>
+    );
+  };
+
+  const renderAddressSection = () => {
+    if (mode === 'list') return renderAddressList();
+    return (
+      <div className="profile-section">
+        <h2 className="section-title">{mode === 'add' ? 'Thêm địa chỉ mới' : 'Sửa địa chỉ'}</h2>
+        <form className="profile-form" onSubmit={handleAddressSubmit} autoComplete="off">
+          <div className="form-group">
+            <label>Họ và Tên*</label>
+            <input type="text" className="form-input" name="fullName" placeholder="Họ và Tên*" value={addressForm.fullName} onChange={handleAddressChange} />
+          </div>
+          {addressErrors.fullName && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.fullName}</div>}
+          <div className="form-group">
+            <label>Điện thoại*</label>
+            <input type="text" className="form-input" name="phone" placeholder="Ex: 0972xxxx" value={addressForm.phone} onChange={handleAddressChange} />
+          </div>
+          {addressErrors.phone && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.phone}</div>}
+          <div className="form-group">
+            <label>Quốc gia*</label>
+            <select className="form-input" name="country" value={addressForm.country} onChange={handleAddressChange}><option>Việt Nam</option></select>
+          </div>
+          {addressErrors.country && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.country}</div>}
+          <div className="form-group">
+            <label>Tỉnh/Thành phố*</label>
+            <select className="form-input" name="province" value={addressForm.province} onChange={handleAddressChange}><option value="">Vui lòng chọn</option><option value="Hà Nội">Hà Nội</option><option value="Hồ Chí Minh">Hồ Chí Minh</option></select>
+          </div>
+          {addressErrors.province && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.province}</div>}
+          <div className="form-group">
+            <label>Quận/Huyện*</label>
+            <input type="text" className="form-input" name="district" value={addressForm.district} onChange={handleAddressChange} />
+          </div>
+          {addressErrors.district && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.district}</div>}
+          <div className="form-group">
+            <label>Xã/Phường*</label>
+            <input type="text" className="form-input" name="ward" value={addressForm.ward} onChange={handleAddressChange} />
+          </div>
+          {addressErrors.ward && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.ward}</div>}
+          <div className="form-group">
+            <label>Địa chỉ*</label>
+            <input type="text" className="form-input" name="address" placeholder="Địa chỉ" value={addressForm.address} onChange={handleAddressChange} />
+          </div>
+          {addressErrors.address && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.address}</div>}
+          {submitMessage && (
+            <div style={{
+              color: submitMessage.type === 'success' ? 'green' : '#d32f2f',
+              marginTop: '16px',
+              textAlign: 'center',
+              fontWeight: 500
+            }}>
+              {submitMessage.text}
+            </div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
+            <button type="button" onClick={handleBackToList} style={{ color: '#1976d2', textDecoration: 'none', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer' }}>&laquo; Quay lại</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <span style={{ color: '#d32f2f', fontSize: 13 }}>(*) bắt buộc</span>
+              <button className="save-button" style={{ background: '#d32f2f', minWidth: 180 }} disabled={isSubmitting}>
+                {isSubmitting ? (mode === 'add' ? 'ĐANG LƯU...' : 'ĐANG CẬP NHẬT...') : (mode === 'add' ? 'LƯU ĐỊA CHỈ' : 'CẬP NHẬT')}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  };
 
   const renderDefaultContent = () => (
     <>

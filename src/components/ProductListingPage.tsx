@@ -7,7 +7,7 @@ import Pagination from "./Pagination";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Header } from "./index";
 import CategoryGrid from "./CategoryGrid";
-import { getAllBooks, searchBooks } from '../services/bookService';
+import { getAllBooks, searchBooks, getBooksOnSale } from '../services/bookService';
 import { getAllCategories, getBooksByCategoryId } from '../services/categoryService';
 import { CategorySection } from './index';
 
@@ -50,7 +50,7 @@ const sortOptions = [
   { value: "price_high", label: "Price: High to Low" },
   { value: "newest", label: "Newest First" },
   { value: "bestseller", label: "Best Sellers" },
-  { value: "rating", label: "Highest Rated" },
+  { value: "sale", label: "Sale" },
 ];
 
 const ProductListingPage: React.FC<ProductListingPageProps> = ({
@@ -130,30 +130,37 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
         params.minRating = filters.rating;
       }
       // Nếu có searchQuery thì gọi searchBooks, ngược lại gọi getAllBooks
-      const fetchBooks = searchQuery
-        ? searchBooks({ keyword: searchQuery, ...params })
-        : getAllBooks(params);
+      let fetchBooks;
+      if (filters.sortBy === "sale") {
+        fetchBooks = getBooksOnSale();
+      } else if (searchQuery) {
+        fetchBooks = searchBooks({ keyword: searchQuery, ...params });
+      } else {
+        fetchBooks = getAllBooks(params);
+      }
 
       fetchBooks
         .then((res) => {
+          // Nếu là sale thì map dữ liệu khác nếu cần
+          let items = res.books || res;
           setProducts(
-            (res.books || []).map((item: any) => ({
+            (items || []).map((item: any) => ({
               id: String(item.id),
               title: item.title,
               author: item.author,
-              discountPrice: item.discountPrice,
-              originalPrice: item.originalPrice,
-              discountPercent: item.discountPercent,
-              image: item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/166x221',
-              rating: item.averageRating,
-              reviewCount: item.totalReviews,
+              discountPrice: item.discountPrice ?? item.price ?? 0,
+              originalPrice: item.originalPrice ?? item.oldPrice ?? 0,
+              discountPercent: item.discountPercent ?? (item.originalPrice && item.discountPrice ? (1 - item.discountPrice / item.originalPrice) : 0),
+              image: item.images && item.images.length > 0 ? item.images[0].url : (item.image || 'https://placehold.co/166x221'),
+              rating: item.averageRating ?? item.rating,
+              reviewCount: item.totalReviews ?? 0,
               category: item.categories && item.categories.length > 0 ? item.categories[0].name : '',
-              sold: item.sold,
-              format: '',
-              language: '',
+              sold: item.sold ?? 0,
+              format: item.format ?? '',
+              language: item.language ?? '',
             }))
           );
-          setTotalResults(res.totalItems || 0);
+          setTotalResults(res.totalItems || items.length || 0);
           setTotalPages(res.totalPages || 1);
           setLoading(false);
         })

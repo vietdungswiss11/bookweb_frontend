@@ -50,7 +50,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
           console.log("Data from getBookById:", data);
           setProduct(data);
           if (data.images && data.images.length > 0) {
-            setSelectedImage(data.images[0]);
+            setSelectedImage(data.images[0].url);
           } else {
             setSelectedImage("https://placehold.co/472x300");
           }
@@ -235,7 +235,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                   className="gallery-image large"
                 />
                 <div className="gallery-thumbnails">
-                  {(product.images && product.images.length > 0 ? product.images : ["https://placehold.co/472x300"]).map((img: string, idx: number) => (
+                  {(product.images && product.images.length > 0 ? product.images.map((img: any) => img.url) : ["https://placehold.co/472x300"]).map((img: string, idx: number) => (
                     <img
                       key={idx}
                       src={img}

@@ -1,0 +1,147 @@
+.auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-modal {
+    background: #fff;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 95vw;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+    padding: 32px 32px 24px 32px;
+    position: relative;
+    animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #eee;
+}
+
+.auth-tabs>div {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: #888;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.auth-tabs>.active {
+    color: #e53935;
+    border-bottom: 2px solid #e53935;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.auth-form label {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.auth-form input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.auth-form input:focus {
+    border: 1.5px solid #e53935;
+}
+
+.password-input-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    flex: 1;
+}
+
+.show-btn {
+    margin-left: 8px;
+    background: none;
+    border: none;
+    color: #1976d2;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.auth-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.forgot-link {
+    color: #e53935;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.auth-submit {
+    background: #e53935;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+
+.auth-submit:hover {
+    background: #c62828;
+}
+
+.auth-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.auth-modal-close:hover {
+    color: #e53935;
+}

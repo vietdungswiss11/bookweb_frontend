@@ -6,7 +6,12 @@ export async function getAllUsers() {
 }
 
 export async function getUserById(userId: string | number) {
-    const res = await fetch(`${API_URL}/${userId}`);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
     return res.json();
 }
 

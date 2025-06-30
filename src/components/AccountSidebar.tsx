@@ -1,6 +1,7 @@
 import React from "react";
 import "./AccountSidebar.css";
 import { AccountSection } from "./UserAccountPage";
+import { useNavigate } from 'react-router-dom';
 
 interface AccountSidebarProps {
   activeSection: AccountSection;
@@ -19,7 +20,12 @@ export const AccountSidebar: React.FC<AccountSidebarProps> = ({
     { id: "referrals" as AccountSection, label: "Referrals" },
     { id: "giftcards" as AccountSection, label: "Gift Cards" },
   ];
-
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    navigate('/');
+  };
   return (
     <div className="account-sidebar">
       <div className="sidebar-content">
@@ -34,6 +40,9 @@ export const AccountSidebar: React.FC<AccountSidebarProps> = ({
             </button>
           ))}
         </div>
+        <button className="sidebar-item logout-btn" onClick={handleLogout} style={{ marginTop: 32, color: '#e53935', fontWeight: 600 }}>
+          Đăng xuất
+        </button>
       </div>
     </div>
   );

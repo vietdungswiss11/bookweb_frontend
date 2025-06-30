@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import './FlashSale.css';
 import { useNavigate } from "react-router-dom";
+import { getBooksOnSale } from '../services/bookService';
 
 interface SaleBook {
   id: string;
@@ -12,85 +13,37 @@ interface SaleBook {
   sold: number;
   total: number;
   progressColor?: string;
+  images: any[];
 }
-
-const saleBooks: SaleBook[] = [
-  {
-    id: "sale-1",
-    title: "AI - Công Cụ Nâng Cao Hiệu Suất Công Việc",
-    image: "https://cdn0.fahasa.com/media/catalog/product/a/i/ai-cong-cu-nang-cao-hieu-suat-cong-viec.jpg",
-    discountPrice: 84500,
-    originalPrice: 169000,
-    discountPercent: 0.5,
-    sold: 10,
-    total: 20,
-    progressColor: "progress-red",
-  },
-  {
-    id: "sale-2",
-    title: "Tư Duy Về Tiền Bạc - Những Lựa Chọn Tài Chính Đúng Đắn Và Thông Minh",
-    image: "https://cdn0.fahasa.com/media/catalog/product/t/u/tu-duy-ve-tien-bac.jpg",
-    discountPrice: 56000,
-    originalPrice: 80000,
-    discountPercent: 0.3,
-    sold: 9,
-    total: 15,
-    progressColor: "progress-red",
-  },
-  {
-    id: "sale-3",
-    title: "Khởi Nghiệp - Làng Mạn Và Thực Tế",
-    image: "https://cdn0.fahasa.com/media/catalog/product/k/h/khoi-nghiep-lang-man-va-thuc-te.jpg",
-    discountPrice: 130500,
-    originalPrice: 179000,
-    discountPercent: 0.27,
-    sold: 11,
-    total: 25,
-    progressColor: "progress-red",
-  },
-  {
-    id: "sale-4",
-    title: "Kinh Doanh Nhà Thuốc - Biến Đổi Hay Biến Mất",
-    image: "https://cdn0.fahasa.com/media/catalog/product/k/i/kinh-doanh-nha-thuoc.jpg",
-    discountPrice: 259500,
-    originalPrice: 399000,
-    discountPercent: 0.34,
-    sold: 0,
-    total: 20,
-    progressColor: "progress-red",
-  },
-  {
-    id: "sale-5",
-    title: "Lợi Thế Bán Hàng (Tái Bản 2019)",
-    image: "https://cdn0.fahasa.com/media/catalog/product/l/o/loi-the-ban-hang.jpg",
-    discountPrice: 96000,
-    originalPrice: 138000,
-    discountPercent: 0.3,
-    sold: 13,
-    total: 20,
-    progressColor: "progress-red",
-  },
-  {
-    id: "sale-6",
-    title: "Từ Tốt Đến Vĩ Đại - Jim Collins (Tái Bản 2021)",
-    image: "https://cdn0.fahasa.com/media/catalog/product/t/u/tu-tot-den-vi-dai.jpg",
-    discountPrice: 65000,
-    originalPrice: 130000,
-    discountPercent: 0.5,
-    sold: 9,
-    total: 12,
-    progressColor: "progress-red",
-  },
-];
 
 const CARD_WIDTH = 280;
 const VISIBLE = 5;
 
 const FlashSale: React.FC = () => {
+  const [saleBooks, setSaleBooks] = useState<SaleBook[]>([]);
   const [currentScroll, setCurrentScroll] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    getBooksOnSale().then((data) => {
+      // Giả sử API trả về mảng sách, cần map về đúng SaleBook
+      const mapped = (data.books || data).map((book: any) => ({
+        id: book.id,
+        title: book.title,
+        image: book.image,
+        discountPrice: book.discountPrice ?? book.price ?? 0,
+        originalPrice: book.originalPrice ?? book.oldPrice ?? 0,
+        discountPercent: book.discountPercent ?? (book.originalPrice && book.discountPrice ? (1 - book.discountPrice / book.originalPrice) : 0),
+        sold: book.sold ?? 0,
+        total: book.total ?? 20,
+        progressColor: 'progress-red',
+        images: book.images || [],
+      }));
+      setSaleBooks(mapped);
+    });
+  }, []);
 
   const scrollBooks = (direction: 'left' | 'right') => {
     if (!scrollContainerRef.current) return;
@@ -171,7 +124,7 @@ const FlashSale: React.FC = () => {
                   style={{ cursor: 'pointer' }}
                 >
                   <img
-                    src={book.image}
+                    src={book.images && book.images.length > 0 ? book.images[0].url : book.image}
                     alt={book.title}
                     className="flash-sale-book-img"
                   />
