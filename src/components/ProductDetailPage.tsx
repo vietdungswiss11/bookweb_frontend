@@ -4,6 +4,7 @@ import "./ProductDetailPage.css";
 import Breadcrumbs from "./Breadcrumbs";
 import ProductActions from "./ProductActions";
 import { getBookById } from "../services/bookService";
+import { useCartApi } from "../hooks/useCartApi";
 
 interface ProductDetailPageProps {
   productId?: string;
@@ -36,7 +37,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const [selectedRatingFilter, setSelectedRatingFilter] = useState<string>("all");
   const [product, setProduct] = useState<any>(null);
   const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
+  const { addToCart } = useCartApi(userId || "");
 
   useEffect(() => {
     console.log("useEffect run, bookId:", bookId);
@@ -203,6 +207,15 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
     { label: product.title },
   ];
 
+  const handleAddToCart = () => {
+    if (!userId) {
+      alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+      return;
+    }
+    addToCart(product.id, quantity);
+    alert("Đã thêm vào giỏ hàng!");
+  };
+
   return (
     <div className="product-detail-page">
       <Breadcrumbs items={breadcrumbItems} />
@@ -281,10 +294,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
               </div>
               <div className="product-qty-row">
                 <label className="product-qty-label" htmlFor="product-qty">Số lượng:</label>
-                <input id="product-qty" type="number" min="1" max="15" defaultValue="1" className="product-qty-input" />
+                <input id="product-qty" type="number" min="1" max="15" value={quantity} onChange={e => setQuantity(Math.max(1, Math.min(15, Number(e.target.value))))} className="product-qty-input" />
                 <span className="product-qty-stock">Đã bán {product.sold}</span>
               </div>
-              <button className="btn-add-cart" onClick={() => navigate('/cart')}>Thêm vào giỏ hàng</button>
+              <button className="btn-add-cart" onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
               <button className="btn-buy">Mua ngay</button>
               <div className="product-status-row">
                 <span>Tình trạng:</span>

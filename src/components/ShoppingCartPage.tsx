@@ -4,6 +4,9 @@ import Breadcrumbs from "./Breadcrumbs";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import Header from "./Header";
+import { useNavigate } from "react-router-dom";
+import { useCartApi } from "../hooks/useCartApi";
+import AuthModal from "./AuthModal";
 
 export interface CartItemData {
   id: string;
@@ -14,7 +17,7 @@ export interface CartItemData {
     discountPrice: number;
     originalPrice: number;
     discountPercent: number;
-    image: string;
+    images?: { url: string }[];
   };
   quantity: number;
   totalPrice: number;
@@ -30,180 +33,55 @@ export interface CartData {
   couponDiscount?: number;
 }
 
-interface ShoppingCartPageProps {
-  userId?: string;
-}
+// Helper để format số tiền an toàn
+const formatMoney = (value: number | undefined) => typeof value === 'number' ? value.toFixed(2) : '0.00';
 
-const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
-  const [cartData, setCartData] = useState<CartData | null>(null);
-  const [loading, setLoading] = useState(false);
+const ShoppingCartPage: React.FC = () => {
+  const userId = localStorage.getItem('userId');
+  const { cart, loading, updateCartItem, removeCartItem, clearCart, fetchCart } = useCartApi(userId || "");
   const [couponCode, setCouponCode] = useState("");
-
-  // Sample cart data - in real app this would come from API
-  const sampleCartData: CartData = {
-    items: [
-      {
-        id: "1",
-        book: {
-          id: "book-1",
-          title: "Dune",
-          author: "Frank Herbert",
-          discountPrice: 149900,
-          originalPrice: 199900,
-          discountPercent: 0.25,
-          image: "https://placehold.co/70x93/8b7355/8b7355",
-        },
-        quantity: 1,
-        totalPrice: 149900,
-      },
-      {
-        id: "2",
-        book: {
-          id: "book-2",
-          title: "1984",
-          author: "George Orwell",
-          discountPrice: 99900,
-          originalPrice: 129900,
-          discountPercent: 0.23,
-          image: "https://placehold.co/70x93/7a6b5d/7a6b5d",
-        },
-        quantity: 1,
-        totalPrice: 99900,
-      },
-      {
-        id: "3",
-        book: {
-          id: "book-3",
-          title: "Fahrenheit 451",
-          author: "Ray Bradbury",
-          discountPrice: 129900,
-          originalPrice: 159900,
-          discountPercent: 0.19,
-          image: "https://placehold.co/70x93/9c8a7a/9c8a7a",
-        },
-        quantity: 1,
-        totalPrice: 129900,
-      },
-    ],
-    subtotal: 149900,
-    tax: 11992,
-    shipping: 0,
-    total: 161892,
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulate API call to get cart data
-    setLoading(true);
-    setTimeout(() => {
-      setCartData(sampleCartData);
-      setLoading(false);
-    }, 500);
-  }, [sampleCartData]);
+    if (userId) fetchCart();
+  }, [fetchCart, userId]);
+
+  if (!userId) {
+    return <AuthModal open={true} onClose={() => window.location.href = '/'} />;
+  }
 
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
-    if (!cartData) return;
-
-    // Simulate API call to update quantity
-    setLoading(true);
-
-    // Update local state immediately for better UX
-    const updatedItems = cartData.items.map((item) => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          quantity: newQuantity,
-          totalPrice: item.book.discountPrice * newQuantity,
-        };
-      }
-      return item;
-    });
-
-    const newSubtotal = updatedItems.reduce(
-      (sum, item) => sum + item.totalPrice,
-      0,
-    );
-    const newTax = Math.round(newSubtotal * 0.08); // 8% tax
-    const newTotal = newSubtotal + newTax + cartData.shipping;
-
-    setTimeout(() => {
-      setCartData({
-        ...cartData,
-        items: updatedItems,
-        subtotal: newSubtotal,
-        tax: newTax,
-        total: newTotal,
-      });
-      setLoading(false);
-    }, 300);
+    await updateCartItem(itemId, newQuantity);
   };
 
   const handleRemoveItem = async (itemId: string) => {
-    if (!cartData) return;
-
-    setLoading(true);
-
-    // Remove item from cart
-    const updatedItems = cartData.items.filter((item) => item.id !== itemId);
-    const newSubtotal = updatedItems.reduce(
-      (sum, item) => sum + item.totalPrice,
-      0,
-    );
-    const newTax = Math.round(newSubtotal * 0.08);
-    const newTotal = newSubtotal + newTax + cartData.shipping;
-
-    setTimeout(() => {
-      setCartData({
-        ...cartData,
-        items: updatedItems,
-        subtotal: newSubtotal,
-        tax: newTax,
-        total: newTotal,
-      });
-      setLoading(false);
-    }, 300);
+    await removeCartItem(itemId);
   };
 
   const handleApplyCoupon = async () => {
-    if (!couponCode.trim() || !cartData) return;
-
-    setLoading(true);
-
+    if (!couponCode.trim() || !cart) return;
     // Simulate coupon validation
     setTimeout(() => {
       let discount = 0;
       if (couponCode.toLowerCase() === "save10") {
-        discount = cartData.subtotal * 0.1; // 10% discount
+        discount = cart.subtotal * 0.1; // 10% discount
       } else if (couponCode.toLowerCase() === "free5") {
         discount = 5; // $5 off
       }
-
-      const newTotal =
-        cartData.subtotal + cartData.tax + cartData.shipping - discount;
-
-      setCartData({
-        ...cartData,
-        couponCode: discount > 0 ? couponCode : undefined,
-        couponDiscount: discount,
-        total: Math.max(0, newTotal),
-      });
-      setLoading(false);
-
-      if (discount === 0) {
-        alert("Invalid coupon code");
-      }
+      // Chỉ hiển thị, không update lên server vì API chưa hỗ trợ coupon
+      // Nếu muốn lưu coupon lên server, cần bổ sung API
+      alert(discount > 0 ? `Áp dụng mã giảm giá thành công: -${discount}` : "Invalid coupon code");
     }, 500);
   };
 
   const handleProceedToCheckout = () => {
     // Navigate to checkout page
-    console.log("Proceeding to checkout with cart:", cartData);
+    console.log("Proceeding to checkout with cart:", cart);
     // In real app: window.location.href = '/checkout' or router.push('/checkout')
   };
 
   const handleContinueShopping = () => {
-    // Navigate back to product listing
-    console.log("Continue shopping");
-    // In real app: window.location.href = '/' or router.push('/')
+    navigate("/");
   };
 
   // Generate breadcrumb items
@@ -212,7 +90,7 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
     { label: "Shopping Cart" },
   ];
 
-  if (loading && !cartData) {
+  if (loading && !cart) {
     return (
       <div className="shopping-cart-page">
         <Header />
@@ -237,11 +115,11 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
             <h1 className="cart-title">Shopping Cart</h1>
           </div>
 
-          {cartData && cartData.items.length > 0 ? (
+          {cart && cart.items && cart.items.length > 0 ? (
             <>
               {/* Cart Items */}
               <div className="cart-items-section">
-                {cartData.items.map((item) => (
+                {cart.items.map((item: any) => (
                   <CartItem
                     key={item.id}
                     item={item}
@@ -275,10 +153,10 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
                   </button>
                   <div className="cart-summary-info">
                     <div className="items-count">
-                      {cartData.items.length} items
+                      {cart.items.length} items
                     </div>
                     <div className="subtotal-text">
-                      Subtotal: ${cartData.subtotal.toFixed(2)}
+                      Subtotal: ${formatMoney(cart?.subtotal)}
                     </div>
                   </div>
                 </div>
@@ -303,11 +181,11 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
                     Apply
                   </button>
                 </div>
-                {cartData.couponDiscount && cartData.couponDiscount > 0 && (
+                {cart.couponDiscount && cart.couponDiscount > 0 && (
                   <div className="coupon-applied">
                     <span>
-                      Coupon "{cartData.couponCode}" applied: -$
-                      {cartData.couponDiscount.toFixed(2)}
+                      Coupon "{cart.couponCode}" applied: -$
+                      {cart.couponDiscount.toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -315,7 +193,13 @@ const ShoppingCartPage: React.FC<ShoppingCartPageProps> = ({ userId }) => {
 
               {/* Cart Summary */}
               <CartSummary
-                cartData={cartData}
+                cartData={{
+                  ...cart,
+                  subtotal: cart.totalPrice,
+                  tax: 0,
+                  shipping: 15000,
+                  total: (cart.totalPrice || 0) + 15000,
+                }}
                 onProceedToCheckout={handleProceedToCheckout}
               />
 

@@ -17,6 +17,7 @@ import { CartProvider } from "./store/CartContext";
 import ShoppingCartPage from "./components/ShoppingCartPage";
 import { getAllCategories } from "./services/categoryService";
 import { getAllBooks } from "./services/bookService";
+import Dashboard  from  "./admin/Dashboard";
 
 function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -66,6 +67,7 @@ function App() {
           <Route path="/search" element={<ProductListingPage />} />
           <Route path="/account" element={<UserAccountPage />} />
           <Route path="/cart" element={<ShoppingCartPage />} />
+          <Route path="/admin" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </CartProvider>

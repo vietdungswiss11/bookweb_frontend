@@ -9,6 +9,11 @@ interface CartItemProps {
   loading?: boolean;
 }
 
+const formatPrice = (price?: number) => {
+  if (typeof price !== "number" || isNaN(price)) return "N/A";
+  return price.toLocaleString("vi-VN");
+};
+
 const CartItem: React.FC<CartItemProps> = ({
   item,
   onQuantityChange,
@@ -36,14 +41,14 @@ const CartItem: React.FC<CartItemProps> = ({
       <div className="cart-item-content">
         {/* Book Image */}
         <div className="cart-item-image">
-          <img src={item.book.image} alt={item.book.title} loading="lazy" />
+          <img src={item.book.images && item.book.images.length > 0 ? item.book.images[0].url : '/default-book.png'} alt={item.book.title} loading="lazy" />
         </div>
 
         {/* Book Info */}
         <div className="cart-item-info">
-          <h3 className="book-title">{item.book.title}</h3>
-          <p className="book-price">{item.book.discountPrice.toLocaleString('vi-VN')} đ {item.book.originalPrice > item.book.discountPrice && <span className="original-price">{item.book.originalPrice.toLocaleString('vi-VN')} đ</span>} {item.book.discountPercent > 0 && <span className="discount-percent">-{Math.round(item.book.discountPercent * 100)}%</span>}</p>
-          <p className="book-author">By: {item.book.author}</p>
+          <div className="cart-item-title" style={{ fontSize: '1rem', fontWeight: 500 }}>{item.book.title}</div>
+          <div className="cart-item-price" style={{ fontSize: '1rem', fontWeight: 600 }}>{formatPrice(item.book.discountPrice)} đ</div>
+          <div className="cart-item-author" style={{ fontSize: '0.9rem', color: '#666' }}>By: {item.book.author}</div>
         </div>
 
         {/* Quantity Controls */}
@@ -110,7 +115,7 @@ const CartItem: React.FC<CartItemProps> = ({
           {/* Item Total */}
           <div className="item-total">
             <span className="total-label">Total:</span>
-            <span className="total-price">{(item.book.discountPrice * item.quantity).toLocaleString('vi-VN')} đ</span>
+            <span className="total-price">{formatPrice(item.book.discountPrice * item.quantity)} đ</span>
           </div>
 
           {/* Remove Button */}

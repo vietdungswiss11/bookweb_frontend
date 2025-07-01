@@ -7,6 +7,9 @@ interface CartSummaryProps {
   onProceedToCheckout: () => void;
 }
 
+// Helper để format số tiền an toàn
+const formatMoney = (value: number | undefined) => typeof value === 'number' ? value.toFixed(2) : '0.00';
+
 const CartSummary: React.FC<CartSummaryProps> = ({
   cartData,
   onProceedToCheckout,
@@ -19,31 +22,33 @@ const CartSummary: React.FC<CartSummaryProps> = ({
           <div className="summary-row">
             <span className="summary-label">Subtotal</span>
             <span className="summary-value">
-              ${cartData.subtotal.toFixed(2)}
+              {typeof cartData.subtotal === 'number'
+                ? cartData.subtotal.toLocaleString('vi-VN') + ' đ'
+                : '0 đ'}
             </span>
           </div>
 
           <div className="summary-row">
             <span className="summary-label">Estimated Tax</span>
-            <span className="summary-value">${cartData.tax.toFixed(2)}</span>
+            <span className="summary-value">${formatMoney(cartData?.tax)}</span>
           </div>
 
           <div className="summary-row">
             <span className="summary-label">Shipping</span>
             <span className="summary-value">
-              {cartData.shipping === 0
-                ? "Free"
-                : `$${cartData.shipping.toFixed(2)}`}
+              {typeof cartData.shipping === 'number'
+                ? cartData.shipping.toLocaleString('vi-VN') + ' đ'
+                : '0 đ'}
             </span>
           </div>
 
-          {cartData.couponDiscount && cartData.couponDiscount > 0 && (
+          {cartData?.couponDiscount && cartData.couponDiscount > 0 && (
             <div className="summary-row discount-row">
               <span className="summary-label">
                 Discount ({cartData.couponCode})
               </span>
               <span className="summary-value discount">
-                -${cartData.couponDiscount.toFixed(2)}
+                -${formatMoney(cartData.couponDiscount)}
               </span>
             </div>
           )}
@@ -53,7 +58,9 @@ const CartSummary: React.FC<CartSummaryProps> = ({
           <div className="summary-row total-row">
             <span className="summary-label total-label">Total</span>
             <span className="summary-value total-value">
-              ${cartData.total.toFixed(2)}
+              {typeof cartData.total === 'number'
+                ? cartData.total.toLocaleString('vi-VN') + ' đ'
+                : '0 đ'}
             </span>
           </div>
         </div>

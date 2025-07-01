@@ -1,0 +1,156 @@
+.order-status-pie {
+  padding: 2rem;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pie-header {
+  margin-bottom: 2rem;
+}
+
+.pie-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+}
+
+.pie-subtitle {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.pie-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pie-chart-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  align-self: center;
+}
+
+.pie-chart {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.pie-segment {
+  transition: opacity 0.3s ease;
+  animation: pieSegmentGrow 0.8s ease-out forwards;
+  transform-origin: 50% 50%;
+}
+
+.pie-segment:hover {
+  opacity: 0.8;
+}
+
+.pie-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.pie-total {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.pie-total-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.pie-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.legend-item:hover {
+  background-color: #f8fafc;
+}
+
+.legend-color {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.legend-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.legend-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.legend-percentage {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@keyframes pieSegmentGrow {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .order-status-pie {
+    padding: 1rem;
+  }
+
+  .pie-chart-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  .pie-total {
+    font-size: 1.25rem;
+  }
+}
