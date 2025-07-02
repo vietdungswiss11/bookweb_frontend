@@ -250,56 +250,129 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
         <h2 className="section-title">{mode === 'add' ? 'Thêm địa chỉ mới' : 'Sửa địa chỉ'}</h2>
         <form className="profile-form" onSubmit={handleAddressSubmit} autoComplete="off">
           <div className="form-group">
-            <label>Họ và Tên*</label>
-            <input type="text" className="form-input" name="fullName" placeholder="Họ và Tên*" value={addressForm.fullName} onChange={handleAddressChange} />
+            <label className="required" htmlFor="fullName">Tên</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              id="fullName" 
+              name="fullName" 
+              placeholder="Tên*" 
+              value={addressForm.fullName} 
+              onChange={handleAddressChange} 
+            />
           </div>
-          {addressErrors.fullName && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.fullName}</div>}
+          {addressErrors.fullName && <div className="form-error">{addressErrors.fullName}</div>}
+          
           <div className="form-group">
-            <label>Điện thoại*</label>
-            <input type="text" className="form-input" name="phone" placeholder="Ex: 0972xxxx" value={addressForm.phone} onChange={handleAddressChange} />
+            <label className="required" htmlFor="phone">Điện thoại</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              id="phone" 
+              name="phone" 
+              placeholder="Ex: 0972xxxx" 
+              value={addressForm.phone} 
+              onChange={handleAddressChange} 
+            />
           </div>
-          {addressErrors.phone && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.phone}</div>}
+          {addressErrors.phone && <div className="form-error">{addressErrors.phone}</div>}
+          
           <div className="form-group">
-            <label>Quốc gia*</label>
-            <select className="form-input" name="country" value={addressForm.country} onChange={handleAddressChange}><option>Việt Nam</option></select>
+            <label className="required" htmlFor="country">Quốc gia</label>
+            <select 
+              className="form-input" 
+              id="country" 
+              name="country" 
+              value={addressForm.country} 
+              onChange={handleAddressChange}
+            >
+              <option value="Việt Nam">Việt Nam</option>
+            </select>
           </div>
-          {addressErrors.country && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.country}</div>}
+          {addressErrors.country && <div className="form-error">{addressErrors.country}</div>}
+          
           <div className="form-group">
-            <label>Tỉnh/Thành phố*</label>
-            <select className="form-input" name="province" value={addressForm.province} onChange={handleAddressChange}><option value="">Vui lòng chọn</option><option value="Hà Nội">Hà Nội</option><option value="Hồ Chí Minh">Hồ Chí Minh</option></select>
+            <label className="required" htmlFor="province">Tỉnh/Thành phố</label>
+            <select 
+              className="form-input" 
+              id="province" 
+              name="province" 
+              value={addressForm.province} 
+              onChange={handleAddressChange}
+            >
+              <option value="">Vui lòng chọn</option>
+              <option value="Hà Nội">Hà Nội</option>
+              <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+            </select>
           </div>
-          {addressErrors.province && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.province}</div>}
+          {addressErrors.province && <div className="form-error">{addressErrors.province}</div>}
+          
           <div className="form-group">
-            <label>Quận/Huyện*</label>
-            <input type="text" className="form-input" name="district" value={addressForm.district} onChange={handleAddressChange} />
+            <label className="required" htmlFor="district">Quận/Huyện</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              id="district" 
+              name="district" 
+              placeholder="" 
+              value={addressForm.district} 
+              onChange={handleAddressChange} 
+            />
           </div>
-          {addressErrors.district && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.district}</div>}
+          {addressErrors.district && <div className="form-error">{addressErrors.district}</div>}
+          
           <div className="form-group">
-            <label>Xã/Phường*</label>
-            <input type="text" className="form-input" name="ward" value={addressForm.ward} onChange={handleAddressChange} />
+            <label className="required" htmlFor="ward">Xã/Phường</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              id="ward" 
+              name="ward" 
+              placeholder="" 
+              value={addressForm.ward} 
+              onChange={handleAddressChange} 
+            />
           </div>
-          {addressErrors.ward && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.ward}</div>}
+          {addressErrors.ward && <div className="form-error">{addressErrors.ward}</div>}
+          
           <div className="form-group">
-            <label>Địa chỉ*</label>
-            <input type="text" className="form-input" name="address" placeholder="Địa chỉ" value={addressForm.address} onChange={handleAddressChange} />
+            <label className="required" htmlFor="address">Địa chỉ</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              id="address" 
+              name="address" 
+              placeholder="Địa chỉ" 
+              value={addressForm.address} 
+              onChange={handleAddressChange} 
+            />
           </div>
-          {addressErrors.address && <div style={{ color: '#d32f2f', fontSize: 13, marginBottom: 4 }}>{addressErrors.address}</div>}
+          {addressErrors.address && <div className="form-error">{addressErrors.address}</div>}
+          
           {submitMessage && (
-            <div style={{
-              color: submitMessage.type === 'success' ? 'green' : '#d32f2f',
-              marginTop: '16px',
-              textAlign: 'center',
-              fontWeight: 500
-            }}>
+            <div className={`submit-message ${submitMessage.type === 'error' ? 'error' : ''}`}>
               {submitMessage.text}
             </div>
           )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
-            <button type="button" onClick={handleBackToList} style={{ color: '#1976d2', textDecoration: 'none', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer' }}>&laquo; Quay lại</button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <span style={{ color: '#d32f2f', fontSize: 13 }}>(*) bắt buộc</span>
-              <button className="save-button" style={{ background: '#d32f2f', minWidth: 180 }} disabled={isSubmitting}>
-                {isSubmitting ? (mode === 'add' ? 'ĐANG LƯU...' : 'ĐANG CẬP NHẬT...') : (mode === 'add' ? 'LƯU ĐỊA CHỈ' : 'CẬP NHẬT')}
+          
+          <div className="form-bottom">
+            <button 
+              type="button" 
+              onClick={handleBackToList} 
+              className="back-button"
+            >
+              &laquo; Quay lại
+            </button>
+            <div className="form-bottom-right">
+              <span className="required-note">(*) bắt buộc</span>
+              <button 
+                className="save-button" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting 
+                  ? (mode === 'add' ? 'ĐANG LƯU...' : 'ĐANG CẬP NHẬT...') 
+                  : (mode === 'add' ? 'LƯU ĐỊA CHỈ' : 'CẬP NHẬT')
+                }
               </button>
             </div>
           </div>

@@ -22,3 +22,6 @@ export { AccountMainContent } from "./AccountMainContent";
 export { OrderItem } from "./OrderItem";
 export { ReviewItem } from "./ReviewItem";
 export { default as CategorySection } from "./CategorySection";
+export { default as CheckoutPage } from "./CheckoutPage";
+export { default as OrderSuccessPage } from "./OrderSuccessPage";
+export { default as PaymentMethodSelector } from "./PaymentMethodSelector";

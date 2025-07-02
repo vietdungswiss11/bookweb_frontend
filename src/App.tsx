@@ -15,9 +15,11 @@ import ProductListingPage from "./components/ProductListingPage";
 import { UserAccountPage } from "./components/UserAccountPage";
 import { CartProvider } from "./store/CartContext";
 import ShoppingCartPage from "./components/ShoppingCartPage";
+import CheckoutPage from "./components/CheckoutPage";
+import OrderSuccessPage from "./components/OrderSuccessPage";
 import { getAllCategories } from "./services/categoryService";
 import { getAllBooks } from "./services/bookService";
-import Dashboard  from  "./admin/Dashboard";
+import Dashboard from "./admin/Dashboard";
 
 function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -25,9 +27,11 @@ function HomePage() {
   useEffect(() => {
     getAllCategories().then(setCategories);
     // Lấy 10 sách mới nhất theo id giảm dần
-    getAllBooks({ page: 0, size: 10, sortBy: 'id', sortDir: 'desc' }).then(res => {
-      setNewReleases(res.books || []);
-    });
+    getAllBooks({ page: 0, size: 10, sortBy: "id", sortDir: "desc" }).then(
+      (res) => {
+        setNewReleases(res.books || []);
+      },
+    );
   }, []);
   return (
     <div className="bookstore-app">
@@ -52,10 +56,10 @@ function HomePage() {
 
 function App() {
   // Lấy danh mục sản phẩm từ generateRecommendedBooks
-  const productCategories = generateRecommendedBooks().map(book => ({
+  const productCategories = generateRecommendedBooks().map((book) => ({
     id: book.id,
     name: book.title,
-    icon: '📚',
+    icon: "📚",
   }));
   return (
     <CartProvider>
@@ -63,10 +67,18 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:bookId" element={<ProductDetailPage />} />
-          <Route path="/category/:categoryName" element={<ProductListingPage categories={productCategories} />} />
+          <Route
+            path="/category/:categoryName"
+            element={<ProductListingPage categories={productCategories} />}
+          />
           <Route path="/search" element={<ProductListingPage />} />
           <Route path="/account" element={<UserAccountPage />} />
           <Route path="/cart" element={<ShoppingCartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route
+            path="/order-success/:orderId"
+            element={<OrderSuccessPage />}
+          />
           <Route path="/admin" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>

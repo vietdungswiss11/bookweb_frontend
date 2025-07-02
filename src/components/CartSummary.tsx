@@ -1,6 +1,7 @@
 import React from "react";
 import "./CartSummary.css";
 import { CartData } from "./ShoppingCartPage";
+import { useNavigate } from "react-router-dom";
 
 interface CartSummaryProps {
   cartData: CartData;
@@ -14,6 +15,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({
   cartData,
   onProceedToCheckout,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="cart-summary">
       <div className="summary-content">
@@ -67,7 +70,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
 
         {/* Checkout Button */}
         <div className="checkout-section">
-          <button onClick={onProceedToCheckout} className="checkout-btn">
+          <button onClick={() => navigate('/checkout')} className="checkout-btn">
             Proceed to Checkout
           </button>
 

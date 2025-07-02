@@ -34,11 +34,19 @@ export interface CartData {
 }
 
 // Helper để format số tiền an toàn
-const formatMoney = (value: number | undefined) => typeof value === 'number' ? value.toFixed(2) : '0.00';
+const formatMoney = (value: number | undefined) =>
+  typeof value === "number" ? value.toFixed(2) : "0.00";
 
 const ShoppingCartPage: React.FC = () => {
-  const userId = localStorage.getItem('userId');
-  const { cart, loading, updateCartItem, removeCartItem, clearCart, fetchCart } = useCartApi(userId || "");
+  const userId = localStorage.getItem("userId");
+  const {
+    cart,
+    loading,
+    updateCartItem,
+    removeCartItem,
+    clearCart,
+    fetchCart,
+  } = useCartApi(userId || "");
   const [couponCode, setCouponCode] = useState("");
   const navigate = useNavigate();
 
@@ -47,7 +55,9 @@ const ShoppingCartPage: React.FC = () => {
   }, [fetchCart, userId]);
 
   if (!userId) {
-    return <AuthModal open={true} onClose={() => window.location.href = '/'} />;
+    return (
+      <AuthModal open={true} onClose={() => (window.location.href = "/")} />
+    );
   }
 
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
@@ -70,14 +80,17 @@ const ShoppingCartPage: React.FC = () => {
       }
       // Chỉ hiển thị, không update lên server vì API chưa hỗ trợ coupon
       // Nếu muốn lưu coupon lên server, cần bổ sung API
-      alert(discount > 0 ? `Áp dụng mã giảm giá thành công: -${discount}` : "Invalid coupon code");
+      alert(
+        discount > 0
+          ? `Áp dụng mã giảm giá thành công: -${discount}`
+          : "Invalid coupon code",
+      );
     }, 500);
   };
 
   const handleProceedToCheckout = () => {
     // Navigate to checkout page
-    console.log("Proceeding to checkout with cart:", cart);
-    // In real app: window.location.href = '/checkout' or router.push('/checkout')
+    navigate("/checkout");
   };
 
   const handleContinueShopping = () => {
@@ -152,9 +165,7 @@ const ShoppingCartPage: React.FC = () => {
                     </div>
                   </button>
                   <div className="cart-summary-info">
-                    <div className="items-count">
-                      {cart.items.length} items
-                    </div>
+                    <div className="items-count">{cart.items.length} items</div>
                     <div className="subtotal-text">
                       Subtotal: ${formatMoney(cart?.subtotal)}
                     </div>

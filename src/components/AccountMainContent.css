@@ -129,61 +129,12 @@
 }
 
 /* Profile Section */
+/* Profile Section - Updated to be full width */
 .profile-section {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
-  padding: 10px;
   width: 100%;
   max-width: 100%;
-  margin: 0;
-}
-
-.profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0;
-}
-
-.form-group label {
-  flex: 0 0 120px;
-  font-weight: 500;
-  color: #333;
-  margin-right: 16px;
-  font-size: 1rem;
-}
-
-.form-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: #fafbfc;
-}
-
-.save-button {
-  background: #d32f2f;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 40px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin: 32px auto 0 auto;
-  display: block;
-}
-
-.save-button:hover {
-  background: #b71c1c;
+  padding: 20px 16px;
+  box-sizing: border-box;
 }
 
 .profile-section .section-title {
@@ -192,6 +143,244 @@
   margin-bottom: 24px;
   color: #222;
   padding: 0;
+}
+
+/* Profile Form - Updated for full width layout */
+.profile-section .profile-form {
+  width: 100%;
+  max-width: 100%;
+}
+
+.profile-section .profile-form .form-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: nowrap; /* Prevent wrapping on desktop */
+}
+
+.profile-section .profile-form .form-group label {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px;
+  font-weight: 500;
+  margin-right: 0;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  color: #333;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.profile-section .profile-form .form-group label.required::after {
+  content: "*";
+  color: #d32f2f;
+  margin-left: 2px;
+}
+
+.profile-section .profile-form .form-group .form-input {
+  flex: 1;
+  min-width: 0;
+  max-width: none; /* Remove max-width constraint */
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  background: #fff;
+  transition: border-color 0.2s ease;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.profile-section .profile-form .form-group .form-input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+.profile-section .profile-form .form-group .form-input::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+/* Select styling to match input */
+.profile-section .profile-form .form-group select.form-input {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  background: #fff;
+  transition: border-color 0.2s ease;
+  height: 44px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.profile-section .profile-form .form-group select.form-input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+/* Error message styles */
+.form-error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-top: -16px;
+  margin-left: 180px; /* Adjust based on new label width */
+  margin-bottom: 16px;
+}
+
+/* Submit message styles */
+.submit-message {
+  color: green;
+  margin: 16px 0;
+  text-align: center;
+  font-weight: 500;
+  padding: 12px;
+  border-radius: 4px;
+  background-color: #f0f8f0;
+}
+
+.submit-message.error {
+  color: #d32f2f;
+  background-color: #fef2f2;
+}
+
+/* Bottom section with back button and save button */
+.form-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+  width: 100%;
+}
+
+.back-button {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 0;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+.form-bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.required-note {
+  color: #d32f2f;
+  font-size: 13px;
+}
+
+.save-button {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-width: 140px;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #b71c1c;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-section .profile-form .form-group {
+    flex-direction: column;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  .profile-section .profile-form .form-group label {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 0;
+  }
+  
+  .form-error {
+    margin-left: 0;
+  }
+  
+  .form-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .form-bottom-right {
+    justify-content: center;
+  }
+}
+
+/* Force desktop layout for screens wider than 768px */
+@media (min-width: 769px) {
+  .profile-section .profile-form .form-group {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+  
+  .profile-section .profile-form .form-group label {
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .profile-section .profile-form .form-group .form-input,
+  .profile-section .profile-form .form-group select.form-input {
+    flex: 1 !important;
+    min-width: 200px !important;
+  }
+}
+
+/* Address list section - full width */
+.address-list-section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+}
+/* Address list section - full width */
+.address-list-section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
 }
 
 /* Coming Soon Sections */

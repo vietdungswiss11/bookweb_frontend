@@ -23,4 +23,17 @@ export async function addAddress(userId: string | number, address: AddressPayloa
     }
 
     return res.json();
+}
+
+export async function getAddresses(userId: string | number): Promise<AddressPayload[]> {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/user/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (!res.ok) {
+        throw new Error('Failed to fetch addresses');
+    }
+    return res.json();
 } 
