@@ -4,6 +4,7 @@ import { AccountSidebar } from "./AccountSidebar";
 import { AccountMainContent } from "./AccountMainContent";
 import { Header } from "./index";
 import { getUserById } from '../services/userService';
+import { getOrdersByUserId } from '../services/orderService';
 import { useNavigate } from "react-router-dom";
 
 export type AccountSection =
@@ -31,12 +32,13 @@ export interface User {
   addresses?: Address[];
 }
 
-export interface Order {
-  id: string;
-  status: "shipped" | "in-transit" | "delivered";
+export interface OrderDTO {
+  id: number;
   orderNumber: string;
-  deliveryDate: string;
-  image: string;
+  orderDate: string;
+  status: string;
+  totalAmount: number;
+  // Thêm các trường khác nếu cần
 }
 
 export interface Review {
@@ -54,6 +56,7 @@ export interface Credit {
 export const UserAccountPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<AccountSection>("profile");
   const [user, setUser] = useState<User | null>(null);
+  const [orders, setOrders] = useState<OrderDTO[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,6 +72,7 @@ export const UserAccountPage: React.FC = () => {
           navigate('/');
         } else {
           setUser(data);
+          getOrdersByUserId(userId).then(setOrders).catch(() => setOrders([]));
         }
       })
       .catch(() => {
@@ -82,59 +86,6 @@ export const UserAccountPage: React.FC = () => {
       getUserById(userId).then(setUser);
     }
   };
-
-  // Sample orders data
-  const orders: Order[] = [
-    {
-      id: "1",
-      status: "shipped",
-      orderNumber: "#12345",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/d4b5a0/d4b5a0",
-    },
-    {
-      id: "2",
-      status: "in-transit",
-      orderNumber: "#12346",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/c8a882/c8a882",
-    },
-    {
-      id: "3",
-      status: "delivered",
-      orderNumber: "#12347",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/b89c7a/b89c7a",
-    },
-    {
-      id: "4",
-      status: "delivered",
-      orderNumber: "#12348",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/e8ddd4/e8ddd4",
-    },
-    {
-      id: "5",
-      status: "delivered",
-      orderNumber: "#12349",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/d2c1a8/d2c1a8",
-    },
-    {
-      id: "6",
-      status: "delivered",
-      orderNumber: "#12350",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/a89078/a89078",
-    },
-    {
-      id: "7",
-      status: "delivered",
-      orderNumber: "#12351",
-      deliveryDate: "May 15 - May 17",
-      image: "https://placehold.co/56x56/c4a584/c4a584",
-    },
-  ];
 
   // Sample reviews data
   const reviews: Review[] = [

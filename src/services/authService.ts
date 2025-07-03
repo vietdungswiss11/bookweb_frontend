@@ -6,7 +6,12 @@ export async function signin(email: string, password: string) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
-    return res.json();
+    const data = await res.json();
+    if (data.token && data.refreshToken) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('refreshToken', data.refreshToken);
+    }
+    return data;
 }
 
 export async function signup(email: string, password: string, confirmPassword: string, phoneNumber: string, name: string) {

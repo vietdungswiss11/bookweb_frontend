@@ -1,40 +1,42 @@
+import { authFetch } from "./authFetch";
+
 const API_URL = "http://localhost:8080";
 
-export interface OrderRequest {
-  userId: string;
+export interface OrderItemRequestDTO {
+  bookId: number;
+  quantity: number;
+}
+
+export interface CreateOrderRequestDTO {
+  userId: number;
+  addressId: number;
   paymentMethod: string;
-  shippingAddress: {
-    fullName: string;
-    phone: string;
-    address: string;
-    city: string;
-    district: string;
-    ward: string;
-  };
-  items: Array<{
-    bookId: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  shippingFee: number;
-  couponCode?: string;
-  couponDiscount?: number;
+  shippingProvider: string;
+  orderItems: OrderItemRequestDTO[];
 }
 
 export interface OrderResponse {
   id: string;
   status:
-    | "PENDING"
-    | "CONFIRMED"
-    | "PAID"
-    | "SHIPPED"
-    | "DELIVERED"
-    | "CANCELLED";
+  | "PENDING"
+  | "CONFIRMED"
+  | "PAID"
+  | "SHIPPED"
+  | "DELIVERED"
+  | "CANCELLED";
   paymentMethod: string;
   paymentUrl?: string; // For Momo/VNPAY redirect
   totalAmount: number;
   createdAt: string;
+}
+
+export interface OrderDTO {
+  id: number;
+  orderNumber: string;
+  orderDate: string;
+  status: string;
+  totalAmount: number;
+  // Thêm các trường khác nếu cần
 }
 
 const getAuthHeaders = (): Record<string, string> => {
@@ -46,9 +48,9 @@ const getAuthHeaders = (): Record<string, string> => {
 };
 
 export async function createOrder(
-  orderData: OrderRequest,
+  orderData: CreateOrderRequestDTO,
 ): Promise<OrderResponse> {
-  const response = await fetch(`${API_URL}/orders`, {
+  const response = await authFetch(`${API_URL}/orders`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(orderData),
@@ -62,7 +64,7 @@ export async function createOrder(
 }
 
 export async function getOrderById(orderId: string): Promise<OrderResponse> {
-  const response = await fetch(`${API_URL}/orders/${orderId}`, {
+  const response = await authFetch(`${API_URL}/orders/${orderId}`, {
     headers: getAuthHeaders(),
   });
 
@@ -74,7 +76,7 @@ export async function getOrderById(orderId: string): Promise<OrderResponse> {
 }
 
 export async function getUserOrders(userId: string): Promise<OrderResponse[]> {
-  const response = await fetch(`${API_URL}/users/${userId}/orders`, {
+  const response = await authFetch(`${API_URL}/users/${userId}/orders`, {
     headers: getAuthHeaders(),
   });
 
@@ -89,7 +91,7 @@ export async function updateOrderStatus(
   orderId: string,
   status: string,
 ): Promise<OrderResponse> {
-  const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
+  const response = await authFetch(`${API_URL}/orders/${orderId}/status`, {
     method: "PATCH",
     headers: getAuthHeaders(),
     body: JSON.stringify({ status }),
@@ -100,4 +102,10 @@ export async function updateOrderStatus(
   }
 
   return response.json();
+}
+
+export async function getOrdersByUserId(userId: string | number) {
+  const res = await authFetch(`${API_URL}/orders/user/${userId}`);
+  if (!res.ok) throw new Error("Failed to fetch orders");
+  return res.json();
 }

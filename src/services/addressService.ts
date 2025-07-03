@@ -1,3 +1,5 @@
+import { authFetch } from "./authFetch";
+
 const API_URL = 'http://localhost:8080/addresses';
 
 export interface AddressPayload {
@@ -10,7 +12,7 @@ export interface AddressPayload {
 
 export async function addAddress(userId: string | number, address: AddressPayload) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/user/${userId}`, {
+    const res = await authFetch(`${API_URL}/user/${userId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -29,7 +31,7 @@ export async function addAddress(userId: string | number, address: AddressPayloa
 
 export async function getAddresses(userId: string | number): Promise<AddressPayload[]> {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/user/${userId}`, {
+    const res = await authFetch(`${API_URL}/user/${userId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

@@ -5,7 +5,7 @@ import Header from "./Header";
 import Breadcrumbs from "./Breadcrumbs";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import { useCartApi } from "../hooks/useCartApi";
-import { createOrder, OrderRequest } from "../services/orderService";
+import { createOrder } from "../services/orderService";
 import AuthModal from "./AuthModal";
 import { getAddresses, AddressPayload } from "../services/addressService";
 
@@ -21,7 +21,7 @@ interface ShippingAddress {
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-  const { cart, loading, fetchCart } = useCartApi(userId || "");
+  const { cart, loading, fetchCart, clearCart } = useCartApi(userId || "");
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [bankType, setBankType] = useState("momo");
@@ -117,40 +117,34 @@ const CheckoutPage: React.FC = () => {
 
       const selectedAddress = addresses[selectedAddressIdx];
 
-      const orderData: OrderRequest = {
-        userId: userId!,
+      if (!selectedAddress || typeof selectedAddress.id !== 'number') {
+        setOrderError("Địa chỉ giao hàng không hợp lệ.");
+        setOrderLoading(false);
+        return;
+      }
+
+      const orderData = {
+        userId: Number(userId),
+        addressId: Number(selectedAddress.id),
         paymentMethod: finalPaymentMethod,
-        shippingAddress: {
-          fullName: selectedAddress.recipientName,
-          phone: selectedAddress.phoneNumber,
-          address: selectedAddress.addressLine,
-          city: "",
-          district: "",
-          ward: "",
-        },
-        items: cart.items.map((item: any) => ({
+        shippingProvider: "GHTK",
+        orderItems: cart.items.map((item: any) => ({
           bookId: item.book.id,
           quantity: item.quantity,
-          price: item.book.discountPrice,
         })),
-        totalAmount: (cart.totalPrice || 0) + 15000, // Add shipping fee
-        shippingFee: 15000,
-        couponCode: cart.couponCode,
-        couponDiscount: cart.couponDiscount || 0,
       };
 
       const orderResponse = await createOrder(orderData);
 
-      // Handle different payment methods
+      // Xử lý chuyển trang hoặc redirect như cũ
       if (finalPaymentMethod === "momo" || finalPaymentMethod === "vnpay") {
         if (orderResponse.paymentUrl) {
-          // Redirect to payment gateway
           window.location.href = orderResponse.paymentUrl;
         } else {
           setOrderError("Không thể tạo liên kết thanh toán. Vui lòng thử lại.");
         }
       } else {
-        // COD or manual bank transfer - redirect to success page
+        await clearCart();
         navigate(`/order-success/${orderResponse.id}`);
       }
     } catch (error) {

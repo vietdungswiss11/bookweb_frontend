@@ -1,9 +1,18 @@
 import React from "react";
 import "./OrderItem.css";
-import { Order } from "./UserAccountPage";
+
+// Định nghĩa lại kiểu Order phù hợp với OrderDTO trả về từ backend
+export interface OrderDTO {
+  id: number;
+  orderNumber: string;
+  orderDate: string;
+  status: string;
+  totalAmount: number;
+  // Thêm các trường khác nếu cần
+}
 
 interface OrderItemProps {
-  order: Order;
+  order: OrderDTO;
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({ order }) => {
@@ -23,13 +32,12 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order }) => {
   return (
     <div className="order-item">
       <div className="order-content">
-        <img src={order.image} alt="Order item" className="order-image" />
         <div className="order-details">
           <div className="order-title">
             {getStatusDisplayName(order.status)}
           </div>
           <div className="order-info">
-            Order {order.orderNumber}. Arriving {order.deliveryDate}
+            Order {order.orderNumber}. Đặt ngày {order.orderDate}
           </div>
         </div>
       </div>

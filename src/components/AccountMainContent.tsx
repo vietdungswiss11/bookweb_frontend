@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./AccountMainContent.css";
-import { AccountSection, User, Order, Review, Credit } from "./UserAccountPage";
+import { AccountSection, User, Review, Credit } from "./UserAccountPage";
+import { OrderDTO } from "../services/orderService";
 import { OrderItem } from "./OrderItem";
 import { ReviewItem } from "./ReviewItem";
 import { addAddress } from "../services/addressService";
+import { getOrderById } from "../services/orderService";
 
 interface AccountMainContentProps {
   activeSection: AccountSection;
   user: User;
-  orders: Order[];
+  orders: OrderDTO[];
   reviews: Review[];
   credits: Credit[];
   onUserRefresh: () => void;
@@ -20,6 +22,34 @@ interface Address {
   phoneNumber: string;
   addressLine: string;
 }
+
+// Thêm component hiển thị chi tiết đơn hàng
+const OrderDetail: React.FC<{ detail: any; onBack: () => void }> = ({ detail, onBack }) => (
+  <div className="order-detail-section" >
+    <button className="back-button" onClick={onBack} style={{ marginBottom: 16, background: '#1976d2', color: '#fff', border: 'none', borderRadius: 6, padding: '8px 20px', fontWeight: 600, cursor: 'pointer' }}>&laquo; Quay lại</button>
+    <h2 style={{ marginBottom: 24, color: '#1976d2' }}>Chi tiết đơn hàng</h2>
+    <div style={{ marginBottom: 10 }}><b>Mã đơn hàng:</b> {detail.orderNumber}</div>
+    <div style={{ marginBottom: 10 }}><b>Ngày đặt:</b> {detail.orderDate}</div>
+    <div style={{ marginBottom: 10 }}><b>Trạng thái:</b> <span style={{ color: detail.status === 'PENDING' ? '#ff9800' : detail.status === 'DELIVERED' ? '#4caf50' : '#1976d2', fontWeight: 600 }}>{detail.status}</span></div>
+    <div style={{ marginBottom: 10 }}><b>Tổng tiền:</b> <span style={{ color: '#d32f2f', fontWeight: 600 }}>{detail.totalAmount?.toLocaleString()} đ</span></div>
+    <div style={{ marginBottom: 10 }}><b>Địa chỉ giao hàng:</b> <span style={{ color: '#333' }}>{detail.addressDTO?.addressLine} - {detail.addressDTO?.recipientName} - {detail.addressDTO?.phoneNumber}</span></div>
+    <div style={{ marginBottom: 10 }}><b>Phương thức thanh toán:</b> {detail.paymentDTO?.paymentMethod}</div>
+    <div style={{ marginBottom: 10 }}><b>Trạng thái thanh toán:</b> {detail.paymentDTO?.status}</div>
+    <div style={{ marginBottom: 10 }}><b>Vận chuyển:</b> {detail.shippingDTO?.shippingProvider} - {detail.shippingDTO?.status}</div>
+    <div style={{ marginBottom: 10 }}><b>Phí vận chuyển:</b> {detail.shippingFee?.toLocaleString()} đ</div>
+    <div style={{ margin: '18px 0 8px 0', fontWeight: 600 }}>Danh sách sản phẩm:</div>
+    <ul style={{ paddingLeft: 24, marginBottom: 18 }}>
+      {detail.orderItems?.map((item: any) => (
+        <li key={item.id} style={{ marginBottom: 8, background: '#f5f5f5', borderRadius: 6, padding: 10 }}>
+          <b>{item.book?.title}</b> <span style={{ color: '#888' }}>(Tác giả: {item.book?.author})</span><br />
+          SL: <b>{item.quantity}</b> | Giá: <b>{item.price?.toLocaleString()} đ</b> | Tổng: <b style={{ color: '#d32f2f' }}>{item.totalPrice?.toLocaleString()} đ</b>
+        </li>
+      ))}
+    </ul>
+    <div style={{ marginBottom: 6 }}><b>Tạm tính:</b> {detail.subtotal?.toLocaleString()} đ</div>
+    <div style={{ fontWeight: 700, fontSize: 18 }}><b>Tổng thanh toán:</b> <span style={{ color: '#d32f2f' }}>{detail.totalAmount?.toLocaleString()} đ</span></div>
+  </div>
+);
 
 export const AccountMainContent: React.FC<AccountMainContentProps> = ({
   activeSection,
@@ -45,6 +75,9 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
   const [mode, setMode] = useState<'list' | 'add' | 'edit'>('list');
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderDTO | null>(null);
+  const [orderDetail, setOrderDetail] = useState<any>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
 
   useEffect(() => {
     if (activeSection === 'address') {
@@ -131,6 +164,19 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     }
   };
 
+  const handleOrderClick = async (order: OrderDTO) => {
+    setLoadingDetail(true);
+    try {
+      const detail = await getOrderById(order.id.toString());
+      setOrderDetail(detail);
+      setSelectedOrder(order);
+    } catch (e) {
+      // Xử lý lỗi nếu cần
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
+
   const renderProfileSection = () => (
     <div className="profile-section">
       <h2 className="section-title">My Profile</h2>
@@ -191,12 +237,48 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
 
   const renderOrdersSection = () => (
     <div className="orders-section">
-      <h2 className="section-title">My Orders</h2>
-      <div className="orders-list">
-        {orders.map((order) => (
-          <OrderItem key={order.id} order={order} />
-        ))}
-      </div>
+      {!orderDetail ? (
+        <>
+          <h2 className="section-title" style={{ color: '#1976d2', marginBottom: 24 }}>My Orders</h2>
+          <div className="orders-list">
+            {orders.length === 0 && <div>Bạn chưa có đơn hàng nào.</div>}
+            {orders.map((order: OrderDTO) => (
+              <div
+                key={order.id}
+                className="order-card"
+                onClick={() => handleOrderClick(order)}
+                style={{
+                  cursor: 'pointer',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 10,
+                  padding: 20,
+                  margin: '16px auto',
+                  background: '#fff',
+                  boxShadow: '0 1px 6px #0001',
+                  transition: 'box-shadow 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '80%',
+                  maxWidth: 700,
+                  minWidth: 320
+                }}
+                onMouseOver={e => (e.currentTarget.style.boxShadow = '0 4px 16px #0002')}
+                onMouseOut={e => (e.currentTarget.style.boxShadow = '0 1px 6px #0001')}
+              >
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>Mã đơn: {order.orderNumber}</div>
+                  <div style={{ color: '#555', marginBottom: 2 }}>Ngày đặt: {order.orderDate}</div>
+                  <div>Trạng thái: <span style={{ color: order.status === 'PENDING' ? '#ff9800' : order.status === 'DELIVERED' ? '#4caf50' : '#1976d2', fontWeight: 600 }}>{order.status}</span></div>
+                </div>
+                <div style={{ fontWeight: 700, color: '#d32f2f', fontSize: 18 }}>{order.totalAmount.toLocaleString()} đ</div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        loadingDetail ? <div>Đang tải chi tiết...</div> : <OrderDetail detail={orderDetail} onBack={() => setOrderDetail(null)} />
+      )}
     </div>
   );
 
@@ -251,53 +333,53 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
         <form className="profile-form" onSubmit={handleAddressSubmit} autoComplete="off">
           <div className="form-group">
             <label className="required" htmlFor="fullName">Tên</label>
-            <input 
-              type="text" 
-              className="form-input" 
-              id="fullName" 
-              name="fullName" 
-              placeholder="Tên*" 
-              value={addressForm.fullName} 
-              onChange={handleAddressChange} 
+            <input
+              type="text"
+              className="form-input"
+              id="fullName"
+              name="fullName"
+              placeholder="Tên*"
+              value={addressForm.fullName}
+              onChange={handleAddressChange}
             />
           </div>
           {addressErrors.fullName && <div className="form-error">{addressErrors.fullName}</div>}
-          
+
           <div className="form-group">
             <label className="required" htmlFor="phone">Điện thoại</label>
-            <input 
-              type="text" 
-              className="form-input" 
-              id="phone" 
-              name="phone" 
-              placeholder="Ex: 0972xxxx" 
-              value={addressForm.phone} 
-              onChange={handleAddressChange} 
+            <input
+              type="text"
+              className="form-input"
+              id="phone"
+              name="phone"
+              placeholder="Ex: 0972xxxx"
+              value={addressForm.phone}
+              onChange={handleAddressChange}
             />
           </div>
           {addressErrors.phone && <div className="form-error">{addressErrors.phone}</div>}
-          
+
           <div className="form-group">
             <label className="required" htmlFor="country">Quốc gia</label>
-            <select 
-              className="form-input" 
-              id="country" 
-              name="country" 
-              value={addressForm.country} 
+            <select
+              className="form-input"
+              id="country"
+              name="country"
+              value={addressForm.country}
               onChange={handleAddressChange}
             >
               <option value="Việt Nam">Việt Nam</option>
             </select>
           </div>
           {addressErrors.country && <div className="form-error">{addressErrors.country}</div>}
-          
+
           <div className="form-group">
             <label className="required" htmlFor="province">Tỉnh/Thành phố</label>
-            <select 
-              className="form-input" 
-              id="province" 
-              name="province" 
-              value={addressForm.province} 
+            <select
+              className="form-input"
+              id="province"
+              name="province"
+              value={addressForm.province}
               onChange={handleAddressChange}
             >
               <option value="">Vui lòng chọn</option>
@@ -306,71 +388,71 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
             </select>
           </div>
           {addressErrors.province && <div className="form-error">{addressErrors.province}</div>}
-          
+
           <div className="form-group">
             <label className="required" htmlFor="district">Quận/Huyện</label>
-            <input 
-              type="text" 
-              className="form-input" 
-              id="district" 
-              name="district" 
-              placeholder="" 
-              value={addressForm.district} 
-              onChange={handleAddressChange} 
+            <input
+              type="text"
+              className="form-input"
+              id="district"
+              name="district"
+              placeholder=""
+              value={addressForm.district}
+              onChange={handleAddressChange}
             />
           </div>
           {addressErrors.district && <div className="form-error">{addressErrors.district}</div>}
-          
+
           <div className="form-group">
             <label className="required" htmlFor="ward">Xã/Phường</label>
-            <input 
-              type="text" 
-              className="form-input" 
-              id="ward" 
-              name="ward" 
-              placeholder="" 
-              value={addressForm.ward} 
-              onChange={handleAddressChange} 
+            <input
+              type="text"
+              className="form-input"
+              id="ward"
+              name="ward"
+              placeholder=""
+              value={addressForm.ward}
+              onChange={handleAddressChange}
             />
           </div>
           {addressErrors.ward && <div className="form-error">{addressErrors.ward}</div>}
-          
+
           <div className="form-group">
             <label className="required" htmlFor="address">Địa chỉ</label>
-            <input 
-              type="text" 
-              className="form-input" 
-              id="address" 
-              name="address" 
-              placeholder="Địa chỉ" 
-              value={addressForm.address} 
-              onChange={handleAddressChange} 
+            <input
+              type="text"
+              className="form-input"
+              id="address"
+              name="address"
+              placeholder="Địa chỉ"
+              value={addressForm.address}
+              onChange={handleAddressChange}
             />
           </div>
           {addressErrors.address && <div className="form-error">{addressErrors.address}</div>}
-          
+
           {submitMessage && (
             <div className={`submit-message ${submitMessage.type === 'error' ? 'error' : ''}`}>
               {submitMessage.text}
             </div>
           )}
-          
+
           <div className="form-bottom">
-            <button 
-              type="button" 
-              onClick={handleBackToList} 
+            <button
+              type="button"
+              onClick={handleBackToList}
               className="back-button"
             >
               &laquo; Quay lại
             </button>
             <div className="form-bottom-right">
               <span className="required-note">(*) bắt buộc</span>
-              <button 
-                className="save-button" 
+              <button
+                className="save-button"
                 disabled={isSubmitting}
               >
-                {isSubmitting 
-                  ? (mode === 'add' ? 'ĐANG LƯU...' : 'ĐANG CẬP NHẬT...') 
+                {isSubmitting
+                  ? (mode === 'add' ? 'ĐANG LƯU...' : 'ĐANG CẬP NHẬT...')
                   : (mode === 'add' ? 'LƯU ĐỊA CHỈ' : 'CẬP NHẬT')
                 }
               </button>
@@ -406,7 +488,7 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
       <div className="content-section">
         <h2 className="section-title">Your orders</h2>
         <div className="orders-list">
-          {orders.map((order) => (
+          {orders.map((order: OrderDTO) => (
             <OrderItem key={order.id} order={order} />
           ))}
         </div>
