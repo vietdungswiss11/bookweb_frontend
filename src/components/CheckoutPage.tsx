@@ -41,7 +41,9 @@ const CheckoutPage: React.FC = () => {
   useEffect(() => {
     if (userId) {
       fetchCart();
+      console.log("userId khi lấy địa chỉ:", userId);
       getAddresses(userId).then(data => {
+        console.log("DANH SÁCH ĐỊA CHỈ TRẢ VỀ:", data);
         setAddresses(data);
         setSelectedAddressIdx(0);
       });
@@ -215,7 +217,7 @@ const CheckoutPage: React.FC = () => {
               ) : (
                 <div className="address-list">
                   {addresses.map((addr, idx) => (
-                    <label key={idx} style={{ display: 'block', marginBottom: 8 }}>
+                    <label key={addr.id} style={{ display: 'block', marginBottom: 8 }}>
                       <input
                         type="radio"
                         name="shippingAddress"
@@ -224,9 +226,12 @@ const CheckoutPage: React.FC = () => {
                         onChange={() => setSelectedAddressIdx(idx)}
                       />
                       {addr.recipientName} - {addr.phoneNumber} - {addr.addressLine}
+                      {addr.default && (
+                        <span style={{ color: 'green', marginLeft: 8 }}>(Mặc định)</span>
+                      )}
                     </label>
                   ))}
-                  <button onClick={() => navigate('/account/addresses')} style={{ marginTop: 8 }}>
+                  <button className="btn btn-primary" onClick={() => navigate('/account/addresses')} style={{ marginTop: 12 }}>
                     Quản lý địa chỉ
                   </button>
                 </div>

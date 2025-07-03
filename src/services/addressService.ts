@@ -1,9 +1,11 @@
 const API_URL = 'http://localhost:8080/addresses';
 
 export interface AddressPayload {
-    recipientName: string;
-    phoneNumber: string;
+    id?: number;
     addressLine: string;
+    phoneNumber: string;
+    recipientName: string;
+    default?: boolean;
 }
 
 export async function addAddress(userId: string | number, address: AddressPayload) {
