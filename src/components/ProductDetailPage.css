@@ -662,3 +662,19 @@
     height: 22px;
   }
 }
+
+.average-rating {
+  color: #1976d2;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.average-rating-number {
+  font-size: 38px;
+  font-weight: 700;
+  color: #ec9006;
+  margin-bottom: 4px;
+  text-align: center;
+}

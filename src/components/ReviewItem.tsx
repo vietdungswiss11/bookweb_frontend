@@ -1,23 +1,36 @@
 import React from "react";
 import "./ReviewItem.css";
 import { Review } from "./UserAccountPage";
+import { useNavigate } from "react-router-dom";
 
 interface ReviewItemProps {
   review: Review;
 }
 
 export const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
+  const bookTitle = review.book?.title || review.bookTitle || "(No title)";
+  const image = review.book?.imageUrl || review.image || "https://placehold.co/56x56/c2a078/c2a078";
+  const content = review.content || "";
+  const date = review.createdAt ? new Date(review.createdAt).toLocaleDateString('vi-VN') : "";
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (review.book?.id) {
+      navigate(`/product/${review.book.id}`);
+    }
+  };
   return (
-    <div className="review-item">
+    <div className="review-item" style={{ cursor: 'pointer' }} onClick={handleClick}>
       <div className="review-content">
         <img
-          src={review.image}
-          alt={review.bookTitle}
+          src={image}
+          alt={bookTitle}
           className="review-image"
         />
         <div className="review-details">
-          <div className="review-title">{review.bookTitle}</div>
+          <div className="review-title">{bookTitle}</div>
           <div className="review-rating">{review.rating}/5 stars</div>
+          {content && <div className="review-text">{content}</div>}
+          {date && <div className="review-date">{date}</div>}
         </div>
       </div>
       <div className="review-arrow">

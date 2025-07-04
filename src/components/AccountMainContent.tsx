@@ -6,6 +6,8 @@ import { OrderItem } from "./OrderItem";
 import { ReviewItem } from "./ReviewItem";
 import { addAddress } from "../services/addressService";
 import { getOrderById } from "../services/orderService";
+import { getReviewsByUserId } from "../services/reviewService";
+import { updateUser } from "../services/userService";
 
 interface AccountMainContentProps {
   activeSection: AccountSection;
@@ -78,6 +80,13 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
   const [selectedOrder, setSelectedOrder] = useState<OrderDTO | null>(null);
   const [orderDetail, setOrderDetail] = useState<any>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [profileForm, setProfileForm] = useState({
+    name: user.name || '',
+    email: user.email || '',
+    phoneNumber: user.phoneNumber || '',
+  });
+  const [profileMsg, setProfileMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeSection === 'address') {
@@ -92,6 +101,23 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
       }
     }
   }, [activeSection, mode]);
+
+  useEffect(() => {
+    if (activeSection === 'reviews') {
+      const userId = user?.id || localStorage.getItem('userId');
+      if (userId) {
+        getReviewsByUserId(userId).then(data => setUserReviews(Array.isArray(data) ? data : []));
+      }
+    }
+  }, [activeSection, user]);
+
+  useEffect(() => {
+    setProfileForm({
+      name: user.name || '',
+      email: user.email || '',
+      phoneNumber: user.phoneNumber || '',
+    });
+  }, [user]);
 
   const handleAddClick = () => {
     setMode('add');
@@ -177,18 +203,35 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     }
   };
 
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProfileForm({ ...profileForm, [e.target.name]: e.target.value });
+  };
+
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfileMsg(null);
+    try {
+      await updateUser(user.id, profileForm);
+      setProfileMsg('Cập nhật thành công!');
+      if (typeof onUserRefresh === 'function') onUserRefresh();
+    } catch (err: any) {
+      setProfileMsg('Cập nhật thất bại!');
+    }
+  };
+
   const renderProfileSection = () => (
     <div className="profile-section">
       <h2 className="section-title">My Profile</h2>
-      <div className="profile-form">
+      <form className="profile-form" onSubmit={handleProfileSubmit} autoComplete="off">
         <div className="form-group">
           <label htmlFor="name">Full Name</label>
           <input
             type="text"
             id="name"
-            value={user.name || 'Chưa có'}
+            name="name"
+            value={profileForm.name}
             className="form-input"
-            readOnly
+            onChange={handleProfileChange}
           />
         </div>
         <div className="form-group">
@@ -196,42 +239,45 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
           <input
             type="email"
             id="email"
-            value={user.email || 'Chưa có'}
+            name="email"
+            value={profileForm.email}
             className="form-input"
-            readOnly
+            onChange={handleProfileChange}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="phone">Phone Number</label>
+          <label htmlFor="phoneNumber">Phone Number</label>
           <input
             type="tel"
-            id="phone"
-            value={user.phoneNumber || 'Chưa có'}
+            id="phoneNumber"
+            name="phoneNumber"
+            value={profileForm.phoneNumber}
             className="form-input"
-            readOnly
+            onChange={handleProfileChange}
           />
         </div>
         <div className="form-group">
           <label>Gender</label>
           <div style={{ display: 'flex', gap: '24px' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="radio" name="gender" value="male" defaultChecked readOnly /> Nam
+              <input type="radio" name="gender" value="male" checked={user.gender === 'male'} readOnly /> Nam
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="radio" name="gender" value="female" readOnly /> Nữ
+              <input type="radio" name="gender" value="female" checked={user.gender === 'female'} readOnly /> Nữ
             </label>
           </div>
         </div>
         <div className="form-group">
           <label>Birthday</label>
           <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
-            <input type="text" className="form-input" placeholder="DD" style={{ maxWidth: 80 }} readOnly />
-            <input type="text" className="form-input" placeholder="MM" style={{ maxWidth: 80 }} readOnly />
-            <input type="text" className="form-input" placeholder="YYYY" style={{ maxWidth: 120 }} readOnly />
+            <input type="text" className="form-input" placeholder="DD" style={{ maxWidth: 80 }} value={user.birthday?.split('-')[2] || ''} readOnly />
+            <input type="text" className="form-input" placeholder="MM" style={{ maxWidth: 80 }} value={user.birthday?.split('-')[1] || ''} readOnly />
+            <input type="text" className="form-input" placeholder="YYYY" style={{ maxWidth: 120 }} value={user.birthday?.split('-')[0] || ''} readOnly />
           </div>
         </div>
-        <button className="save-button" disabled>Save Changes</button>
-      </div>
+        {profileMsg && <div className={`submit-message${profileMsg.includes('thất bại') ? ' error' : ''}`}>{profileMsg}</div>}
+        <button className="save-button" type="submit">Save Changes</button>
+      </form>
     </div>
   );
 
@@ -286,9 +332,9 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     <div className="reviews-section">
       <h2 className="section-title">My Reviews</h2>
       <div className="reviews-list">
-        {reviews.map((review) => (
+        {userReviews.length > 0 ? userReviews.map((review) => (
           <ReviewItem key={review.id} review={review} />
-        ))}
+        )) : <div>Bạn chưa có đánh giá nào.</div>}
       </div>
     </div>
   );
@@ -541,3 +587,4 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     </div>
   );
 };
+

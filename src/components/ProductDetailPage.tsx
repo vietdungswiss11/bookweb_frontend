@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./ProductDetailPage.css";
 import Breadcrumbs from "./Breadcrumbs";
 import ProductActions from "./ProductActions";
-import { getBookById } from "../services/bookService";
+import { getBookById, getRelatedBooks } from "../services/bookService";
 import { useCartApi } from "../hooks/useCartApi";
+import { getReviewsByBookId } from "../services/reviewService";
 
 interface ProductDetailPageProps {
   productId?: string;
@@ -31,6 +32,14 @@ interface Book {
   image: string;
 }
 
+interface ReviewDTO {
+  id: number;
+  content: string;
+  rating: number;
+  createdAt: string;
+  user: { id: number; name: string };
+}
+
 const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const { bookId } = useParams<{ bookId: string }>();
   console.log("Component render, bookId param:", bookId);
@@ -41,6 +50,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
   const { addToCart } = useCartApi(userId || "");
+  const [reviews, setReviews] = useState<ReviewDTO[]>([]);
+  const [relatedBooks, setRelatedBooks] = useState<any[]>([]);
 
   useEffect(() => {
     console.log("useEffect run, bookId:", bookId);
@@ -58,6 +69,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
           } else {
             setSelectedImage("https://placehold.co/472x300");
           }
+          getReviewsByBookId(id).then(data => setReviews(Array.isArray(data) ? data : []));
+          getRelatedBooks(id, 5).then((books) => {
+            setRelatedBooks(Array.isArray(books) ? books.filter(b => b.id !== id) : []);
+          });
         });
       }
     }
@@ -134,37 +149,6 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
     }
   ];
 
-  const relatedBooks: Book[] = [
-    {
-      id: 1,
-      title: "Cây Đời",
-      author: "Jane Goodall",
-      price: 250000,
-      image: "https://placehold.co/176x235/8B7355/8B7355",
-    },
-    {
-      id: 2,
-      title: "Nguồn Gốc Thay Đổi",
-      author: "Alex Smith",
-      price: 320000,
-      image: "https://placehold.co/176x235/6B4423/6B4423",
-    },
-    {
-      id: 3,
-      title: "Hành Trình Xanh",
-      author: "Lisa Green",
-      price: 280000,
-      image: "https://placehold.co/176x235/7A9B57/7A9B57",
-    },
-    {
-      id: 4,
-      title: "Hạt Giống Hy Vọng",
-      author: "John Doe",
-      price: 350000,
-      image: "https://placehold.co/176x235/C4A373/C4A373",
-    },
-  ];
-
   const ratingDistribution = [
     { stars: 5, count: 473, percentage: 71 },
     { stars: 4, count: 115, percentage: 17 },
@@ -173,27 +157,23 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
     { stars: 1, count: 13, percentage: 2 },
   ];
 
+  const safeReviews = Array.isArray(reviews) ? reviews : [];
+  const filteredReviews = safeReviews.filter(review => {
+    if (selectedRatingFilter === "all") return true;
+    const filterNum = parseInt(selectedRatingFilter);
+    return review.rating === filterNum;
+  });
+
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
     return (
       <div className="star-list">
-        {[...Array(5)].map((_, index) => {
-          if (index < fullStars) {
-            return <span key={index} className="star star-full">★</span>;
-          } else if (index === fullStars && hasHalfStar) {
-            return <span key={index} className="star star-half">☆</span>;
-          } else {
-            return <span key={index} className="star star-empty">☆</span>;
-          }
-        })}
+        {[...Array(5)].map((_, index) => (
+          <span key={index} className={index < fullStars ? "star star-full" : "star star-empty"}>★</span>
+        ))}
       </div>
     );
   };
-
-  const filteredReviews = selectedRatingFilter === "all"
-    ? allReviews
-    : allReviews.filter(review => review.rating === parseInt(selectedRatingFilter));
 
   const formatPrice = (price: number | undefined) => {
     if (typeof price !== "number" || isNaN(price)) return "N/A";
@@ -214,6 +194,15 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
     }
     addToCart(product.id, quantity);
     alert("Đã thêm vào giỏ hàng!");
+  };
+
+  const handleBuyNow = () => {
+    if (!userId) {
+      alert("Bạn cần đăng nhập để mua hàng!");
+      return;
+    }
+    addToCart(product.id, quantity);
+    navigate("/cart");
   };
 
   return (
@@ -292,13 +281,16 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                 <span className="product-rating-value">{product.rating}</span>
                 <span className="product-rating-count">({product.totalReviews} đánh giá)</span>
               </div>
+              {typeof product.averageRating === 'number' && (
+                <div className="average-rating">Trung bình: {product.averageRating.toFixed(1)} / 5</div>
+              )}
               <div className="product-qty-row">
                 <label className="product-qty-label" htmlFor="product-qty">Số lượng:</label>
                 <input id="product-qty" type="number" min="1" max="15" value={quantity} onChange={e => setQuantity(Math.max(1, Math.min(15, Number(e.target.value))))} className="product-qty-input" />
                 <span className="product-qty-stock">Đã bán {product.sold}</span>
               </div>
               <button className="btn-add-cart" onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
-              <button className="btn-buy">Mua ngay</button>
+              <button className="btn-buy" onClick={handleBuyNow}>Mua ngay</button>
               <div className="product-status-row">
                 <span>Tình trạng:</span>
                 <span className="product-in-stock">Còn hàng</span>
@@ -359,10 +351,11 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
           <h2 className="section-title">Ratings & Reviews</h2>
           <div className="ratings-overview">
             <div className="rating-summary">
-              <div className="rating-score">{product.rating}</div>
-              <div className="rating-stars">{renderStars(product.rating)}</div>
+              <div className="average-rating-number">
+                {typeof product.averageRating === 'number' ? product.averageRating.toFixed(1) : '-'}
+              </div>
               <div className="rating-count">
-                {product.totalReviews.toLocaleString()} reviews
+                {product.totalReviews} reviews
               </div>
             </div>
 
@@ -389,10 +382,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
               className={`filter-btn${selectedRatingFilter === "all" ? " active" : ""}`}
               onClick={() => setSelectedRatingFilter("all")}
             >
-              Tất cả ({allReviews.length})
+              Tất cả ({reviews.length})
             </button>
             {[5, 4, 3, 2, 1].map((rating) => {
-              const count = allReviews.filter(review => review.rating === rating).length;
+              const count = reviews.filter(review => review.rating === rating).length;
               return (
                 <button
                   key={rating}
@@ -407,30 +400,18 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
 
           {/* Reviews List */}
           <div className="reviews-list">
-            {filteredReviews.map((review) => (
+            {filteredReviews.length > 0 ? filteredReviews.map((review) => (
               <div key={review.id} className="review-item shopee-review">
                 <div className="review-header-row">
-                  <img src={review.avatar} alt={review.userName} className="review-avatar" />
-                  <span className="review-user-name">{review.userName}</span>
+                  <span className="review-user-name">{review.user?.name || "Ẩn danh"}</span>
                   <span className="review-stars-row">{renderStars(review.rating)}</span>
                 </div>
                 <div className="review-date-quality-row">
-                  <span className="review-date">{review.date}</span>
-                  <span className="review-quality">Chất lượng sản phẩm: <b>tốt</b></span>
+                  <span className="review-date">{review.createdAt}</span>
                 </div>
-                <div className="review-highlight">Tính năng nổi bật: sạc, ko cần dùng pin, điều chỉnh được tốc độ chuột, dùng được cho cả đt và máy tính bảng</div>
-                <div className="review-comment">{review.comment}</div>
-                <div className="review-footer">
-                  <span className="review-like">
-                    <svg width="18" height="18" fill="#888"><path d="M9 16l-1.45-1.32C3.4 10.36 0 8.28 0 5.5 0 3.42 1.42 2 3.5 2c1.54 0 3.04.99 3.57 2.36h1.87C11.46 2.99 12.96 2 14.5 2 16.58 2 18 3.42 18 5.5c0 2.78-3.4 4.86-7.55 9.18L9 16z" /></svg>
-                    {review.likes}
-                  </span>
-                </div>
+                <div className="review-comment">{review.content}</div>
               </div>
-            ))}
-            {filteredReviews.length === 0 && (
-              <div className="no-reviews">Không có đánh giá nào với mức sao đã chọn.</div>
-            )}
+            )) : <div className="no-reviews">Không có đánh giá nào.</div>}
           </div>
         </section>
 
@@ -439,16 +420,21 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
           <h2 className="section-title">Related Books</h2>
           <div className="related-books-grid">
             {relatedBooks.map((book) => (
-              <div key={book.id} className="related-book-item">
+              <div
+                key={book.id}
+                className="related-book-item"
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/product/${book.id}`)}
+              >
                 <img
-                  src={book.image}
+                  src={book.images?.[0]?.url || "https://placehold.co/176x235"}
                   alt={book.title}
                   className="related-book-image"
                 />
                 <div className="related-book-info">
                   <div className="related-book-title">{book.title}</div>
                   <div className="related-book-author">By {book.author}</div>
-                  <div className="related-book-price">{formatPrice(book.price)}</div>
+                  <div className="related-book-price">{formatPrice(book.discountPrice)}</div>
                 </div>
               </div>
             ))}

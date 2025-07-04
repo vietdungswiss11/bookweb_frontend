@@ -77,9 +77,9 @@ const CartSummary: React.FC<CartSummaryProps> = ({
           <div className="payment-methods">
             <span className="payment-text">We accept:</span>
             <div className="payment-icons">
-              <div className="payment-icon visa">VISA</div>
-              <div className="payment-icon mastercard">MC</div>
-              <div className="payment-icon paypal">PP</div>
+              <div className="payment-icon cod">COD</div>
+              <div className="payment-icon momo">MOMO</div>
+              <div className="payment-icon vnpay">VNPAY</div>
             </div>
           </div>
         </div>

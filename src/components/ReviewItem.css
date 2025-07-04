@@ -89,3 +89,18 @@
   flex-shrink: 0;
   fill: #171412;
 }
+
+.review-text {
+  color: #666;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.review-date {
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 2px;
+}

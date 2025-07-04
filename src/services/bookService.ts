@@ -52,4 +52,9 @@ export async function searchBooks(params: any) {
 export async function getBooksOnSale() {
     const res = await fetch(`${API_URL}/sale`);
     return res.json();
+}
+
+export async function getRelatedBooks(bookId: number, limit = 5) {
+    const res = await fetch(`${API_URL}/${bookId}/related?limit=${limit}`);
+    return res.json();
 } 

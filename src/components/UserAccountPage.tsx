@@ -30,6 +30,8 @@ export interface User {
   phoneNumber?: string;
   avatar?: string;
   addresses?: Address[];
+  gender?: string;
+  birthday?: string;
 }
 
 export interface OrderDTO {
@@ -43,9 +45,16 @@ export interface OrderDTO {
 
 export interface Review {
   id: string;
-  bookTitle: string;
+  content?: string;
   rating: number;
-  image: string;
+  createdAt?: string;
+  book?: {
+    id: number;
+    title: string;
+    imageUrl?: string;
+  };
+  image?: string;
+  bookTitle?: string;
 }
 
 export interface Credit {

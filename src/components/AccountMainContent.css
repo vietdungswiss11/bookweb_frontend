@@ -24,7 +24,8 @@
   box-shadow: rgba(0, 0, 0, 0.067) 0px 2px 12px;
   padding: 0;
 }
-  /* Welcome Section */
+
+/* Welcome Section */
 .welcome-section {
   display: flex;
   padding: 16px;

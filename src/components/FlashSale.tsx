@@ -101,7 +101,7 @@ const FlashSale: React.FC = () => {
               <div className="flash-sale-countdown-box">{String(countdown.seconds).padStart(2, '0')}</div>
             </div>
           </div>
-          <a href="#" className="flash-sale-viewall" onClick={e => { e.preventDefault(); navigate('/flash-sale'); }}>Xem tất cả →</a>
+          <a href="#" className="flash-sale-viewall" onClick={e => { e.preventDefault(); navigate('/category/tat-ca'); }}>Xem tất cả →</a>
         </div>
         <div className="flash-sale-scroll" ref={scrollContainerRef}>
           {showScrollButtons && (

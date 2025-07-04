@@ -78,6 +78,7 @@
   flex-direction: column;
   gap: 16px;
   align-self: stretch;
+  align-items: center;
 }
 
 .checkout-btn {
@@ -85,7 +86,7 @@
   height: 48px;
   min-width: 84px;
   max-width: 480px;
-  padding: 0px 20px;
+  padding: 16px 48px;
   justify-content: center;
   align-items: center;
   flex: 1;
@@ -94,7 +95,7 @@
   color: #171412;
   border: none;
   font-family: "Epilogue", sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 24px;
   cursor: pointer;
@@ -136,27 +137,36 @@
 
 .payment-icon {
   display: flex;
-  padding: 4px 8px;
+  padding: 4px 12px;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
   border: 1px solid #e5e0db;
   background: #fff;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: #8a7361;
 }
 
-.payment-icon.visa {
-  color: #1a1f71;
+.payment-icon.cod,
+.payment-icon.momo,
+.payment-icon.vnpay {
+  min-width: 60px;
+  min-height: 32px;
+  font-size: 15px;
+  padding: 8px 20px;
 }
 
-.payment-icon.mastercard {
+.payment-icon.cod {
+  color: #2abd36;
+}
+
+.payment-icon.momo {
+  color: #ba09c0;
+}
+
+.payment-icon.vnpay {
   color: #eb001b;
-}
-
-.payment-icon.paypal {
-  color: #003087;
 }
 
 /* Responsive adjustments */
