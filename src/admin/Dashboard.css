@@ -219,3 +219,7 @@
     padding: 16px 8px;
   }
 }
+
+.dashboard-content {
+  padding-left: 220px;
+}

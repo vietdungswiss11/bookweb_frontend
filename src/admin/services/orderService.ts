@@ -5,6 +5,7 @@ import {
   OrderStats,
   PaginatedResponse,
 } from "../types/Order";
+import { authFetch } from "../../services/authFetch";
 
 const API_URL = "http://localhost:8080/orders";
 
@@ -17,14 +18,6 @@ class OrderServiceError extends Error {
     this.name = "OrderServiceError";
   }
 }
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-};
 
 const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
@@ -65,9 +58,7 @@ export const getOrders = async (params?: {
       }
     }
 
-    const response = await fetch(url, {
-      headers: getAuthHeaders(),
-    });
+    const response = await authFetch(url);
     return handleResponse<PaginatedResponse<OrderDTO>>(response);
   } catch (error) {
     if (error instanceof OrderServiceError) throw error;
@@ -77,9 +68,7 @@ export const getOrders = async (params?: {
 
 export const getOrderById = async (id: number): Promise<OrderDTO> => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
-      headers: getAuthHeaders(),
-    });
+    const response = await authFetch(`${API_URL}/${id}`);
     return handleResponse<OrderDTO>(response);
   } catch (error) {
     if (error instanceof OrderServiceError) throw error;
@@ -92,9 +81,8 @@ export const updateOrderStatus = async (
   data: UpdateOrderStatusRequest,
 ): Promise<OrderDTO> => {
   try {
-    const response = await fetch(`${API_URL}/${id}/status`, {
+    const response = await authFetch(`${API_URL}/${id}/status`, {
       method: "PUT",
-      headers: getAuthHeaders(),
       body: JSON.stringify(data),
     });
     return handleResponse<OrderDTO>(response);
@@ -106,11 +94,9 @@ export const updateOrderStatus = async (
 
 export const deleteOrder = async (id: number): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await authFetch(`${API_URL}/${id}`, {
       method: "DELETE",
-      headers: getAuthHeaders(),
     });
-
     if (!response.ok) {
       const errorData = await response
         .json()
@@ -122,17 +108,14 @@ export const deleteOrder = async (id: number): Promise<void> => {
     }
   } catch (error) {
     if (error instanceof OrderServiceError) throw error;
-    throw new OrderServiceError("Không thể x��a đơn hàng");
+    throw new OrderServiceError("Không thể xóa đơn hàng");
   }
 };
 
 export const searchOrders = async (query: string): Promise<OrderDTO[]> => {
   try {
-    const response = await fetch(
+    const response = await authFetch(
       `${API_URL}/search?q=${encodeURIComponent(query)}`,
-      {
-        headers: getAuthHeaders(),
-      },
     );
     return handleResponse<OrderDTO[]>(response);
   } catch (error) {
@@ -148,9 +131,7 @@ export const getOrderStats = async (
     const url = period
       ? `${API_URL}/stats?period=${period}`
       : `${API_URL}/stats`;
-    const response = await fetch(url, {
-      headers: getAuthHeaders(),
-    });
+    const response = await authFetch(url);
     return handleResponse<OrderStats>(response);
   } catch (error) {
     if (error instanceof OrderServiceError) throw error;
@@ -173,9 +154,7 @@ export const exportOrders = async (filters?: OrderFilters): Promise<Blob> => {
       }
     }
 
-    const response = await fetch(url, {
-      headers: getAuthHeaders(),
-    });
+    const response = await authFetch(url);
 
     if (!response.ok) {
       throw new OrderServiceError("Không thể xuất dữ liệu đơn hàng");

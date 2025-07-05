@@ -2,16 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Plus, RefreshCw, AlertCircle, CheckCircle, X } from "lucide-react";
 import { BookDTO, Book } from "./types";
 import {
-  getAllBooks,
   createBook,
   updateBook,
   deleteBook,
+} from "./services/bookService";
+import {
+  getAllBooks,
+  getBookById,
   searchBooks,
 } from "../services/bookService";
 import DataTable from "./components/DataTable";
 import BookForm from "./components/BookForm";
 import BookDetailModal from "./components/BookDetailModal";
 import ConfirmDialog from "./components/ConfirmDialog";
+import Pagination from "../components/Pagination";
 import "./BooksPage.css";
 
 interface Toast {
@@ -30,21 +34,27 @@ const BooksPage: React.FC = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    fetchBooks(currentPage);
+    // eslint-disable-next-line
+  }, [currentPage]);
 
   useEffect(() => {
     const delayedSearch = setTimeout(() => {
       if (searchQuery.trim()) {
         handleSearch();
       } else {
-        fetchBooks();
+        fetchBooks(1);
+        setCurrentPage(1);
       }
     }, 500);
 
     return () => clearTimeout(delayedSearch);
+    // eslint-disable-next-line
   }, [searchQuery]);
 
   const showToast = (type: "success" | "error", message: string) => {
@@ -61,25 +71,22 @@ const BooksPage: React.FC = () => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
-  const fetchBooks = async () => {
+  const fetchBooks = async (page: number) => {
     setLoading(true);
     try {
-      const response = await getAllBooks();
-      if (Array.isArray(response)) {
-        setBooks(response);
-      } else if (response.books && Array.isArray(response.books)) {
+      const response = await getAllBooks({ page: page - 1, size: pageSize });
+      if (Array.isArray(response.books)) {
         setBooks(response.books);
-      } else if (response.data && Array.isArray(response.data)) {
-        setBooks(response.data);
-      } else if (response.content && Array.isArray(response.content)) {
-        setBooks(response.content);
+        setTotalPages(response.totalPages || 1);
       } else {
         setBooks([]);
+        setTotalPages(1);
       }
     } catch (error: any) {
       console.error("Error fetching books:", error);
       showToast("error", error.message || "Không thể tải danh sách sách");
       setBooks([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
@@ -87,18 +94,21 @@ const BooksPage: React.FC = () => {
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      fetchBooks();
+      fetchBooks(1);
+      setCurrentPage(1);
       return;
     }
 
     setLoading(true);
     try {
-      const response = await searchBooks(searchQuery);
-      setBooks(Array.isArray(response) ? response : []);
+      const response = await searchBooks({ keyword: searchQuery });
+      setBooks(Array.isArray(response.books) ? response.books : []);
+      setTotalPages(response.totalPages || 1);
     } catch (error: any) {
       console.error("Error searching books:", error);
       showToast("error", error.message || "Không thể tìm kiếm sách");
       setBooks([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
@@ -134,7 +144,7 @@ const BooksPage: React.FC = () => {
         showToast("success", "Thêm sách mới thành công");
       }
       setIsFormOpen(false);
-      fetchBooks();
+      fetchBooks(currentPage);
     } catch (error: any) {
       console.error("Error saving book:", error);
       showToast("error", error.message || "Không thể lưu thông tin sách");
@@ -150,7 +160,7 @@ const BooksPage: React.FC = () => {
       await deleteBook(selectedBook.id);
       showToast("success", "Xóa sách thành công");
       setIsConfirmOpen(false);
-      fetchBooks();
+      fetchBooks(currentPage);
     } catch (error: any) {
       console.error("Error deleting book:", error);
       showToast("error", error.message || "Không thể xóa sách");
@@ -161,7 +171,11 @@ const BooksPage: React.FC = () => {
 
   const handleRefresh = () => {
     setSearchQuery("");
-    fetchBooks();
+    fetchBooks(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -196,6 +210,11 @@ const BooksPage: React.FC = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onViewDetail={handleViewDetail}
+        />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       </div>
 

@@ -7,14 +7,15 @@ export interface Book {
   discountPrice: number;
   description?: string;
   categoryId: number;
-  images: { id: number; url: string; name?: string }[];
+  images: { id?: number; url: string; name?: string }[];
   imageUrl?: string;
-  stockQuantity: number;
+  stockQuantity?: number;
   isbn?: string;
-  publishedDate?: string;
+  publicationDate: string;
   publisher?: string;
   language?: string;
   pages?: number;
+  sold: number;
 }
 
 export interface BookDTO {
@@ -27,17 +28,18 @@ export interface BookDTO {
   discountPrice: number;
   description?: string;
   categoryId: number;
-  images: { id: number; url: string; name?: string }[];
+  images: { id?: number; url: string; name?: string }[];
   imageUrl?: string;
-  stockQuantity: number;
+  stockQuantity?: number;
   isbn?: string;
-  publishedDate?: string;
+  publicationDate?: string;
   publisher?: string;
   language?: string;
   pages?: number;
   createdAt?: string;
   updatedAt?: string;
   sold?: number;
+  categories?: { id: number; name: string }[];
 }
 
 export interface ApiResponse<T> {
@@ -52,4 +54,11 @@ export interface PaginatedResponse<T> {
   totalPages: number;
   currentPage: number;
   pageSize: number;
+}
+
+export interface BookListResponse {
+  books: BookDTO[];
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
 }

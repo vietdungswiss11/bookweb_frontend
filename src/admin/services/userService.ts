@@ -5,6 +5,7 @@ import {
   UpdateUserRequest,
   PaginatedResponse,
 } from "../types/User";
+import { authFetch } from "../../services/authFetch";
 
 const API_URL = "http://localhost:8080/users";
 
@@ -17,14 +18,6 @@ class UserServiceError extends Error {
     this.name = "UserServiceError";
   }
 }
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-};
 
 const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
@@ -59,10 +52,7 @@ export const getUsers = async (params?: {
         url += `?${query.toString()}`;
       }
     }
-
-    const response = await fetch(url, {
-      headers: getAuthHeaders(),
-    });
+    const response = await authFetch(url);
     return handleResponse<PaginatedResponse<UserDTO>>(response);
   } catch (error) {
     if (error instanceof UserServiceError) throw error;
@@ -72,9 +62,7 @@ export const getUsers = async (params?: {
 
 export const getUserById = async (id: number): Promise<UserDTO> => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
-      headers: getAuthHeaders(),
-    });
+    const response = await authFetch(`${API_URL}/${id}`);
     return handleResponse<UserDTO>(response);
   } catch (error) {
     if (error instanceof UserServiceError) throw error;
@@ -84,9 +72,8 @@ export const getUserById = async (id: number): Promise<UserDTO> => {
 
 export const createUser = async (user: CreateUserRequest): Promise<UserDTO> => {
   try {
-    const response = await fetch(API_URL, {
+    const response = await authFetch(API_URL, {
       method: "POST",
-      headers: getAuthHeaders(),
       body: JSON.stringify(user),
     });
     return handleResponse<UserDTO>(response);
@@ -101,9 +88,8 @@ export const updateUser = async (
   user: UpdateUserRequest,
 ): Promise<UserDTO> => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await authFetch(`${API_URL}/${id}`, {
       method: "PUT",
-      headers: getAuthHeaders(),
       body: JSON.stringify(user),
     });
     return handleResponse<UserDTO>(response);
@@ -115,11 +101,9 @@ export const updateUser = async (
 
 export const deleteUser = async (id: number): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await authFetch(`${API_URL}/${id}`, {
       method: "DELETE",
-      headers: getAuthHeaders(),
     });
-
     if (!response.ok) {
       const errorData = await response
         .json()
@@ -137,11 +121,8 @@ export const deleteUser = async (id: number): Promise<void> => {
 
 export const searchUsers = async (query: string): Promise<UserDTO[]> => {
   try {
-    const response = await fetch(
+    const response = await authFetch(
       `${API_URL}/search?q=${encodeURIComponent(query)}`,
-      {
-        headers: getAuthHeaders(),
-      },
     );
     return handleResponse<UserDTO[]>(response);
   } catch (error) {
@@ -155,9 +136,8 @@ export const toggleUserStatus = async (
   isActive: boolean,
 ): Promise<UserDTO> => {
   try {
-    const response = await fetch(`${API_URL}/${id}/toggle-status`, {
+    const response = await authFetch(`${API_URL}/${id}/toggle-status`, {
       method: "PATCH",
-      headers: getAuthHeaders(),
       body: JSON.stringify({ isActive }),
     });
     return handleResponse<UserDTO>(response);

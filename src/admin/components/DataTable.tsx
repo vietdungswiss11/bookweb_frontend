@@ -72,7 +72,7 @@ const DataTable: React.FC<DataTableProps> = ({
               <th>Tác giả</th>
               <th>Giá</th>
               <th>Số lượng bán</th>
-              <th>Ngày tạo</th>
+              <th>Ngày xuất bản</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -111,7 +111,7 @@ const DataTable: React.FC<DataTableProps> = ({
                       {book.sold ?? 0}
                     </span>
                   </td>
-                  <td>{formatDate(book.createdAt)}</td>
+                  <td>{formatDate(book.publicationDate)}</td>
                   <td>
                     <div className="action-buttons">
                       <button

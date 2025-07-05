@@ -10,11 +10,13 @@ import "./Dashboard.css";
 import BooksPage from "./BooksPage";
 import UsersPage from "./UsersPage";
 import OrdersPage from "./OrdersPage";
+import AdminSidebar from "./components/AdminSidebar";
+
 const Dashboard: React.FC = () => {
   const stats = getDashboardStats();
 
   return (
-    <div className="dashboard">
+    <div className="dashboard-content">
       <header className="dashboard-header">
         <div className="dashboard-header-content">
           <h1 className="dashboard-title">Bảng điều khiển</h1>
@@ -34,9 +36,6 @@ const Dashboard: React.FC = () => {
 
       <main className="dashboard-main">
         <section className="stats-section">
-          <BooksPage />
-          <UsersPage />
-          <OrdersPage />
           <div className="stats-grid">
             <StatCard
               title="Tổng đơn hàng"

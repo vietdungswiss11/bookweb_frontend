@@ -64,13 +64,24 @@ const BookDetailModal: React.FC<BookDetailModalProps> = ({
 
         <div className="book-detail-content">
           <div className="book-detail-main">
-            <div className="book-image-section">
-              {book.imageUrl ? (
-                <img
-                  src={book.imageUrl}
-                  alt={book.title}
-                  className="book-cover"
-                />
+            <div className="book-image-gallery">
+              {book.images && book.images.length > 0 ? (
+                <>
+                  <div className="main-image">
+                    <img src={book.images[0].url} alt={book.title} style={{ width: 180, height: 240, objectFit: "cover", borderRadius: 8, border: '1px solid #eee' }} />
+                  </div>
+                  <div className="thumbnail-list" style={{ display: 'flex', marginTop: 8 }}>
+                    {book.images.map((img, idx) => (
+                      <img
+                        key={img.id || idx}
+                        src={img.url}
+                        alt={img.name || book.title}
+                        className="thumbnail"
+                        style={{ width: 60, height: 80, objectFit: "cover", marginRight: 8, borderRadius: 4, border: '1px solid #eee' }}
+                      />
+                    ))}
+                  </div>
+                </>
               ) : (
                 <div className="no-image-placeholder">
                   <BookOpen size={48} />
@@ -82,19 +93,12 @@ const BookDetailModal: React.FC<BookDetailModalProps> = ({
             <div className="book-info-section">
               <div className="book-header">
                 <h1 className="book-title">{book.title}</h1>
-                <div className="book-meta">
-                  <span className="book-id">ID: {book.id}</span>
-                  <span
-                    className={`stock-status ${book.stockQuantity > 0 ? "in-stock" : "out-of-stock"}`}
-                  >
-                    {book.stockQuantity > 0 ? "Còn hàng" : "Hết hàng"}
-                  </span>
-                </div>
               </div>
 
-              <div className="book-price">
-                <span className="price-label">Giá bán:</span>
-                <span className="price-value">{formatPrice(book.price)}</span>
+              <div className="book-prices" style={{ marginBottom: 16 }}>
+                <div>Giá gốc: <span style={{ textDecoration: 'line-through', color: '#888' }}>{formatPrice(book.originalPrice)}</span></div>
+                <div>Giá bán: <span style={{ color: '#1976d2', fontWeight: 600 }}>{formatPrice(book.discountPrice)}</span></div>
+                <div>% Giảm: <span style={{ color: '#d32f2f' }}>{(book.discountPercent * 100).toFixed(0)}%</span></div>
               </div>
 
               <div className="book-details-grid">
@@ -112,26 +116,18 @@ const BookDetailModal: React.FC<BookDetailModalProps> = ({
                     Danh mục
                   </div>
                   <div className="detail-value">
-                    {getCategoryName(book.categoryId)}
+                    {book.categories && book.categories.length > 0
+                      ? book.categories.map(cat => cat.name).join(", ")
+                      : "Khác"}
                   </div>
                 </div>
 
                 <div className="detail-item">
                   <div className="detail-label">
                     <BookOpen size={16} />
-                    Số lượng
+                    Số lượng bán
                   </div>
-                  <div className="detail-value">{book.stockQuantity}</div>
-                </div>
-
-                <div className="detail-item">
-                  <div className="detail-label">
-                    <Globe size={16} />
-                    Ngôn ngữ
-                  </div>
-                  <div className="detail-value">
-                    {book.language || "Không có thông tin"}
-                  </div>
+                  <div className="detail-value">{book.sold ?? 0}</div>
                 </div>
 
                 {book.isbn && (
@@ -144,53 +140,13 @@ const BookDetailModal: React.FC<BookDetailModalProps> = ({
                   </div>
                 )}
 
-                {book.publisher && (
-                  <div className="detail-item">
-                    <div className="detail-label">
-                      <Building size={16} />
-                      Nhà xuất bản
-                    </div>
-                    <div className="detail-value">{book.publisher}</div>
-                  </div>
-                )}
-
-                {book.pages && book.pages > 0 && (
-                  <div className="detail-item">
-                    <div className="detail-label">
-                      <BookOpen size={16} />
-                      Số trang
-                    </div>
-                    <div className="detail-value">{book.pages}</div>
-                  </div>
-                )}
-
                 <div className="detail-item">
                   <div className="detail-label">
                     <Calendar size={16} />
                     Ngày xuất bản
                   </div>
                   <div className="detail-value">
-                    {formatDate(book.publishedDate)}
-                  </div>
-                </div>
-
-                <div className="detail-item">
-                  <div className="detail-label">
-                    <Calendar size={16} />
-                    Ngày tạo
-                  </div>
-                  <div className="detail-value">
-                    {formatDate(book.createdAt)}
-                  </div>
-                </div>
-
-                <div className="detail-item">
-                  <div className="detail-label">
-                    <Calendar size={16} />
-                    Cập nhật lần cuối
-                  </div>
-                  <div className="detail-value">
-                    {formatDate(book.updatedAt)}
+                    {formatDate(book.publicationDate)}
                   </div>
                 </div>
               </div>

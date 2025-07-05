@@ -1,3 +1,5 @@
+import { authFetch } from "./authFetch";
+
 const API_URL = 'http://localhost:8080/categories';
 
 export async function getAllCategories() {
@@ -11,7 +13,7 @@ export async function getCategoryById(categoryId: string | number) {
 }
 
 export async function createCategory(data: any) {
-    const res = await fetch(API_URL, {
+    const res = await authFetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -20,7 +22,7 @@ export async function createCategory(data: any) {
 }
 
 export async function updateCategory(categoryId: string | number, data: any) {
-    const res = await fetch(`${API_URL}/${categoryId}`, {
+    const res = await authFetch(`${API_URL}/${categoryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -29,7 +31,7 @@ export async function updateCategory(categoryId: string | number, data: any) {
 }
 
 export async function deleteCategory(categoryId: string | number) {
-    const res = await fetch(`${API_URL}/${categoryId}`, {
+    const res = await authFetch(`${API_URL}/${categoryId}`, {
         method: 'DELETE'
     });
     return res.ok;

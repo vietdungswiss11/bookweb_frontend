@@ -1,6 +1,7 @@
 .books-page {
   padding: 24px;
-  max-width: 1200px;
+  padding-left: 220px;
+  max-width: 1400px;
   margin: 0 auto;
   min-height: 100vh;
   background: #f9fafb;
@@ -90,6 +91,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -169,6 +171,7 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;

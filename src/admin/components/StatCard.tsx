@@ -55,7 +55,7 @@ const StatCard: React.FC<StatCardProps> = ({
           {getIcon()}
         </div>
         {trend !== undefined && (
-          <div className={`stat-trend ${trend >= 0 ? "positive" : "negative"}`}>
+          <div className={`stat-trend ${trend >= 0 ? "positive" : "negative"}`} style={{ marginTop: 8 }}>
             {trend >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
             <span>{Math.abs(trend)}%</span>
           </div>
