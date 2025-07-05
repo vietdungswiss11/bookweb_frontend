@@ -35,7 +35,7 @@ export async function authFetch(input: RequestInfo, init: RequestInit = {}) {
         } catch (err) {
             localStorage.removeItem("token");
             localStorage.removeItem("refreshToken");
-            window.location.href = "auth/signin";
+            window.dispatchEvent(new Event("show-auth-modal"));
             throw err;
         }
     }

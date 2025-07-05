@@ -72,22 +72,22 @@ export const UserAccountPage: React.FC = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     if (!userId || !token) {
-      navigate('/');
+      window.dispatchEvent(new Event('show-auth-modal'));
       return;
     }
     getUserById(userId)
       .then(data => {
         if (data.error) {
-          navigate('/');
+          window.dispatchEvent(new Event('show-auth-modal'));
         } else {
           setUser(data);
           getOrdersByUserId(userId).then(setOrders).catch(() => setOrders([]));
         }
       })
       .catch(() => {
-        navigate('/');
+        window.dispatchEvent(new Event('show-auth-modal'));
       });
-  }, [navigate]);
+  }, []);
 
   const refreshUser = () => {
     const userId = localStorage.getItem('userId');

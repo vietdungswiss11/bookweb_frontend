@@ -20,6 +20,7 @@ import OrderSuccessPage from "./components/OrderSuccessPage";
 import { getAllCategories } from "./services/categoryService";
 import { getAllBooks } from "./services/bookService";
 import Dashboard from "./admin/Dashboard";
+import AuthModal from "./components/AuthModal";
 
 function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -55,6 +56,14 @@ function HomePage() {
 }
 
 function App() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setShowAuthModal(true);
+    window.addEventListener("show-auth-modal", handler);
+    return () => window.removeEventListener("show-auth-modal", handler);
+  }, []);
+
   // Lấy danh mục sản phẩm từ generateRecommendedBooks
   const productCategories = generateRecommendedBooks().map((book) => ({
     id: book.id,
@@ -64,6 +73,7 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:bookId" element={<ProductDetailPage />} />
