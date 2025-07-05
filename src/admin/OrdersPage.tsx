@@ -224,6 +224,11 @@ const OrdersPage: React.FC = () => {
     }).format(amount);
   };
 
+  const safeOrders = orders.map(order => ({
+    ...order,
+    customer: order.customer || { name: 'Không có', email: '', phoneNumber: '' }
+  }));
+
   return (
     <div className="orders-page">
       <div className="page-header">
@@ -366,7 +371,7 @@ const OrdersPage: React.FC = () => {
 
       <div className="page-content">
         <OrderDataTable
-          data={orders}
+          data={safeOrders}
           loading={loading}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}

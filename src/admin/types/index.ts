@@ -2,8 +2,12 @@ export interface Book {
   title: string;
   author: string;
   price: number;
+  originalPrice: number;
+  discountPercent: number;
+  discountPrice: number;
   description?: string;
   categoryId: number;
+  images: { id: number; url: string; name?: string }[];
   imageUrl?: string;
   stockQuantity: number;
   isbn?: string;
@@ -18,8 +22,12 @@ export interface BookDTO {
   title: string;
   author: string;
   price: number;
+  originalPrice: number;
+  discountPercent: number;
+  discountPrice: number;
   description?: string;
   categoryId: number;
+  images: { id: number; url: string; name?: string }[];
   imageUrl?: string;
   stockQuantity: number;
   isbn?: string;
@@ -29,6 +37,7 @@ export interface BookDTO {
   pages?: number;
   createdAt?: string;
   updatedAt?: string;
+  sold?: number;
 }
 
 export interface ApiResponse<T> {

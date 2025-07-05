@@ -71,7 +71,7 @@ const DataTable: React.FC<DataTableProps> = ({
               <th>Tên sách</th>
               <th>Tác giả</th>
               <th>Giá</th>
-              <th>Số lượng</th>
+              <th>Số lượng bán</th>
               <th>Ngày tạo</th>
               <th>Thao tác</th>
             </tr>
@@ -89,7 +89,9 @@ const DataTable: React.FC<DataTableProps> = ({
                   <td>{book.id}</td>
                   <td>
                     <div className="book-image">
-                      {book.imageUrl ? (
+                      {book.images && Array.isArray(book.images) && book.images.length > 0 && book.images[0].url ? (
+                        <img src={book.images[0].url} alt={book.title} />
+                      ) : book.imageUrl ? (
                         <img src={book.imageUrl} alt={book.title} />
                       ) : (
                         <div className="no-image">📚</div>
@@ -103,12 +105,10 @@ const DataTable: React.FC<DataTableProps> = ({
                     </div>
                   </td>
                   <td>{book.author}</td>
-                  <td>{formatPrice(book.price)}</td>
+                  <td>{formatPrice(book.discountPrice ?? book.price)}</td>
                   <td>
-                    <span
-                      className={`stock-badge ${book.stockQuantity > 0 ? "in-stock" : "out-of-stock"}`}
-                    >
-                      {book.stockQuantity}
+                    <span className="stock-badge in-stock">
+                      {book.sold ?? 0}
                     </span>
                   </td>
                   <td>{formatDate(book.createdAt)}</td>

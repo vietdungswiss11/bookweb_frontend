@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Save, AlertCircle } from "lucide-react";
 import { Book, BookDTO } from "../types";
 import "./BookForm.css";
+import { getAllCategories } from '../../services/categoryService';
 
 interface BookFormProps {
   open: boolean;
@@ -15,19 +16,23 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
     title: "",
     author: "",
     price: 0,
+    originalPrice: 0,
+    discountPercent: 0,
+    discountPrice: 0,
     description: "",
     categoryId: 1,
-    imageUrl: "",
+    images: [],
     stockQuantity: 0,
     isbn: "",
     publishedDate: "",
-    publisher: "",
-    language: "Tiếng Việt",
-    pages: 0,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   useEffect(() => {
     if (book) {
@@ -35,34 +40,51 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
         title: book.title,
         author: book.author,
         price: book.price,
+        originalPrice: book.originalPrice ?? 0,
+        discountPercent: book.discountPercent ?? 0,
+        discountPrice: book.discountPrice ?? book.price ?? 0,
         description: book.description || "",
         categoryId: book.categoryId,
-        imageUrl: book.imageUrl || "",
+        images: book.images || [],
         stockQuantity: book.stockQuantity,
         isbn: book.isbn || "",
         publishedDate: book.publishedDate || "",
-        publisher: book.publisher || "",
-        language: book.language || "Tiếng Việt",
-        pages: book.pages || 0,
       });
+      if (book.images) {
+        setImagePreviews(book.images.map(img => img.url));
+      }
     } else {
       setFormData({
         title: "",
         author: "",
         price: 0,
+        originalPrice: 0,
+        discountPercent: 0,
+        discountPrice: 0,
         description: "",
         categoryId: 1,
-        imageUrl: "",
+        images: [],
         stockQuantity: 0,
         isbn: "",
         publishedDate: "",
-        publisher: "",
-        language: "Tiếng Việt",
-        pages: 0,
       });
+      setImagePreviews([]);
     }
     setErrors({});
   }, [book, open]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await getAllCategories();
+        if (Array.isArray(res)) setCategories(res);
+        else if (res.data && Array.isArray(res.data)) setCategories(res.data);
+      } catch (e) {
+        setCategories([]);
+      }
+    }
+    fetchCategories();
+  }, []);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -83,10 +105,6 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
       newErrors.stockQuantity = "Số lượng không thể âm";
     }
 
-    if (formData.pages && formData.pages < 0) {
-      newErrors.pages = "Số trang không thể âm";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -100,7 +118,18 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
 
     setLoading(true);
     try {
-      await onSave(formData);
+      let submitData = { ...formData };
+      // Nếu images là mảng object
+      if (submitData.images && submitData.images.length > 0) {
+        if (typeof submitData.images[0] === 'string') {
+          submitData.imageUrl = submitData.images[0];
+        } else if (submitData.images[0].url) {
+          submitData.imageUrl = submitData.images[0].url;
+        }
+      } else {
+        submitData.imageUrl = undefined;
+      }
+      await onSave(submitData);
       onClose();
     } catch (error) {
       console.error("Error saving book:", error);
@@ -115,16 +144,28 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
     >,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        name === "price" ||
-        name === "stockQuantity" ||
-        name === "pages" ||
-        name === "categoryId"
-          ? Number(value) || 0
-          : value,
-    }));
+    setFormData((prev) => {
+      let newData = {
+        ...prev,
+        [name]:
+          name === "price" ||
+            name === "stockQuantity" ||
+            name === "categoryId" ||
+            name === "originalPrice" ||
+            name === "discountPercent"
+            ? Number(value) || 0
+            : value,
+      };
+      if (name === "originalPrice" || name === "discountPercent") {
+        const discount = newData.originalPrice * (1 - newData.discountPercent);
+        newData = {
+          ...newData,
+          discountPrice: Math.round(discount),
+          price: Math.round(discount),
+        };
+      }
+      return newData;
+    });
 
     if (errors[name]) {
       setErrors((prev) => {
@@ -132,6 +173,37 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
         delete newErrors[name];
         return newErrors;
       });
+    }
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    const fileArr = Array.from(files);
+    setImageFiles(fileArr);
+    // Preview
+    setImagePreviews(fileArr.map(f => URL.createObjectURL(f)));
+    // Upload
+    const formDataUpload = new FormData();
+    fileArr.forEach(f => formDataUpload.append('files', f));
+    try {
+      const res = await fetch('http://localhost:8080/upload/multi', {
+        method: 'POST',
+        headers: {
+          // 'Authorization': 'Bearer ...', // Nếu cần token thì truyền vào đây
+        },
+        body: formDataUpload,
+      });
+      const data = await res.json();
+      if (data.urls) {
+        setFormData((prev) => ({ ...prev, images: data.urls }));
+        setImagePreviews(data.urls);
+      }
+    } catch (e) {
+      // handle error
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -188,28 +260,45 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="price">Giá *</label>
+              <label htmlFor="originalPrice">Giá gốc *</label>
               <input
                 type="number"
-                id="price"
-                name="price"
-                value={formData.price}
+                id="originalPrice"
+                name="originalPrice"
+                value={formData.originalPrice}
                 onChange={handleChange}
-                className={errors.price ? "error" : ""}
                 placeholder="0"
                 min="0"
-                step="1000"
               />
-              {errors.price && (
-                <span className="error-message">
-                  <AlertCircle size={16} />
-                  {errors.price}
-                </span>
-              )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="stockQuantity">Số lượng *</label>
+              <label htmlFor="discountPercent">% Giảm giá</label>
+              <input
+                type="number"
+                id="discountPercent"
+                name="discountPercent"
+                value={formData.discountPercent}
+                onChange={handleChange}
+                placeholder="0.2 cho 20%"
+                min="0"
+                max="1"
+                step="0.01"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Giá sau giảm</label>
+              <input
+                type="number"
+                value={formData.discountPrice}
+                readOnly
+                style={{ background: '#f5f5f5' }}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="stockQuantity">Số lượng đã bán*</label>
               <input
                 type="number"
                 id="stockQuantity"
@@ -241,18 +330,6 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="publisher">Nhà xuất bản</label>
-              <input
-                type="text"
-                id="publisher"
-                name="publisher"
-                value={formData.publisher}
-                onChange={handleChange}
-                placeholder="Nhập nhà xuất bản"
-              />
-            </div>
-
-            <div className="form-group">
               <label htmlFor="publishedDate">Ngày xuất bản</label>
               <input
                 type="date"
@@ -264,43 +341,6 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="pages">Số trang</label>
-              <input
-                type="number"
-                id="pages"
-                name="pages"
-                value={formData.pages}
-                onChange={handleChange}
-                className={errors.pages ? "error" : ""}
-                placeholder="0"
-                min="0"
-              />
-              {errors.pages && (
-                <span className="error-message">
-                  <AlertCircle size={16} />
-                  {errors.pages}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="language">Ngôn ngữ</label>
-              <select
-                id="language"
-                name="language"
-                value={formData.language}
-                onChange={handleChange}
-              >
-                <option value="Tiếng Việt">Tiếng Việt</option>
-                <option value="English">English</option>
-                <option value="Français">Français</option>
-                <option value="Deutsch">Deutsch</option>
-                <option value="中文">中文</option>
-                <option value="日本語">日本語</option>
-              </select>
-            </div>
-
-            <div className="form-group">
               <label htmlFor="categoryId">Danh mục</label>
               <select
                 id="categoryId"
@@ -308,25 +348,30 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
                 value={formData.categoryId}
                 onChange={handleChange}
               >
-                <option value={1}>Văn học</option>
-                <option value={2}>Khoa học</option>
-                <option value={3}>Lịch sử</option>
-                <option value={4}>Kỹ thuật</option>
-                <option value={5}>Kinh tế</option>
-                <option value={6}>Nghệ thuật</option>
+                {categories.length === 0 && <option value={1}>Văn học</option>}
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
               </select>
             </div>
 
             <div className="form-group full-width">
-              <label htmlFor="imageUrl">URL hình ảnh</label>
+              <label htmlFor="images">Hình ảnh</label>
               <input
-                type="url"
-                id="imageUrl"
-                name="imageUrl"
-                value={formData.imageUrl}
-                onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
+                type="file"
+                id="images"
+                name="images"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                disabled={uploading}
               />
+              {uploading && <div>Đang upload...</div>}
+              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                {imagePreviews.map((url, idx) => (
+                  <img key={idx} src={url} alt="preview" style={{ width: 60, height: 80, objectFit: 'cover', borderRadius: 4, border: '1px solid #eee' }} />
+                ))}
+              </div>
             </div>
 
             <div className="form-group full-width">

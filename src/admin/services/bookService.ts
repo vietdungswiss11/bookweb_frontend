@@ -1,6 +1,6 @@
 import { Book, BookDTO, ApiResponse, PaginatedResponse } from "../types";
 
-const API_URL = "http://localhost:8080/books";
+const API_URL = "http://localhost:8080/admin/books";
 
 class BookServiceError extends Error {
   constructor(

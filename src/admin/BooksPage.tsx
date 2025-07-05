@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Plus, RefreshCw, AlertCircle, CheckCircle, X } from "lucide-react";
 import { BookDTO, Book } from "./types";
 import {
-  getBooks,
+  getAllBooks,
   createBook,
   updateBook,
   deleteBook,
   searchBooks,
-} from "./services/bookService";
+} from "../services/bookService";
 import DataTable from "./components/DataTable";
 import BookForm from "./components/BookForm";
 import BookDetailModal from "./components/BookDetailModal";
@@ -64,12 +64,15 @@ const BooksPage: React.FC = () => {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await getBooks();
-      // Handle both paginated and non-paginated responses
+      const response = await getAllBooks();
       if (Array.isArray(response)) {
         setBooks(response);
+      } else if (response.books && Array.isArray(response.books)) {
+        setBooks(response.books);
       } else if (response.data && Array.isArray(response.data)) {
         setBooks(response.data);
+      } else if (response.content && Array.isArray(response.content)) {
+        setBooks(response.content);
       } else {
         setBooks([]);
       }

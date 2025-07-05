@@ -151,26 +151,28 @@ const OrderDataTable: React.FC<OrderDataTableProps> = ({
                     <div className="customer-info">
                       <div className="customer-name">
                         <User size={14} />
-                        {order.customer.name}
+                        {order.customer ? order.customer.name : <span style={{ color: '#aaa' }}>Không có</span>}
                       </div>
                       <div className="customer-contact">
-                        <small>{order.customer.email}</small>
-                        <small>{order.customer.phoneNumber}</small>
+                        <small>{order.customer ? order.customer.email : ''}</small>
+                        <small>{order.customer ? order.customer.phoneNumber : ''}</small>
                       </div>
                     </div>
                   </td>
                   <td>
                     <div className="order-items">
                       <span className="items-count">
-                        {order.items.length} sản phẩm
+                        {order.items && Array.isArray(order.items) ? order.items.length : 0} sản phẩm
                       </span>
                       <div className="items-preview">
-                        {order.items.slice(0, 2).map((item, index) => (
-                          <small key={index} className="item-preview">
-                            {item.bookTitle} x{item.quantity}
-                          </small>
-                        ))}
-                        {order.items.length > 2 && (
+                        {order.items && Array.isArray(order.items)
+                          ? order.items.slice(0, 2).map((item, index) => (
+                            <small key={index} className="item-preview">
+                              {item.bookTitle} x{item.quantity}
+                            </small>
+                          ))
+                          : null}
+                        {order.items && Array.isArray(order.items) && order.items.length > 2 && (
                           <small className="more-items">
                             +{order.items.length - 2} khác
                           </small>

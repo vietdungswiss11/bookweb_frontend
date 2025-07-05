@@ -148,7 +148,7 @@ const UserDataTable: React.FC<UserDataTableProps> = ({
                       )}
                     </div>
                   </td>
-                  <td>{getRoleBadge(user.role)}</td>
+                  <td>{user.role ? getRoleBadge(user.role) : <span style={{ color: '#aaa' }}>Không rõ</span>}</td>
                   <td>
                     <div className="status-cell">
                       {getStatusBadge(user.isActive)}
