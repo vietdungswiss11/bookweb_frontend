@@ -62,3 +62,15 @@ export interface BookListResponse {
   totalItems: number;
   totalPages: number;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface CategoryListResponse {
+  categories: Category[];
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
+}

@@ -23,6 +23,7 @@ import Dashboard from "./admin/Dashboard";
 import AuthModal from "./components/AuthModal";
 import AdminSidebar from "./admin/components/AdminSidebar";
 import BooksPage from "./admin/BooksPage";
+import CategoriesPage from "./admin/CategoriesPage";
 import OrdersPage from "./admin/OrdersPage";
 import UsersPage from "./admin/UsersPage";
 
@@ -77,7 +78,10 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
+        <AuthModal
+          open={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+        />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:bookId" element={<ProductDetailPage />} />
@@ -93,19 +97,23 @@ function App() {
             path="/order-success/:orderId"
             element={<OrderSuccessPage />}
           />
-          <Route path="/admin/*" element={
-            <div style={{ display: "flex" }}>
-              <AdminSidebar />
-              <div style={{ width: "100%" }}>
-                <Routes>
-                  <Route path="" element={<Dashboard />} />
-                  <Route path="books" element={<BooksPage />} />
-                  <Route path="orders" element={<OrdersPage />} />
-                  <Route path="users" element={<UsersPage />} />
-                </Routes>
+          <Route
+            path="/admin/*"
+            element={
+              <div style={{ display: "flex" }}>
+                <AdminSidebar />
+                <div style={{ width: "100%" }}>
+                  <Routes>
+                    <Route path="" element={<Dashboard />} />
+                    <Route path="books" element={<BooksPage />} />
+                    <Route path="categories" element={<CategoriesPage />} />
+                    <Route path="orders" element={<OrdersPage />} />
+                    <Route path="users" element={<UsersPage />} />
+                  </Routes>
+                </div>
               </div>
-            </div>
-          } />
+            }
+          />
         </Routes>
       </BrowserRouter>
     </CartProvider>
