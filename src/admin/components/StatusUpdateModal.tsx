@@ -3,8 +3,10 @@ import { X, Save, AlertCircle, Package } from "lucide-react";
 import {
   OrderDTO,
   OrderStatus,
-  UpdateOrderStatusRequest,
+  OrderStatusUpdateRequest,
   ORDER_STATUS_LABELS,
+  PaymentStatus,
+  PAYMENT_STATUS_LABELS,
 } from "../types/Order";
 import "./StatusUpdateModal.css";
 
@@ -12,7 +14,7 @@ interface StatusUpdateModalProps {
   open: boolean;
   order: OrderDTO | null;
   onClose: () => void;
-  onSave: (id: number, data: UpdateOrderStatusRequest) => Promise<void>;
+  onSave: (id: number, data: OrderStatusUpdateRequest) => Promise<void>;
 }
 
 const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
@@ -22,6 +24,8 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
   onSave,
 }) => {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>("PENDING");
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState<string>("");
+  const [selectedShippingStatus, setSelectedShippingStatus] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [cancelReason, setCancelReason] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +33,9 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
 
   useEffect(() => {
     if (order) {
-      setSelectedStatus(order.status);
+      setSelectedStatus(order.status as OrderStatus);
+      setSelectedPaymentStatus(order.paymentDTO?.status || "");
+      setSelectedShippingStatus(order.shippingDTO?.status || "");
       setNotes("");
       setCancelReason("");
       setError("");
@@ -87,8 +93,10 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
 
     setLoading(true);
     try {
-      const updateData: UpdateOrderStatusRequest = {
-        status: selectedStatus,
+      const updateData = {
+        orderStatus: selectedStatus,
+        paymentStatus: selectedPaymentStatus,
+        shippingStatus: selectedShippingStatus,
         notes: notes.trim() || undefined,
         cancelReason:
           selectedStatus === "CANCELLED" ? cancelReason.trim() : undefined,
@@ -104,8 +112,8 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
     }
   };
 
-  const isStatusChanged = order && selectedStatus !== order.status;
-  const availableStatuses = order ? getAvailableStatuses(order.status) : [];
+  const isStatusChanged = order && selectedStatus !== (order.status as OrderStatus);
+  const availableStatuses = order ? getAvailableStatuses(order.status as OrderStatus) : [];
 
   if (!open || !order) return null;
 
@@ -117,9 +125,9 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
             <h2>Cập nhật trạng thái đơn hàng</h2>
             <div className="order-info">
               <Package size={16} />
-              <span>{order.orderCode}</span>
+              <span>{order.orderNumber || order.id}</span>
               <span className="separator">•</span>
-              <span>{order.customer.name}</span>
+              <span>{order.userDTO?.name || "Không có"}</span>
             </div>
           </div>
           <button className="close-btn" onClick={onClose}>
@@ -134,11 +142,11 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
               <span
                 className="status-badge current"
                 style={{
-                  backgroundColor: `${getStatusColor(order.status)}20`,
-                  color: getStatusColor(order.status),
+                  backgroundColor: `${getStatusColor((order.status as OrderStatus) || "PENDING")}20`,
+                  color: getStatusColor((order.status as OrderStatus) || "PENDING"),
                 }}
               >
-                {ORDER_STATUS_LABELS[order.status]}
+                {order.status || "Không rõ"}
               </span>
             </div>
           </div>
@@ -153,7 +161,7 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
             >
               {availableStatuses.map((status) => (
                 <option key={status} value={status}>
-                  {ORDER_STATUS_LABELS[status]}
+                  {status}
                 </option>
               ))}
             </select>
@@ -163,14 +171,45 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
                 <span
                   className="status-badge preview"
                   style={{
-                    backgroundColor: `${getStatusColor(selectedStatus)}20`,
-                    color: getStatusColor(selectedStatus),
+                    backgroundColor: `${getStatusColor(selectedStatus || "Không rõ")}20`,
+                    color: getStatusColor(selectedStatus || "Không rõ"),
                   }}
                 >
-                  {ORDER_STATUS_LABELS[selectedStatus]}
+                  {selectedStatus || "Không rõ"}
                 </span>
               </div>
             )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="paymentStatus">Trạng thái thanh toán</label>
+            <select
+              id="paymentStatus"
+              value={selectedPaymentStatus}
+              onChange={(e) => setSelectedPaymentStatus(e.target.value)}
+            >
+              <option value="">-- Chọn trạng thái --</option>
+              {Object.keys(PAYMENT_STATUS_LABELS).map((status) => (
+                <option key={status} value={status}>
+                  {PAYMENT_STATUS_LABELS[status as PaymentStatus]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="shippingStatus">Trạng thái vận chuyển</label>
+            <select
+              id="shippingStatus"
+              value={selectedShippingStatus}
+              onChange={(e) => setSelectedShippingStatus(e.target.value)}
+            >
+              <option value="">-- Chọn trạng thái --</option>
+              <option value="PENDING">Chờ vận chuyển</option>
+              <option value="SHIPPED">Đã giao vận</option>
+              <option value="DELIVERED">Đã giao hàng</option>
+              <option value="CANCELLED">Đã hủy vận chuyển</option>
+            </select>
           </div>
 
           {selectedStatus === "CANCELLED" && (
@@ -182,8 +221,8 @@ const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
                 onChange={(e) => setCancelReason(e.target.value)}
                 className={
                   error &&
-                  selectedStatus === "CANCELLED" &&
-                  !cancelReason.trim()
+                    selectedStatus === "CANCELLED" &&
+                    !cancelReason.trim()
                     ? "error"
                     : ""
                 }

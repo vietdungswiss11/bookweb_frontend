@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import {
   OrderDTO,
-  UpdateOrderStatusRequest,
+  OrderStatusUpdateRequest ,
   OrderFilters,
   OrderStats,
   OrderStatus,
@@ -101,8 +101,8 @@ const OrdersPage: React.FC = () => {
       let orderList: OrderDTO[] = [];
       if (Array.isArray(response)) {
         orderList = response;
-      } else if (response.data && Array.isArray(response.data)) {
-        orderList = response.data;
+      } else if (response.orders && Array.isArray(response.orders)) {
+        orderList = response.orders;
       }
 
       setOrders(orderList);
@@ -161,7 +161,7 @@ const OrdersPage: React.FC = () => {
 
   const handleSaveStatus = async (
     id: number,
-    data: UpdateOrderStatusRequest,
+    data: OrderStatusUpdateRequest ,
   ) => {
     try {
       await updateOrderStatus(id, data);
@@ -226,7 +226,7 @@ const OrdersPage: React.FC = () => {
 
   const safeOrders = orders.map(order => ({
     ...order,
-    customer: order.customer || { name: 'Không có', email: '', phoneNumber: '' }
+    userDTO: order.userDTO || { id: 0, name: 'Không có', email: '', phoneNumber: '' }
   }));
 
   return (
@@ -397,7 +397,7 @@ const OrdersPage: React.FC = () => {
       <ConfirmDialog
         open={isConfirmOpen}
         title="Xác nhận xóa đơn hàng"
-        content={`Bạn có chắc chắn muốn xóa đơn hàng "${selectedOrder?.orderCode}"? Hành động này không thể hoàn tác.`}
+        content={`Bạn có chắc chắn muốn xóa đơn hàng "${selectedOrder?.orderNumber || selectedOrder?.id}"? Hành động này không thể hoàn tác.`}
         confirmText="Xóa"
         cancelText="Hủy"
         loading={deleteLoading}

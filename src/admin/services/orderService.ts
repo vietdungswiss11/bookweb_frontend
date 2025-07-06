@@ -1,6 +1,6 @@
 import {
   OrderDTO,
-  UpdateOrderStatusRequest,
+  OrderStatusUpdateRequest,
   OrderFilters,
   OrderStats,
   PaginatedResponse,
@@ -32,13 +32,20 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
   return response.json();
 };
 
+export interface OrdersApiResponse {
+  orders: OrderDTO[];
+  totalItems: number;
+  totalPages: number;
+  currentPage?: number;
+}
+
 export const getOrders = async (params?: {
   page?: number;
   size?: number;
   filters?: OrderFilters;
-}): Promise<PaginatedResponse<OrderDTO>> => {
+}): Promise<OrdersApiResponse> => {
   try {
-    let url = API_URL;
+    let url = "http://localhost:8080/admin/orders";
     if (params) {
       const query = new URLSearchParams();
 
@@ -59,7 +66,7 @@ export const getOrders = async (params?: {
     }
 
     const response = await authFetch(url);
-    return handleResponse<PaginatedResponse<OrderDTO>>(response);
+    return handleResponse<OrdersApiResponse>(response);
   } catch (error) {
     if (error instanceof OrderServiceError) throw error;
     throw new OrderServiceError("Không thể tải danh sách đơn hàng");
@@ -78,10 +85,11 @@ export const getOrderById = async (id: number): Promise<OrderDTO> => {
 
 export const updateOrderStatus = async (
   id: number,
-  data: UpdateOrderStatusRequest,
+  data: OrderStatusUpdateRequest,
 ): Promise<OrderDTO> => {
   try {
-    const response = await authFetch(`${API_URL}/${id}/status`, {
+    const url = `http://localhost:8080/admin/orders/${id}/status`;
+    const response = await authFetch(url, {
       method: "PUT",
       body: JSON.stringify(data),
     });
@@ -93,8 +101,9 @@ export const updateOrderStatus = async (
 };
 
 export const deleteOrder = async (id: number): Promise<void> => {
+  let url = "http://localhost:8080/admin/orders";
   try {
-    const response = await authFetch(`${API_URL}/${id}`, {
+    const response = await authFetch(`${url}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

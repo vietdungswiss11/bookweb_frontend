@@ -123,7 +123,6 @@ const OrderDataTable: React.FC<OrderDataTableProps> = ({
             <tr>
               <th>Mã đơn hàng</th>
               <th>Khách hàng</th>
-              <th>Sản phẩm</th>
               <th>Tổng tiền</th>
               <th>Trạng thái</th>
               <th>Thanh toán</th>
@@ -134,7 +133,7 @@ const OrderDataTable: React.FC<OrderDataTableProps> = ({
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={8} className="no-data">
+                <td colSpan={7} className="no-data">
                   Không có dữ liệu
                 </td>
               </tr>
@@ -144,57 +143,45 @@ const OrderDataTable: React.FC<OrderDataTableProps> = ({
                   <td>
                     <div className="order-code">
                       <Package size={16} />
-                      <span>{order.orderCode}</span>
+                      <span>{order.id}</span>
                     </div>
                   </td>
                   <td>
                     <div className="customer-info">
                       <div className="customer-name">
                         <User size={14} />
-                        {order.customer ? order.customer.name : <span style={{ color: '#aaa' }}>Không có</span>}
+                        {order.userDTO ? order.userDTO.name : <span style={{ color: '#aaa' }}>Không có</span>}
                       </div>
                       <div className="customer-contact">
-                        <small>{order.customer ? order.customer.email : ''}</small>
-                        <small>{order.customer ? order.customer.phoneNumber : ''}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="order-items">
-                      <span className="items-count">
-                        {order.items && Array.isArray(order.items) ? order.items.length : 0} sản phẩm
-                      </span>
-                      <div className="items-preview">
-                        {order.items && Array.isArray(order.items)
-                          ? order.items.slice(0, 2).map((item, index) => (
-                            <small key={index} className="item-preview">
-                              {item.bookTitle} x{item.quantity}
-                            </small>
-                          ))
-                          : null}
-                        {order.items && Array.isArray(order.items) && order.items.length > 2 && (
-                          <small className="more-items">
-                            +{order.items.length - 2} khác
-                          </small>
-                        )}
+                        <small>{order.userDTO ? order.userDTO.email : ''}</small>
+                        <small>{order.userDTO ? order.userDTO.phoneNumber : ''}</small>
                       </div>
                     </div>
                   </td>
                   <td>
                     <div className="order-amount">
-                      <DollarSign size={14} />
+                      
                       <span className="amount">
                         {formatCurrency(order.totalAmount)}
                       </span>
                     </div>
                   </td>
                   <td>{getStatusBadge(order.status)}</td>
-                  <td>{getPaymentStatusBadge(order.paymentStatus)}</td>
+                  <td>
+                    {order.paymentDTO ? (
+                      <>
+                        <span>{order.paymentDTO.paymentMethod?.toUpperCase() || ''}</span>
+                        <span style={{ marginLeft: 8 }}>{getPaymentStatusBadge(order.paymentDTO.status)}</span>
+                      </>
+                    ) : (
+                      <span>-</span>
+                    )}
+                  </td>
                   <td>
                     <div className="order-date">
                       <Calendar size={14} />
-                      <span>{formatDate(order.createdAt)}</span>
-                      <small>{formatDateTime(order.createdAt)}</small>
+                      <span>{order.orderDate ? formatDate(order.orderDate) : '-'}</span>
+                      <small>{order.orderDate ? formatDateTime(order.orderDate) : ''}</small>
                     </div>
                   </td>
                   <td>

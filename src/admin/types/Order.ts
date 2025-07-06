@@ -51,31 +51,81 @@ export interface ShippingAddress {
 
 export interface OrderDTO {
   id: number;
-  orderCode: string;
-  customer: CustomerInfo;
-  items: OrderItem[];
-  shippingAddress: ShippingAddress;
-  status: OrderStatus;
-  paymentStatus: PaymentStatus;
-  paymentMethod: PaymentMethod;
-  subtotal: number;
-  shippingFee: number;
-  discount: number;
+  orderNumber?: string | null;
+  orderDate: string;
+  status: string;
+  userDTO: {
+    id: number;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    // ... các trường khác nếu cần
+  } | null;
+  orderItems: Array<{
+    id: number;
+    book: {
+      id: number;
+      title: string;
+      author?: string;
+      imageUrl?: string;
+      images?: string[];
+      // ... các trường khác nếu cần
+    };
+    quantity: number;
+    price: number;
+    totalPrice: number;
+    // ... các trường khác nếu cần
+  }>;
   totalAmount: number;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  paymentDTO?: {
+    id: number;
+    paymentMethod: string;
+    status: string;
+    amount: number;
+    // ... các trường khác nếu cần
+  };
+  shippingDTO?: {
+    id: number;
+    shippingCode: string;
+    shippingProvider: string;
+    status: string;
+    note?: string;
+    estimatedDelivery?: string;
+    actualDelivery?: string;
+    shippingFee?: number;
+    recipientName?: string;
+    phoneNumber?: string;
+    address?: string;
+    ward?: string;
+    district?: string;
+    city?: string;
+    notes?: string;
+  };
+  addressDTO?: {
+    id: number;
+    addressLine: string;
+    phoneNumber: string;
+    recipientName: string;
+    userDTO?: any;
+    default?: boolean;
+  };
   confirmedAt?: string;
   shippedAt?: string;
   deliveredAt?: string;
   cancelledAt?: string;
-  cancelReason?: string;
-}
-
-export interface UpdateOrderStatusRequest {
-  status: OrderStatus;
+  subtotal?: number;
+  shippingFee?: number;
+  discount?: number;
   notes?: string;
   cancelReason?: string;
+  // ... các trường khác nếu cần
+}
+
+export interface OrderStatusUpdateRequest {
+  orderStatus?: string;
+  paymentStatus?: string;
+  shippingStatus?: string;
+  notes?: string;
 }
 
 export interface OrderFilters {

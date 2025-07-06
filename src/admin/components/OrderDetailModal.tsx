@@ -71,8 +71,8 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
     return colors[status] || colors.PENDING;
   };
 
-  const statusColor = getStatusColor(order.status);
-  const paymentColor = getPaymentStatusColor(order.paymentStatus);
+  const statusColor = getStatusColor(order.status || "Không rõ");
+  const paymentColor = getPaymentStatusColor(order.paymentDTO?.status || "Không rõ");
 
   return (
     <div className="modal-overlay">
@@ -82,7 +82,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
             <h2>Chi tiết đơn hàng</h2>
             <div className="order-code-large">
               <Package size={20} />
-              {order.orderCode}
+              {order.orderNumber || order.id}
             </div>
           </div>
           <button className="close-btn" onClick={onClose}>
@@ -102,7 +102,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                     color: statusColor.text,
                   }}
                 >
-                  {ORDER_STATUS_LABELS[order.status]}
+                  {order.status || "Không rõ"}
                 </div>
               </div>
               <div className="status-card">
@@ -114,13 +114,13 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                     color: paymentColor.text,
                   }}
                 >
-                  {PAYMENT_STATUS_LABELS[order.paymentStatus]}
+                  {order.paymentDTO?.status || "Không rõ"}
                 </div>
               </div>
               <div className="status-card">
                 <div className="status-label">Phương thức thanh toán</div>
                 <div className="status-value">
-                  {PAYMENT_METHOD_LABELS[order.paymentMethod]}
+                  {order.paymentDTO?.paymentMethod || "Không rõ"}
                 </div>
               </div>
             </div>
@@ -135,22 +135,16 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
               <div className="customer-details">
                 <div className="detail-row">
                   <span className="label">Họ tên:</span>
-                  <span className="value">{order.customer.name}</span>
+                  <span className="value">{order.userDTO?.name || "Không có"}</span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Email:</span>
-                  <span className="value">{order.customer.email}</span>
+                  <span className="value">{order.userDTO?.email || ""}</span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Số điện thoại:</span>
-                  <span className="value">{order.customer.phoneNumber}</span>
+                  <span className="value">{order.userDTO?.phoneNumber || ""}</span>
                 </div>
-                {order.customer.address && (
-                  <div className="detail-row">
-                    <span className="label">Địa chỉ:</span>
-                    <span className="value">{order.customer.address}</span>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -162,31 +156,37 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
               <div className="shipping-details">
                 <div className="detail-row">
                   <span className="label">Người nhận:</span>
-                  <span className="value">
-                    {order.shippingAddress.recipientName}
-                  </span>
+                  <span className="value">{order.addressDTO?.recipientName || ""}</span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Số điện thoại:</span>
-                  <span className="value">
-                    {order.shippingAddress.phoneNumber}
-                  </span>
+                  <span className="value">{order.addressDTO?.phoneNumber || ""}</span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Địa chỉ:</span>
-                  <span className="value">
-                    {order.shippingAddress.address},{" "}
-                    {order.shippingAddress.ward},{" "}
-                    {order.shippingAddress.district},{" "}
-                    {order.shippingAddress.city}
-                  </span>
+                  <span className="value">{order.addressDTO?.addressLine || ""}</span>
                 </div>
-                {order.shippingAddress.notes && (
-                  <div className="detail-row">
-                    <span className="label">Ghi chú:</span>
-                    <span className="value">{order.shippingAddress.notes}</span>
-                  </div>
-                )}
+              </div>
+            </div>
+
+            <div className="detail-section">
+              <h3>
+                <Truck size={18} />
+                Đơn vị vận chuyển
+              </h3>
+              <div className="shipping-provider-details">
+                <div className="detail-row">
+                  <span className="label">Đơn vị:</span>
+                  <span className="value">{order.shippingDTO?.shippingProvider || ""}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="label">Mã vận đơn:</span>
+                  <span className="value">{order.shippingDTO?.shippingCode || ""}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="label">Trạng thái:</span>
+                  <span className="value">{order.shippingDTO?.status || ""}</span>
+                </div>
               </div>
             </div>
 
@@ -199,7 +199,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                 <div className="detail-row">
                   <span className="label">Ngày tạo:</span>
                   <span className="value">
-                    {formatDateTime(order.createdAt)}
+                    {formatDateTime(order.orderDate)}
                   </span>
                 </div>
                 {order.confirmedAt && (
@@ -246,16 +246,16 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                 <div className="detail-row">
                   <span className="label">Tạm tính:</span>
                   <span className="value">
-                    {formatCurrency(order.subtotal)}
+                    {formatCurrency(order.subtotal ?? 0)}
                   </span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Phí vận chuyển:</span>
                   <span className="value">
-                    {formatCurrency(order.shippingFee)}
+                    {formatCurrency(order.shippingFee ?? order.shippingDTO?.shippingFee ?? 0)}
                   </span>
                 </div>
-                {order.discount > 0 && (
+                {order.discount && order.discount > 0 && (
                   <div className="detail-row">
                     <span className="label">Giảm giá:</span>
                     <span className="value discount">
@@ -276,24 +276,26 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
           <div className="items-section">
             <h3>
               <Package size={18} />
-              Sản phẩm đã đặt ({order.items.length} sản phẩm)
+              Sản phẩm đã đặt ({order.orderItems.length} sản phẩm)
             </h3>
             <div className="items-list">
-              {order.items.map((item, index) => (
+              {order.orderItems.map((item, index) => (
                 <div key={index} className="item-card">
                   <div className="item-image">
-                    {item.bookImageUrl ? (
-                      <img src={item.bookImageUrl} alt={item.bookTitle} />
+                    {item.book.images && item.book.images.length > 0 ? (
+                      <img src={item.book.images[0]} alt={item.book.title} />
+                    ) : item.book.imageUrl ? (
+                      <img src={item.book.imageUrl} alt={item.book.title} />
                     ) : (
                       <div className="no-image">📚</div>
                     )}
                   </div>
                   <div className="item-info">
-                    <h4 className="item-title">{item.bookTitle}</h4>
-                    <p className="item-author">Tác giả: {item.bookAuthor}</p>
+                    <h4 className="item-title">{item.book.title}</h4>
+                    <p className="item-author">Tác giả: {item.book.author || ""}</p>
                     <div className="item-details">
                       <span className="item-price">
-                        {formatCurrency(item.unitPrice)}
+                        {formatCurrency(item.price)}
                       </span>
                       <span className="item-quantity">x {item.quantity}</span>
                       <span className="item-total">
