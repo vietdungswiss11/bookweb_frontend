@@ -78,8 +78,10 @@ const UsersPage: React.FC = () => {
   const calculateStats = (userList: UserDTO[]) => {
     setStats({
       total: userList.length,
-      active: userList.filter((user) => user.isActive).length,
-      admins: userList.filter((user) => user.role === "ADMIN").length,
+      active: userList.filter((user) => user.lastLoginAt).length,
+      admins: userList.filter((user) =>
+        user.roles && user.roles.some(role => role.name === "ROLE_ADMIN")
+      ).length,
     });
   };
 

@@ -10,12 +10,17 @@ export interface User {
   avatar?: string;
 }
 
+export interface RoleDTO {
+  id: number;
+  name: string;
+}
+
 export interface UserDTO {
   id: number;
   name: string;
   email: string;
   phoneNumber: string;
-  role: "USER" | "ADMIN";
+  roles: RoleDTO[];
   isActive: boolean;
   address?: string;
   dateOfBirth?: string;

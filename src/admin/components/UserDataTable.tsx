@@ -93,11 +93,9 @@ const UserDataTable: React.FC<UserDataTableProps> = ({
           <thead>
             <tr>
               <th>ID</th>
-              <th>Avatar</th>
               <th>Thông tin cá nhân</th>
               <th>Liên hệ</th>
               <th>Vai trò</th>
-              <th>Trạng thái</th>
               <th>Đăng nhập cuối</th>
               <th>Thao tác</th>
             </tr>
@@ -105,7 +103,7 @@ const UserDataTable: React.FC<UserDataTableProps> = ({
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={8} className="no-data">
+                <td colSpan={6} className="no-data">
                   Không có dữ liệu
                 </td>
               </tr>
@@ -114,64 +112,32 @@ const UserDataTable: React.FC<UserDataTableProps> = ({
                 <tr key={user.id}>
                   <td>{user.id}</td>
                   <td>
-                    <div className="user-avatar">
-                      {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} />
-                      ) : (
-                        <div className="no-avatar">
-                          <UserIcon size={20} />
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td>
                     <div className="user-info">
                       <span className="user-name">{user.name}</span>
                       <small className="user-id">ID: {user.id}</small>
-                      {user.dateOfBirth && (
-                        <small className="user-dob">
-                          Sinh: {formatDate(user.dateOfBirth)}
-                        </small>
-                      )}
                     </div>
                   </td>
                   <td>
                     <div className="contact-info">
                       <div className="email">{user.email}</div>
                       <div className="phone">{user.phoneNumber}</div>
-                      {user.address && (
-                        <div className="address" title={user.address}>
-                          {user.address.length > 30
-                            ? `${user.address.substring(0, 30)}...`
-                            : user.address}
-                        </div>
-                      )}
                     </div>
                   </td>
-                  <td>{user.role ? getRoleBadge(user.role) : <span style={{ color: '#aaa' }}>Không rõ</span>}</td>
                   <td>
-                    <div className="status-cell">
-                      {getStatusBadge(user.isActive)}
-                      {onToggleStatus && (
-                        <button
-                          className="toggle-status-btn"
-                          onClick={() => onToggleStatus(user)}
-                          title={
-                            user.isActive
-                              ? "Khóa tài khoản"
-                              : "Kích hoạt tài khoản"
-                          }
-                        >
-                          {user.isActive ? (
-                            <ToggleRight size={16} className="toggle-on" />
-                          ) : (
-                            <ToggleLeft size={16} className="toggle-off" />
-                          )}
-                        </button>
-                      )}
-                    </div>
+                    {user.roles && user.roles.length > 0
+                      ? user.roles.map((role: any, idx: number) => (
+                        <span key={role.id} className="role-badge">
+                          {role.name.replace("ROLE_", "")}
+                          {idx < user.roles.length - 1 ? ", " : ""}
+                        </span>
+                      ))
+                      : <span style={{ color: '#aaa' }}>Không rõ</span>}
                   </td>
-                  <td>{formatDateTime(user.lastLoginAt)}</td>
+                  <td>
+                    {user.lastLoginAt
+                      ? new Date(user.lastLoginAt).toLocaleString("vi-VN")
+                      : "-"}
+                  </td>
                   <td>
                     <div className="action-buttons">
                       <button

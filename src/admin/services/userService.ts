@@ -40,7 +40,7 @@ export const getUsers = async (params?: {
   isActive?: boolean;
 }): Promise<PaginatedResponse<UserDTO>> => {
   try {
-    let url = API_URL;
+    let url = 'http://localhost:8080/admin/users';
     if (params) {
       const query = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
@@ -62,7 +62,7 @@ export const getUsers = async (params?: {
 
 export const getUserById = async (id: number): Promise<UserDTO> => {
   try {
-    const response = await authFetch(`${API_URL}/${id}`);
+    const response = await authFetch(`http://localhost:8080/admin/users/${id}`);
     return handleResponse<UserDTO>(response);
   } catch (error) {
     if (error instanceof UserServiceError) throw error;
@@ -101,7 +101,7 @@ export const updateUser = async (
 
 export const deleteUser = async (id: number): Promise<void> => {
   try {
-    const response = await authFetch(`${API_URL}/${id}`, {
+    const response = await authFetch(`http://localhost:8080/admin/users/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

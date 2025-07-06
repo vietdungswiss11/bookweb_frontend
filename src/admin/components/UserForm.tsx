@@ -34,7 +34,9 @@ const UserForm: React.FC<UserFormProps> = ({ open, user, onClose, onSave }) => {
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
-        role: user.role,
+        role: user.roles && user.roles.length > 0
+          ? (user.roles[0].name === "ROLE_ADMIN" ? "ADMIN" : "USER")
+          : "USER",
         isActive: user.isActive,
         address: user.address || "",
         dateOfBirth: user.dateOfBirth || "",

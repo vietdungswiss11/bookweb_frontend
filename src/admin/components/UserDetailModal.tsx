@@ -58,9 +58,23 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
       : { label: "Tạm khóa", color: "#ef4444", bgColor: "#fef2f2" };
   };
 
-  const roleInfo = getRoleInfo(user.role);
+  const roleInfo = getRoleInfo(user.roles && user.roles.length > 0 ? user.roles[0].name : "");
   const statusInfo = getStatusInfo(user.isActive);
   const RoleIcon = roleInfo.icon;
+
+  // Trạng thái tài khoản động theo lastLoginAt
+  let accountStatus = {
+    label: "Không sử dụng",
+    color: "#6b7280", // xám
+    bgColor: "#f3f4f6"
+  };
+  if (user.lastLoginAt) {
+    accountStatus = {
+      label: "Hoạt động",
+      color: "#10b981", // xanh
+      bgColor: "#ecfdf5"
+    };
+  }
 
   return (
     <div className="modal-overlay">
@@ -201,16 +215,16 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
                   <div className="status-indicator">
                     <div
                       className="status-dot"
-                      style={{ backgroundColor: statusInfo.color }}
+                      style={{ backgroundColor: accountStatus.color }}
                     ></div>
-                    <span style={{ color: statusInfo.color }}>
-                      {statusInfo.label}
+                    <span style={{ color: accountStatus.color }}>
+                      {accountStatus.label}
                     </span>
                   </div>
                   <div className="status-description">
-                    {user.isActive
+                    {accountStatus.label === "Hoạt động"
                       ? "Tài khoản đang hoạt động bình thường và có thể truy cập hệ thống."
-                      : "Tài khoản đã bị tạm khóa và không thể truy cập hệ thống."}
+                      : "Tài khoản chưa từng đăng nhập và hiện không sử dụng."}
                   </div>
                 </div>
               </div>
