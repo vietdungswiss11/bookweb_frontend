@@ -22,6 +22,7 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
     discountPrice: 0,
     description: "",
     categoryId: 1,
+    categoryIds: [],
     images: [],
     isbn: "",
     publicationDate: "",
@@ -45,7 +46,8 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
         discountPercent: book.discountPercent ?? 0,
         discountPrice: book.discountPrice ?? book.price ?? 0,
         description: book.description || "",
-        categoryId: book.categoryId,
+        categoryId: book.categoryId ?? 1,
+        categoryIds: book.categories ? book.categories.map(cat => cat.id) : [],
         images: book.images || [],
         isbn: book.isbn || "",
         publicationDate: book.publicationDate || "",
@@ -64,6 +66,7 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
         discountPrice: 0,
         description: "",
         categoryId: 1,
+        categoryIds: [],
         images: [],
         isbn: "",
         publicationDate: "",
@@ -149,7 +152,12 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
 
     setLoading(true);
     try {
-      let submitData = { ...formData };
+      // Build object gửi lên API: categories là mảng object {id: ...}
+      let submitData = {
+        ...formData,
+        categories: formData.categoryIds.map(id => ({ id })),
+      };
+      
       // Nếu images là mảng object
       if (submitData.images && submitData.images.length > 0) {
         if (typeof submitData.images[0] === 'string') {
@@ -176,12 +184,12 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => {
-      let newData = {
+      let newData = { ...prev };
+      newData = {
         ...prev,
         [name]:
           name === "price" ||
             name === "sold" ||
-            name === "categoryId" ||
             name === "originalPrice" ||
             name === "discountPercent"
             ? Number(value) || 0
@@ -387,19 +395,34 @@ const BookForm: React.FC<BookFormProps> = ({ open, book, onClose, onSave }) => {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="categoryId">Danh mục</label>
-              <select
-                id="categoryId"
-                name="categoryId"
-                value={formData.categoryId}
-                onChange={handleChange}
-              >
-                {categories.length === 0 && <option value={1}>Văn học</option>}
+            <div className="form-group full-width">
+              <label>Danh mục</label>
+              <div className="category-checkbox-group">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  <label key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <input
+                      type="checkbox"
+                      value={cat.id}
+                      checked={formData.categoryIds.includes(cat.id)}
+                      onChange={e => {
+                        const checked = e.target.checked;
+                        setFormData(prev => {
+                          let newIds = prev.categoryIds || [];
+                          if (checked) {
+                            newIds = [...newIds, cat.id];
+                          } else {
+                            newIds = newIds.filter(id => id !== cat.id);
+                          }
+                          return { ...prev, categoryIds: newIds };
+                        });
+                      }}
+                    />
+                    {cat.name}
+                  </label>
                 ))}
-              </select>
+              </div>
+              </div>
             </div>
 
             <div className="form-group full-width">

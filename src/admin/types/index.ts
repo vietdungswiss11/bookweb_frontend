@@ -7,6 +7,7 @@ export interface Book {
   discountPrice: number;
   description?: string;
   categoryId: number;
+  categoryIds: number[];
   images: { id?: number; url: string; name?: string }[];
   imageUrl?: string;
   stockQuantity?: number;

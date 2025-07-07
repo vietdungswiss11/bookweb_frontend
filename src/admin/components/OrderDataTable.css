@@ -152,37 +152,37 @@
 }
 
 .status-pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: #ddda10;
+  color: #e75f0b;
 }
 
 .status-confirmed {
-  background: #dbeafe;
+  background: #5b8dcf;
   color: #1e40af;
 }
 
 .status-processing {
-  background: #e0e7ff;
+  background: #6987eb;
   color: #3730a3;
 }
 
 .status-shipped {
-  background: #fce7f3;
+  background: #e269ae;
   color: #be185d;
 }
 
 .status-delivered {
-  background: #dcfce7;
+  background: #6fe799;
   color: #166534;
 }
 
 .status-cancelled {
-  background: #fef2f2;
+  background: #f17777;
   color: #dc2626;
 }
 
 .status-refunded {
-  background: #f3f4f6;
+  background: #6b93e2;
   color: #374151;
 }
 

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import {
   OrderDTO,
-  OrderStatusUpdateRequest ,
+  OrderStatusUpdateRequest,
   OrderFilters,
   OrderStats,
   OrderStatus,
@@ -161,7 +161,7 @@ const OrdersPage: React.FC = () => {
 
   const handleSaveStatus = async (
     id: number,
-    data: OrderStatusUpdateRequest ,
+    data: OrderStatusUpdateRequest,
   ) => {
     try {
       await updateOrderStatus(id, data);
@@ -229,6 +229,21 @@ const OrdersPage: React.FC = () => {
     userDTO: order.userDTO || { id: 0, name: 'Không có', email: '', phoneNumber: '' }
   }));
 
+  // Thêm hàm tính toán thống kê dựa trên orders
+  const getCustomStats = () => {
+    const total = orders.length;
+    const delivered = orders.filter(o => o.status === 'DELIVERED').length;
+    const refunded = orders.filter(o => o.status === 'REFUNDED').length;
+    const cancelled = orders.filter(o => o.status === 'CANCELLED').length;
+    // Đang xử lý là tất cả đơn trừ đi đã giao hàng, đã hoàn tiền, đã hủy
+    const processing = total - delivered - refunded - cancelled;
+    // Doanh thu là tổng số tiền của các đơn đã giao hàng
+    const revenue = orders.filter(o => o.status === 'DELIVERED').reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+    return { total, delivered, processing, revenue };
+  };
+
+  const customStats = getCustomStats();
+
   return (
     <div className="orders-page">
       <div className="page-header">
@@ -264,7 +279,7 @@ const OrdersPage: React.FC = () => {
               <Package size={24} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">{stats.total}</div>
+              <div className="stat-value">{customStats.total}</div>
               <div className="stat-label">Tổng đơn hàng</div>
             </div>
           </div>
@@ -274,7 +289,7 @@ const OrdersPage: React.FC = () => {
             </div>
             <div className="stat-content">
               <div className="stat-value">
-                {stats.pending + stats.processing}
+                {customStats.processing}
               </div>
               <div className="stat-label">Đang xử lý</div>
             </div>
@@ -284,7 +299,7 @@ const OrdersPage: React.FC = () => {
               <CheckCircle size={24} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">{stats.delivered}</div>
+              <div className="stat-value">{customStats.delivered}</div>
               <div className="stat-label">Đã giao hàng</div>
             </div>
           </div>
@@ -294,7 +309,7 @@ const OrdersPage: React.FC = () => {
             </div>
             <div className="stat-content">
               <div className="stat-value">
-                {formatCurrency(stats.totalRevenue)}
+                {formatCurrency(customStats.revenue)}
               </div>
               <div className="stat-label">Doanh thu</div>
             </div>
