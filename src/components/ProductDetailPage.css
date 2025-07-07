@@ -678,3 +678,103 @@
   margin-bottom: 4px;
   text-align: center;
 }
+
+/* Review Form (User đánh giá) */
+.review-form {
+  background: #fffbe7;
+  border: 1.5px solid #ffe082;
+  border-radius: 12px;
+  padding: 20px 24px 16px 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 12px rgba(255, 193, 7, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 1000px;
+}
+
+.review-form label {
+  font-weight: 600;
+  color: #a1824a;
+  margin-right: 8px;
+}
+
+.review-form select {
+  border-radius: 6px;
+  border: 1.5px solid #e0e0e0;
+  padding: 6px 12px;
+  font-size: 15px;
+  background: #fff;
+  color: #e53935;
+  font-weight: 600;
+  outline: none;
+  margin-left: 4px;
+  margin-bottom: 0;
+  transition: border 0.2s;
+}
+
+.review-form select:focus {
+  border: 1.5px solid #e53935;
+}
+
+.review-form textarea {
+  border-radius: 8px;
+  border: 1.5px solid #e0e0e0;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: #222;
+  background: #fff;
+  resize: vertical;
+  min-height: 60px;
+  max-height: 180px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.review-form textarea:focus {
+  border: 1.5px solid #e53935;
+}
+
+.btn-review-submit {
+  background: linear-gradient(90deg, #e53935 60%, #ff7043 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.10);
+}
+
+.btn-review-submit:hover {
+  background: linear-gradient(90deg, #b71c1c 60%, #e53935 100%);
+  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.16);
+}
+
+.btn-review-delete {
+  background: #fff;
+  color: #e53935;
+  border: 2px solid #e53935;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.btn-review-delete:hover {
+  background: #ffeaea;
+  color: #b71c1c;
+  border: 2px solid #b71c1c;
+}
+
+@media (max-width: 700px) {
+  .review-form {
+    padding: 12px 6px 10px 6px;
+    max-width: 98vw;
+  }
+}
