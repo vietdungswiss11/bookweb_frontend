@@ -7,7 +7,7 @@ import { ReviewItem } from "./ReviewItem";
 import { addAddress } from "../services/addressService";
 import { getOrderById } from "../services/orderService";
 import { getReviewsByUserId } from "../services/reviewService";
-import { updateUser } from "../services/userService";
+import { updateUser, changePassword } from "../services/userService";
 
 interface AccountMainContentProps {
   activeSection: AccountSection;
@@ -87,6 +87,14 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     phoneNumber: user.phoneNumber || '',
   });
   const [profileMsg, setProfileMsg] = useState<string | null>(null);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [changePasswordForm, setChangePasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [changePasswordMsg, setChangePasswordMsg] = useState<string | null>(null);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
     if (activeSection === 'address') {
@@ -219,65 +227,167 @@ export const AccountMainContent: React.FC<AccountMainContentProps> = ({
     }
   };
 
+  const handleChangePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChangePasswordForm({ ...changePasswordForm, [e.target.name]: e.target.value });
+  };
+
+  const handleChangePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChangePasswordMsg(null);
+    if (!changePasswordForm.oldPassword || !changePasswordForm.newPassword || !changePasswordForm.confirmPassword) {
+      setChangePasswordMsg('Vui lòng nhập đầy đủ các trường!');
+      return;
+    }
+    if (changePasswordForm.newPassword !== changePasswordForm.confirmPassword) {
+      setChangePasswordMsg('Mật khẩu mới và nhập lại phải giống nhau!');
+      return;
+    }
+    setIsChangingPassword(true);
+    try {
+      const msg = await changePassword(user.id, changePasswordForm.oldPassword, changePasswordForm.newPassword, changePasswordForm.confirmPassword);
+      setChangePasswordMsg(msg || 'Đổi mật khẩu thành công!');
+      setChangePasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => { setShowChangePassword(false); setChangePasswordMsg(null); }, 1500);
+    } catch (err: any) {
+      setChangePasswordMsg(err.message || 'Đổi mật khẩu thất bại!');
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
   const renderProfileSection = () => (
     <div className="profile-section">
       <h2 className="section-title">My Profile</h2>
-      <form className="profile-form" onSubmit={handleProfileSubmit} autoComplete="off">
-        <div className="form-group">
-          <label htmlFor="name">Full Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={profileForm.name}
-            className="form-input"
-            onChange={handleProfileChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={profileForm.email}
-            className="form-input"
-            onChange={handleProfileChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="phoneNumber">Phone Number</label>
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={profileForm.phoneNumber}
-            className="form-input"
-            onChange={handleProfileChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Gender</label>
-          <div style={{ display: 'flex', gap: '24px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="radio" name="gender" value="male" checked={user.gender === 'male'} readOnly /> Nam
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <input type="radio" name="gender" value="female" checked={user.gender === 'female'} readOnly /> Nữ
-            </label>
+      {!showChangePassword ? (
+        <>
+          <form className="profile-form" onSubmit={handleProfileSubmit} autoComplete="off">
+            <div className="form-group">
+              <label htmlFor="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={profileForm.name}
+                className="form-input"
+                onChange={handleProfileChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={profileForm.email}
+                className="form-input"
+                onChange={handleProfileChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phoneNumber">Phone Number</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={profileForm.phoneNumber}
+                className="form-input"
+                onChange={handleProfileChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Gender</label>
+              <div style={{ display: 'flex', gap: '24px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <input type="radio" name="gender" value="male" checked={user.gender === 'male'} readOnly /> Nam
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <input type="radio" name="gender" value="female" checked={user.gender === 'female'} readOnly /> Nữ
+                </label>
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Birthday</label>
+              <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
+                <input type="text" className="form-input" placeholder="DD" style={{ maxWidth: 80 }} value={user.birthday?.split('-')[2] || ''} readOnly />
+                <input type="text" className="form-input" placeholder="MM" style={{ maxWidth: 80 }} value={user.birthday?.split('-')[1] || ''} readOnly />
+                <input type="text" className="form-input" placeholder="YYYY" style={{ maxWidth: 120 }} value={user.birthday?.split('-')[0] || ''} readOnly />
+              </div>
+            </div>
+            {profileMsg && <div className={`submit-message${profileMsg.includes('thất bại') ? ' error' : ''}`}>{profileMsg}</div>}
+            <div className="profile-btn-row">
+              <button className="save-button" type="submit">Save Changes</button>
+              <button
+                type="button"
+                className="change-password-btn"
+                onClick={() => setShowChangePassword(true)}
+              >
+                Thay đổi mật khẩu
+              </button>
+            </div>
+          </form>
+        </>
+      ) : (
+        <form className="profile-form" onSubmit={handleChangePasswordSubmit} autoComplete="off">
+          <div className="form-group">
+            <label htmlFor="oldPassword" className="required">Mật khẩu cũ</label>
+            <input
+              type="password"
+              id="oldPassword"
+              name="oldPassword"
+              className="form-input"
+              value={changePasswordForm.oldPassword}
+              onChange={handleChangePasswordInput}
+              placeholder="Nhập mật khẩu cũ"
+            />
           </div>
-        </div>
-        <div className="form-group">
-          <label>Birthday</label>
-          <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
-            <input type="text" className="form-input" placeholder="DD" style={{ maxWidth: 80 }} value={user.birthday?.split('-')[2] || ''} readOnly />
-            <input type="text" className="form-input" placeholder="MM" style={{ maxWidth: 80 }} value={user.birthday?.split('-')[1] || ''} readOnly />
-            <input type="text" className="form-input" placeholder="YYYY" style={{ maxWidth: 120 }} value={user.birthday?.split('-')[0] || ''} readOnly />
+          <div className="form-group">
+            <label htmlFor="newPassword" className="required">Mật khẩu mới</label>
+            <input
+              type="password"
+              id="newPassword"
+              name="newPassword"
+              className="form-input"
+              value={changePasswordForm.newPassword}
+              onChange={handleChangePasswordInput}
+              placeholder="Nhập mật khẩu mới"
+            />
           </div>
-        </div>
-        {profileMsg && <div className={`submit-message${profileMsg.includes('thất bại') ? ' error' : ''}`}>{profileMsg}</div>}
-        <button className="save-button" type="submit">Save Changes</button>
-      </form>
+          <div className="form-group">
+            <label htmlFor="confirmPassword" className="required">Nhập lại mật khẩu mới</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              className="form-input"
+              value={changePasswordForm.confirmPassword}
+              onChange={handleChangePasswordInput}
+              placeholder="Nhập lại mật khẩu mới"
+            />
+          </div>
+          {changePasswordMsg && (
+            <div className={`submit-message${changePasswordMsg.includes('thất bại') ? ' error' : ''}`}>{changePasswordMsg}</div>
+          )}
+          <div className="form-bottom">
+            <button
+              type="button"
+              onClick={() => { setShowChangePassword(false); setChangePasswordMsg(null); setChangePasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' }); }}
+              className="back-button"
+            >
+              &laquo; Quay lại
+            </button>
+            <div className="form-bottom-right">
+              <span className="required-note">(*) bắt buộc</span>
+              <button
+                className="save-button"
+                type="submit"
+                disabled={isChangingPassword}
+              >
+                {isChangingPassword ? 'ĐANG LƯU...' : 'LƯU THAY ĐỔI'}
+              </button>
+            </div>
+          </div>
+        </form>
+      )}
     </div>
   );
 

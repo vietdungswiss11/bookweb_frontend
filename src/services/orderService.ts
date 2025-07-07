@@ -107,5 +107,6 @@ export async function updateOrderStatus(
 export async function getOrdersByUserId(userId: string | number) {
   const res = await authFetch(`${API_URL}/orders/user/${userId}`);
   if (!res.ok) throw new Error("Failed to fetch orders");
-  return res.json();
+  const data = await res.json();
+  return Array.isArray(data.orders) ? data.orders : [];
 }

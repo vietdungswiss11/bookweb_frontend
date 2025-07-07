@@ -24,7 +24,7 @@ export interface Address {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   phoneNumber?: string;
@@ -143,7 +143,7 @@ export const UserAccountPage: React.FC = () => {
           />
           <AccountMainContent
             activeSection={activeSection}
-            user={user || { id: '', name: "", email: "", phoneNumber: "" }}
+            user={user || { id: 0, name: "", email: "", phoneNumber: "" }}
             orders={orders}
             reviews={reviews}
             credits={credits}

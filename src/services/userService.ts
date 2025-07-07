@@ -40,4 +40,21 @@ export async function deleteUser(userId: string | number) {
         method: 'DELETE'
     });
     return res.ok;
+}
+
+export async function changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string) {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`http://localhost:8080/auth/users/${userId}/change-password`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ oldPassword, newPassword, confirmPassword })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        throw new Error(data.message || 'Đổi mật khẩu thất bại!');
+    }
+    return data.message;
 } 
