@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AuthModal.css';
-import { signin, signup } from '../services/authService';
+import { signin, signup, forgotPassword } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 
 interface AuthModalProps {
@@ -16,6 +16,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [showForgot, setShowForgot] = useState(false);
+    const [forgotEmail, setForgotEmail] = useState('');
+    const [forgotMsg, setForgotMsg] = useState<string | null>(null);
     const navigate = useNavigate();
 
     if (!open) return null;
@@ -76,6 +79,23 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
         setLoading(false);
     };
 
+    const handleForgotPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setForgotMsg(null);
+        setLoading(true);
+        try {
+            const res = await forgotPassword(forgotEmail);
+            if (res.success) {
+                setForgotMsg('Mật khẩu mới đã được gửi về email của bạn!');
+            } else {
+                setForgotMsg(res.message || 'Không tìm thấy email hoặc lỗi gửi mail!');
+            }
+        } catch (err) {
+            setForgotMsg('Lỗi kết nối server!');
+        }
+        setLoading(false);
+    };
+
     return (
         <div className="auth-modal-overlay" onClick={onClose}>
             <div className="auth-modal" onClick={e => e.stopPropagation()}>
@@ -84,21 +104,33 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
                     <div className={tab === 'register' ? 'active' : ''} onClick={() => setTab('register')}>Đăng ký</div>
                 </div>
                 {tab === 'login' ? (
-                    <form className="auth-form" onSubmit={handleLogin}>
-                        <label>Email</label>
-                        <input type="email" value={loginInfo.username} onChange={e => setLoginInfo({ ...loginInfo, username: e.target.value })} />
-                        <label>Mật khẩu</label>
-                        <div className="password-input-wrapper">
-                            <input type={showPassword ? 'text' : 'password'} value={loginInfo.password} onChange={e => setLoginInfo({ ...loginInfo, password: e.target.value })} />
-                            <button type="button" className="show-btn" onClick={() => setShowPassword(v => !v)}>{showPassword ? 'Ẩn' : 'Hiện'}</button>
-                        </div>
-                        <div className="auth-form-footer">
-                            <a href="#" className="forgot-link">Quên mật khẩu?</a>
-                        </div>
-                        {error && <div style={{ color: 'red', fontSize: 14 }}>{error}</div>}
-                        {success && <div style={{ color: 'green', fontSize: 14 }}>{success}</div>}
-                        <button type="submit" className="auth-submit" disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>
-                    </form>
+                    showForgot ? (
+                        <form className="auth-form" onSubmit={handleForgotPassword}>
+                            <label>Nhập email để nhận mật khẩu mới</label>
+                            <input type="email" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required />
+                            {forgotMsg && <div style={{ color: forgotMsg.includes('gửi') ? 'green' : 'red', fontSize: 14 }}>{forgotMsg}</div>}
+                            <div className="auth-btn-row">
+                                <button type="submit" className="auth-submit" disabled={loading}>{loading ? 'Đang gửi...' : 'Gửi mật khẩu mới'}</button>
+                                <button type="button" className="auth-back-btn" onClick={() => { setShowForgot(false); setForgotMsg(null); }}>Quay lại</button>
+                            </div>
+                        </form>
+                    ) : (
+                        <form className="auth-form" onSubmit={handleLogin}>
+                            <label>Email</label>
+                            <input type="email" value={loginInfo.username} onChange={e => setLoginInfo({ ...loginInfo, username: e.target.value })} />
+                            <label>Mật khẩu</label>
+                            <div className="password-input-wrapper">
+                                <input type={showPassword ? 'text' : 'password'} value={loginInfo.password} onChange={e => setLoginInfo({ ...loginInfo, password: e.target.value })} />
+                                <button type="button" className="show-btn" onClick={() => setShowPassword(v => !v)}>{showPassword ? 'Ẩn' : 'Hiện'}</button>
+                            </div>
+                            <div className="auth-form-footer">
+                                <a href="#" className="forgot-link" onClick={e => { e.preventDefault(); setShowForgot(true); }}>Quên mật khẩu?</a>
+                            </div>
+                            {error && <div style={{ color: 'red', fontSize: 14 }}>{error}</div>}
+                            {success && <div style={{ color: 'green', fontSize: 14 }}>{success}</div>}
+                            <button type="submit" className="auth-submit" disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>
+                        </form>
+                    )
                 ) : (
                     <form className="auth-form" onSubmit={handleRegister}>
                         <label>Email</label>

@@ -27,4 +27,12 @@ export async function signup(email: string, password: string, confirmPassword: s
         })
     });
     return res.json();
+}
+
+export async function forgotPassword(email: string) {
+    const res = await fetch(`${API_URL}/forgot-password?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
 } 

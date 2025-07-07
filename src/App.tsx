@@ -26,6 +26,7 @@ import BooksPage from "./admin/BooksPage";
 import CategoriesPage from "./admin/CategoriesPage";
 import OrdersPage from "./admin/OrdersPage";
 import UsersPage from "./admin/UsersPage";
+import RequireAdmin from "./admin/components/RequireAdmin";
 
 function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -100,18 +101,20 @@ function App() {
           <Route
             path="/admin/*"
             element={
-              <div style={{ display: "flex" }}>
-                <AdminSidebar />
-                <div style={{ width: "100%" }}>
-                  <Routes>
-                    <Route path="" element={<Dashboard />} />
-                    <Route path="books" element={<BooksPage />} />
-                    <Route path="categories" element={<CategoriesPage />} />
-                    <Route path="orders" element={<OrdersPage />} />
-                    <Route path="users" element={<UsersPage />} />
-                  </Routes>
+              <RequireAdmin>
+                <div style={{ display: "flex" }}>
+                  <AdminSidebar />
+                  <div style={{ width: "100%" }}>
+                    <Routes>
+                      <Route path="" element={<Dashboard />} />
+                      <Route path="books" element={<BooksPage />} />
+                      <Route path="categories" element={<CategoriesPage />} />
+                      <Route path="orders" element={<OrdersPage />} />
+                      <Route path="users" element={<UsersPage />} />
+                    </Routes>
+                  </div>
                 </div>
-              </div>
+              </RequireAdmin>
             }
           />
         </Routes>

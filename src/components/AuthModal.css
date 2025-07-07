@@ -145,3 +145,28 @@
 .auth-modal-close:hover {
     color: #e53935;
 }
+
+.auth-btn-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0;
+    margin-top: 0;
+    padding-top: 8px;
+}
+
+.auth-back-btn {
+    background: #d98609;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+
+.auth-back-btn:hover {
+    background: #b3740a;
+}
