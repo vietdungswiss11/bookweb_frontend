@@ -32,6 +32,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
                 setSuccess('Đăng nhập thành công!');
                 localStorage.setItem('token', res.token);
                 if (res.id) localStorage.setItem('userId', res.id);
+                localStorage.setItem('user', JSON.stringify({
+                    id: res.id,
+                    name: res.name,
+                    email: res.email,
+                    roles: res.roles
+                }));
                 setTimeout(() => {
                     setSuccess(null);
                     onClose();

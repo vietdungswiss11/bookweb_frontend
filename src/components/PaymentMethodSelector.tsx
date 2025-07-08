@@ -196,13 +196,13 @@ const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
                   <h5>Thông tin chuyển khoản:</h5>
                   <div className="bank-account-info">
                     <p>
-                      <strong>Ngân hàng:</strong> Vietcombank (VCB)
+                      <strong>Ngân hàng:</strong> ACB
                     </p>
                     <p>
-                      <strong>Số tài khoản:</strong> 1234567890
+                      <strong>Số tài khoản:</strong> 14776447
                     </p>
                     <p>
-                      <strong>Chủ tài khoản:</strong> CÔNG TY TNHH BOOKSTORE
+                      <strong>Chủ tài khoản:</strong> LE VIET DUNG (FOUNDER CÔNG TY TNHH BOOKSTORE)
                     </p>
                     <p>
                       <strong>Nội dung:</strong> [Mã đơn hàng] - [Họ tên]
@@ -212,29 +212,13 @@ const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
                   <div className="qr-code-section">
                     <h6>Quét mã QR để chuyển khoản:</h6>
                     <div className="qr-code-placeholder">
-                      <svg
-                        width="120"
-                        height="120"
-                        viewBox="0 0 120 120"
-                        fill="none"
-                      >
-                        <rect
-                          width="120"
-                          height="120"
-                          fill="#f0f0f0"
-                          stroke="#ddd"
-                          strokeWidth="1"
-                        />
-                        <text
-                          x="60"
-                          y="65"
-                          textAnchor="middle"
-                          fontSize="12"
-                          fill="#666"
-                        >
-                          QR Code
-                        </text>
-                      </svg>
+                      <img
+                        src={process.env.PUBLIC_URL + "/img/qrCode/ACB-LEVIETDUNG-14776447.png"}
+                        alt="QR chuyển khoản ACB LE VIET DUNG"
+                        width={240}
+                        height={360}
+                        style={{ border: '1px solid #ddd', borderRadius: 8 }}
+                      />
                       <p className="qr-note">
                         Mã QR sẽ được tạo sau khi đặt hàng
                       </p>
