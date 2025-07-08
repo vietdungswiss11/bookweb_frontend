@@ -1,6 +1,7 @@
 import { authFetch } from "./authFetch";
+import API_BASE_URL from './apiConfig';
 
-const API_URL = 'http://localhost:8080/users';
+const API_URL = `${API_BASE_URL}/users`;
 
 export async function getAllUsers() {
     const res = await authFetch(API_URL);
@@ -44,7 +45,7 @@ export async function deleteUser(userId: string | number) {
 
 export async function changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:8080/auth/users/${userId}/change-password`, {
+    const res = await fetch(`${API_BASE_URL}/auth/users/${userId}/change-password`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

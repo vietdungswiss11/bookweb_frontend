@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:8080/auth';
+import API_BASE_URL from './apiConfig';
+
+const API_URL = `${API_BASE_URL}/auth`;
 
 export async function signin(email: string, password: string) {
     const res = await fetch(`${API_URL}/signin`, {

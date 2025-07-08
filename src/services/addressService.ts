@@ -1,6 +1,7 @@
 import { authFetch } from "./authFetch";
+import API_BASE_URL from './apiConfig';
 
-const API_URL = 'http://localhost:8080/addresses';
+const API_URL = `${API_BASE_URL}/addresses`;
 
 export interface AddressPayload {
     id?: number;

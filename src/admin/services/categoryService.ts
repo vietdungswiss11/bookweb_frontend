@@ -1,7 +1,8 @@
 import { Category, CategoryListResponse, PaginatedResponse } from "../types";
 import { authFetch } from "../../services/authFetch";
+import API_BASE_URL from '../../services/apiConfig';
 
-const API_URL = "http://localhost:8080/admin/categories";
+const API_URL = `${API_BASE_URL}/admin/categories`;
 
 class CategoryServiceError extends Error {
   constructor(
@@ -32,7 +33,7 @@ export const getAllCategories = async (params?: {
   keyword?: string;
 }): Promise<CategoryListResponse | PaginatedResponse<Category> | Category[]> => {
   try {
-    const url = new URL("http://localhost:8080/categories");
+    const url = new URL(`${API_BASE_URL}/categories`);
     if (params?.page !== undefined)
       url.searchParams.append("page", params.page.toString());
     if (params?.size !== undefined)
@@ -100,7 +101,7 @@ export const deleteCategory = async (id: number): Promise<void> => {
 
 export const searchCategories = async (keyword: string): Promise<Category[]> => {
   try {
-    const url = new URL("http://localhost:8080/categories/search");
+    const url = new URL(`${API_BASE_URL}/categories/search`);
     url.searchParams.append("keyword", keyword);
     const response = await fetch(url.toString());
     return handleResponse<Category[]>(response);

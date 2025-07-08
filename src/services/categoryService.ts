@@ -1,6 +1,7 @@
 import { authFetch } from "./authFetch";
+import API_BASE_URL from './apiConfig';
 
-const API_URL = 'http://localhost:8080/categories';
+const API_URL = `${API_BASE_URL}/categories`;
 
 export async function getAllCategories() {
     const res = await fetch(API_URL);

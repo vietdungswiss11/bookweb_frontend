@@ -6,8 +6,9 @@ import {
   PaginatedResponse,
 } from "../types/User";
 import { authFetch } from "../../services/authFetch";
+import API_BASE_URL from '../../services/apiConfig';
 
-const API_URL = "http://localhost:8080/users";
+const API_URL = `${API_BASE_URL}/users`;
 
 class UserServiceError extends Error {
   constructor(
@@ -40,7 +41,7 @@ export const getUsers = async (params?: {
   isActive?: boolean;
 }): Promise<PaginatedResponse<UserDTO>> => {
   try {
-    let url = 'http://localhost:8080/admin/users';
+    let url = `${API_BASE_URL}/admin/users`;
     if (params) {
       const query = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
@@ -62,7 +63,7 @@ export const getUsers = async (params?: {
 
 export const getUserById = async (id: number): Promise<UserDTO> => {
   try {
-    const response = await authFetch(`http://localhost:8080/admin/users/${id}`);
+    const response = await authFetch(`${API_BASE_URL}/admin/users/${id}`);
     return handleResponse<UserDTO>(response);
   } catch (error) {
     if (error instanceof UserServiceError) throw error;
@@ -101,7 +102,7 @@ export const updateUser = async (
 
 export const deleteUser = async (id: number): Promise<void> => {
   try {
-    const response = await authFetch(`http://localhost:8080/admin/users/${id}`, {
+    const response = await authFetch(`${API_BASE_URL}/admin/users/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {

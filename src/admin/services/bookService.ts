@@ -1,7 +1,8 @@
 import { Book, BookDTO } from "../types";
 import { authFetch } from "../../services/authFetch";
+import API_BASE_URL from '../../services/apiConfig';
 
-const API_URL = "http://localhost:8080/admin/books";
+const API_URL = `${API_BASE_URL}/admin/books`;
 
 class BookServiceError extends Error {
   constructor(

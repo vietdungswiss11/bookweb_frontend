@@ -1,5 +1,7 @@
-const API_URL = 'http://localhost:8080/books';
-const ADMIN_API_URL = 'http://localhost:8080/admin/books';
+import API_BASE_URL from './apiConfig';
+
+const API_URL = `${API_BASE_URL}/books`;
+const ADMIN_API_URL = `${API_BASE_URL}/admin/books`;
 
 export async function getAllBooks(params?: any) {
     let url = API_URL;

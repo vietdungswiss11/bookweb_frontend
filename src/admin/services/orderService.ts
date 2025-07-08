@@ -6,8 +6,9 @@ import {
   PaginatedResponse,
 } from "../types/Order";
 import { authFetch } from "../../services/authFetch";
+import API_BASE_URL from '../../services/apiConfig';
 
-const API_URL = "http://localhost:8080/orders";
+const API_URL = `${API_BASE_URL}/orders`;
 
 class OrderServiceError extends Error {
   constructor(
@@ -45,7 +46,7 @@ export const getOrders = async (params?: {
   filters?: OrderFilters;
 }): Promise<OrdersApiResponse> => {
   try {
-    let url = "http://localhost:8080/admin/orders";
+    let url = `${API_BASE_URL}/admin/orders`;
     if (params) {
       const query = new URLSearchParams();
 
@@ -88,7 +89,7 @@ export const updateOrderStatus = async (
   data: OrderStatusUpdateRequest,
 ): Promise<OrderDTO> => {
   try {
-    const url = `http://localhost:8080/admin/orders/${id}/status`;
+    const url = `${API_BASE_URL}/admin/orders/${id}/status`;
     const response = await authFetch(url, {
       method: "PUT",
       body: JSON.stringify(data),
@@ -101,7 +102,7 @@ export const updateOrderStatus = async (
 };
 
 export const deleteOrder = async (id: number): Promise<void> => {
-  let url = "http://localhost:8080/admin/orders";
+  let url = `${API_BASE_URL}/admin/orders`;
   try {
     const response = await authFetch(`${url}/${id}`, {
       method: "DELETE",

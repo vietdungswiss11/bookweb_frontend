@@ -1,4 +1,5 @@
 import { authFetch } from "./authFetch";
+import API_BASE_URL from './apiConfig';
 
 const API_URL = "http://localhost:8080";
 
@@ -50,7 +51,7 @@ const getAuthHeaders = (): Record<string, string> => {
 export async function createOrder(
   orderData: CreateOrderRequestDTO,
 ): Promise<OrderResponse> {
-  const response = await authFetch(`${API_URL}/orders`, {
+  const response = await authFetch(`${API_BASE_URL}/orders`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(orderData),
@@ -64,7 +65,7 @@ export async function createOrder(
 }
 
 export async function getOrderById(orderId: string): Promise<OrderResponse> {
-  const response = await authFetch(`${API_URL}/orders/${orderId}`, {
+  const response = await authFetch(`${API_BASE_URL}/orders/${orderId}`, {
     headers: getAuthHeaders(),
   });
 
@@ -76,7 +77,7 @@ export async function getOrderById(orderId: string): Promise<OrderResponse> {
 }
 
 export async function getUserOrders(userId: string): Promise<OrderResponse[]> {
-  const response = await authFetch(`${API_URL}/users/${userId}/orders`, {
+  const response = await authFetch(`${API_BASE_URL}/users/${userId}/orders`, {
     headers: getAuthHeaders(),
   });
 
@@ -91,7 +92,7 @@ export async function updateOrderStatus(
   orderId: string,
   status: string,
 ): Promise<OrderResponse> {
-  const response = await authFetch(`${API_URL}/orders/${orderId}/status`, {
+  const response = await authFetch(`${API_BASE_URL}/orders/${orderId}/status`, {
     method: "PATCH",
     headers: getAuthHeaders(),
     body: JSON.stringify({ status }),
@@ -105,7 +106,7 @@ export async function updateOrderStatus(
 }
 
 export async function getOrdersByUserId(userId: string | number) {
-  const res = await authFetch(`${API_URL}/orders/user/${userId}`);
+  const res = await authFetch(`${API_BASE_URL}/orders/user/${userId}`);
   if (!res.ok) throw new Error("Failed to fetch orders");
   const data = await res.json();
   return Array.isArray(data.orders) ? data.orders : [];
