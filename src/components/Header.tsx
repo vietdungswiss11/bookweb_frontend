@@ -13,9 +13,9 @@ const Header: React.FC = () => {
         <div className="header-main">
           <div className="header-left">
             <div className="logo-container" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
-              {/* Logo icon sách nhỏ và chữ BookStore */}
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-icon"><rect x="3" y="4" width="18" height="16" rx="2" fill="#2563eb" /><rect x="6" y="7" width="12" height="2" rx="1" fill="#fff" /><rect x="6" y="11" width="8" height="2" rx="1" fill="#fff" /></svg>
-              <span className="logo-text">BookStore</span>
+              {/* Logo icon sách nhỏ và chữ BookZone */}
+              <img src="/logoWeb.png" alt="BookZone logo" className="logo-img" />
+              <span className="logo-text">BookZone</span>
             </div>
             <SearchBar />
           </div>

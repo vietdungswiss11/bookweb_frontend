@@ -16,6 +16,7 @@
     width: 840px;
     height: 320px;
     flex-shrink: 0;
+    position: relative;
 }
 
 .carousel-image {
@@ -54,4 +55,27 @@
 
 .slick-dots li.slick-active button:before {
     color: #d82c2c;
+}
+
+/* Slick Carousel Arrow Custom */
+.slick-arrow {
+    display: none !important;
+}
+
+/* Đặt dots nằm đè lên ảnh banner, không bị tràn xuống dưới */
+.slick-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+    z-index: 3;
+    pointer-events: auto;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #d82c2c;
+    font-weight: bold;
+    opacity: 1;
 }

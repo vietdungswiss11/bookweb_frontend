@@ -13,17 +13,39 @@ const HeroSection: React.FC = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
+    arrows: false,
   };
 
+
   const mainBanners = [
-    { id: 1, imageUrl: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80', alt: 'Books Banner 1' },
-    { id: 2, imageUrl: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80', alt: 'Books Banner 2' },
-    { id: 3, imageUrl: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80', alt: 'Books Banner 3' },
+    // { id: 1, imageUrl: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80', alt: 'Books Banner 1' },
+    // { id: 2, imageUrl: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80', alt: 'Books Banner 2' },
+    // { id: 3, imageUrl: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80', alt: 'Books Banner 3' },
+    {
+      id: 1,
+      imageUrl: "/img/hero-section/bannerMain1.png", alt: "Banner chính 1"
+    },
+    {
+      id: 2,
+      imageUrl: "/img/hero-section/bannerMain2.png", alt: "Banner chính 1"
+    },
+    {
+      id: 3,
+      imageUrl: "/img/hero-section/bannerMain3.jpg", alt: "Banner chính 1"
+    }
   ];
 
   const sideBanners = [
-    { id: 1, imageUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80', alt: 'Side Banner 1' },
-    { id: 2, imageUrl: 'https://images.unsplash.com/photo-1510936111840-6cef99faf2a9?auto=format&fit=crop&w=400&q=80', alt: 'Side Banner 2' },
+    // { id: 1, imageUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80', alt: 'Side Banner 1' },
+    // { id: 2, imageUrl: 'https://images.unsplash.com/photo-1510936111840-6cef99faf2a9?auto=format&fit=crop&w=400&q=80', alt: 'Side Banner 2' },
+    {
+      id: 1,
+      imageUrl: "/img/hero-section/sideBanner1.png", alt: "Side Bar 1"
+    },
+    {
+      id: 2,
+      imageUrl: "/img/hero-section/sideBanner2.jpg", alt: "Side Bar 2"
+    },
   ]
 
   return (

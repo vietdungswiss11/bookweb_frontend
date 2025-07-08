@@ -1,28 +1,29 @@
 import React from "react";
 import './CategoryGrid.css';
 import { useNavigate } from "react-router-dom";
+import { title } from "process";
 
 const CategoryGrid: React.FC = () => {
   const promoBanners = [
     {
       id: 1,
-      imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=310&h=210&fit=crop',
-      title: 'Trở lại trường học cùng Fahasa'
-    },
-    {
-      id: 2,
-      imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=310&h=210&fit=crop',
+      imageUrl: "/img/promo-grid/mangafest_t7.webp", alt: "promo-grid 1",
       title: 'Chương trình Manga Fest 2025'
     },
     {
+      id: 2,
+      imageUrl: "/img/promo-grid/83.png", alt: "promo-grid 2",
+      title: 'Chương trình 8/3 2025'
+    },
+    {
       id: 3,
-      imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=310&h=210&fit=crop',
-      title: 'Mỗi trang sách là một chuyến phiêu lưu'
+      imageUrl: "/img/promo-grid/2010.png", alt: "promo-grid 3",
+      title: 'Chương trình 20/10 2025'
     },
     {
       id: 4,
-      imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=310&h=210&fit=crop',
-      title: 'Expand your world, one page at a time!'
+      imageUrl:  "/img/promo-grid/christmas.png", alt: "promo-grid 4",
+      title: 'Merry Christmas'
     },
   ];
 
