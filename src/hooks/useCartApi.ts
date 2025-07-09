@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import API_BASE_URL from "../services/apiConfig";
 
 export function useCartApi(userId: string) {
     const [cart, setCart] = useState<any>(null);
@@ -28,7 +29,7 @@ export function useCartApi(userId: string) {
     const addToCart = useCallback(async (bookId: string | number, quantity: number = 1) => {
         setLoading(true);
         const headers = getAuthHeaders();
-        await fetch(`/users/${userId}/cart/items/${bookId}?quantity=${quantity}`, {
+        await fetch(`${API_BASE_URL}/users/${userId}/cart/items/${bookId}?quantity=${quantity}`, {
             method: "POST",
             headers
         });
@@ -40,7 +41,7 @@ export function useCartApi(userId: string) {
     const updateCartItem = useCallback(async (cartItemId: string | number, quantity: number) => {
         setLoading(true);
         const headers = getAuthHeaders();
-        await fetch(`/users/${userId}/cart/items/${cartItemId}?quantity=${quantity}`, {
+        await fetch(`${API_BASE_URL}/users/${userId}/cart/items/${cartItemId}?quantity=${quantity}`, {
             method: "PUT",
             headers
         });
@@ -52,7 +53,7 @@ export function useCartApi(userId: string) {
     const removeCartItem = useCallback(async (cartItemId: string | number) => {
         setLoading(true);
         const headers = getAuthHeaders();
-        await fetch(`/users/${userId}/cart/items/${cartItemId}`, {
+        await fetch(`${API_BASE_URL}/users/${userId}/cart/items/${cartItemId}`, {
             method: "DELETE",
             headers
         });
@@ -64,7 +65,7 @@ export function useCartApi(userId: string) {
     const clearCart = useCallback(async () => {
         setLoading(true);
         const headers = getAuthHeaders();
-        await fetch(`/users/${userId}/cart`, {
+        await fetch(`${API_BASE_URL}/users/${userId}/cart`, {
             method: "DELETE",
             headers
         });
