@@ -31,12 +31,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   const categories = propCategories || defaultCategories;
 
-  const languages = [
-    { id: "vietnamese", name: "Vietnamese" },
-    { id: "english", name: "English" },
-    { id: "chinese", name: "Chinese" },
-  ];
-
   const ratings = [
     { id: 5, name: "5 stars" },
     { id: 4, name: "4.5 stars & up" },
@@ -191,21 +185,32 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       </div>
 
-      {/* Language Filter */}
+      {/* Yêu thích */}
       <div className="filter-section">
-        <h3 className="filter-title">Ngôn ngữ</h3>
-        <div className="language-filters">
-          {languages.map((language) => (
-            <label key={language.id} className="language-filter">
-              <input
-                type="checkbox"
-                checked={filters.language.includes(language.id)}
-                onChange={() => handleLanguageChange(language.id)}
-                className="language-checkbox"
-              />
-              <span className="language-label">{language.name}</span>
-            </label>
-          ))}
+        <h3 className="filter-title">Yêu thích</h3>
+        <div className="favorite-filters">
+          <label className="favorite-filter">
+            <input
+              type="checkbox"
+              checked={!!filters.bestSeller}
+              onChange={() => {
+                onFilterChange({ bestSeller: !filters.bestSeller, sale: false });
+              }}
+              className="favorite-checkbox"
+            />
+            <span className="favorite-label">Best Sellers</span>
+          </label>
+          <label className="favorite-filter">
+            <input
+              type="checkbox"
+              checked={!!filters.sale}
+              onChange={() => {
+                onFilterChange({ sale: !filters.sale, bestSeller: false });
+              }}
+              className="favorite-checkbox"
+            />
+            <span className="favorite-label">Sale</span>
+          </label>
         </div>
       </div>
     </div>

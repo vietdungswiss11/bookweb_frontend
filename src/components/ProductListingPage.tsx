@@ -6,7 +6,6 @@ import ProductGrid from "./ProductGrid";
 import Pagination from "./Pagination";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Header, Footer } from "./index";
-import CategoryGrid from "./CategoryGrid";
 import {
   getAllBooks,
   searchBooks,
@@ -14,9 +13,7 @@ import {
 } from "../services/bookService";
 import {
   getAllCategories,
-  getBooksByCategoryId,
 } from "../services/categoryService";
-import { CategorySection } from "./index";
 
 interface ProductListingPageProps {
   searchQuery?: string;
@@ -33,6 +30,8 @@ export interface FilterState {
   format: string[];
   language: string[];
   sortBy: string;
+  bestSeller?: boolean;
+  sale?: boolean;
 }
 
 export interface Product {
@@ -56,8 +55,6 @@ const sortOptions = [
   { value: "price_low", label: "Price: Low to High" },
   { value: "price_high", label: "Price: High to Low" },
   { value: "newest", label: "Newest First" },
-  { value: "bestseller", label: "Best Sellers" },
-  { value: "sale", label: "Sale" },
 ];
 
 const ProductListingPage: React.FC<ProductListingPageProps> = ({
@@ -79,6 +76,8 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
     format: [],
     language: [],
     sortBy: "relevance",
+    bestSeller: false,
+    sale: false,
     ...initialFilters,
   });
 
@@ -136,9 +135,13 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
       if (filters.rating) {
         params.minRating = filters.rating;
       }
-      // Nếu có searchQuery thì gọi searchBooks, ngược lại gọi getAllBooks
+      // Nếu chọn Sale thì luôn gọi getBooksOnSale
       let fetchBooks;
-      if (filters.sortBy === "sale") {
+      if (filters.sale) {
+        fetchBooks = getBooksOnSale();
+      } else if (filters.bestSeller) {
+        fetchBooks = getAllBooks({ ...params, sortBy: 'sold', sortDir: 'desc' });
+      } else if (filters.sortBy === "sale") {
         fetchBooks = getBooksOnSale();
       } else if (searchQuery) {
         fetchBooks = searchBooks({ keyword: searchQuery, ...params });
@@ -225,48 +228,6 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
       { label: category },
     );
   }
-
-  // Danh mục đồng bộ với CategoryGrid
-  const categoryBanners = [
-    {
-      id: 1,
-      imageUrl:
-        "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=310&h=210&fit=crop",
-      title: "Trở lại trường học cùng Fahasa",
-    },
-    {
-      id: 2,
-      imageUrl:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=310&h=210&fit=crop",
-      title: "Chương trình Manga Fest 2025",
-    },
-    {
-      id: 3,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=310&h=210&fit=crop",
-      title: "Mỗi trang sách là một chuyến phiêu lưu",
-    },
-    {
-      id: 4,
-      imageUrl:
-        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=310&h=210&fit=crop",
-      title: "Expand your world, one page at a time!",
-    },
-  ];
-
-  const removeVietnameseTones = (str: string) => {
-    return str
-      .normalize("NFD")
-      .replace(/\u0300|\u0301|\u0303|\u0309|\u0323|\u02C6|\u0306|\u031B/g, "")
-      .replace(
-        /[\u00C0-\u00C3\u00C8-\u00CA\u00CC-\u00CD\u00D2-\u00D5\u00D9-\u00DA\u00DD\u00E0-\u00E3\u00E8-\u00EA\u00EC-\u00ED\u00F2-\u00F5\u00F9-\u00FA\u00FD\u0102\u0103\u0110\u0111\u0128\u0129\u0168\u0169\u01A0\u01A1\u01AF\u01B0]/g,
-        "",
-      )
-      .replace(/[^a-zA-Z0-9 ]/g, "")
-      .replace(/\s+/g, "-");
-  };
-  const toUrlFriendly = (str: string) =>
-    removeVietnameseTones(str.toLowerCase());
 
   return (
     <>

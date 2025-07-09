@@ -84,37 +84,37 @@ const AboutPage: React.FC = () => {
 
   const milestones = [
     {
-      year: "2018",
+      year: "2020",
       title: "Thành lập BookZone",
       description:
         "Ra mắt với sứ mệnh lan tỏa văn hóa đọc đến mọi người Việt Nam.",
     },
     {
-      year: "2019",
+      year: "2021",
       title: "Mở rộng kho sách",
       description:
-        "Đạt mốc 10,000 đầu sách và thiết lập quan hệ đối tác v��i các nhà xuất bản lớn.",
+        "Đạt mốc 10,000 đầu sách và thiết lập quan hệ đối tác với các nhà xuất bản lớn.",
     },
     {
-      year: "2020",
+      year: "2022",
       title: "Phát triển ứng dụng mobile",
       description:
         "Ra mắt ứng dụng di động, tăng trải nghiệm mua sắm cho khách hàng.",
     },
     {
-      year: "2021",
+      year: "2023",
       title: "Mở rộng toàn quốc",
       description:
         "Phủ sóng giao hàng toàn quốc và đạt 100,000 khách hàng tin tưởng.",
     },
     {
-      year: "2022",
+      year: "2024",
       title: "Giải thưởng E-commerce",
       description:
         'Nhận giải "Website thương mại điện tử xuất sắc" do Hiệp hội Thương mại điện tử Việt Nam trao tặng.',
     },
     {
-      year: "2023",
+      year: "2025",
       title: "Hệ sinh thái hoàn chỉnh",
       description:
         "Phát triển thành hệ sinh thái sách hoàn chỉnh với dịch vụ sách nói và sách điện tử.",
@@ -130,16 +130,18 @@ const AboutPage: React.FC = () => {
 
           {/* Hero Section */}
           <section className="about-hero">
-            <div className="hero-content">
-              <h1 className="about-title">Về chúng tôi</h1>
-              <p className="hero-subtitle">
-                Khám phá câu chuyện của BookZone - nơi kết nối bạn với th���
-                giới tri thức bất tận
+            <div
+              className="about-hero-left"
+              style={{ backgroundImage: "url('/img/about/aboutUs.jpg')" }}
+            >
+              <h1 className="about-hero-title">Về chúng tôi</h1>
+              <p className="about-hero-desc">
+                Khám phá câu chuyện của BookZone - nơi kết nối bạn với thế giới tri thức bất tận
               </p>
             </div>
             <div className="hero-image">
               <img
-                src="https://placehold.co/600x400/f7fafa/e64023?text=BookZone+Story"
+                src="/img/about/aboutUs2.jpg"
                 alt="BookZone Story"
               />
             </div>
@@ -178,28 +180,6 @@ const AboutPage: React.FC = () => {
             </div>
           </section>
 
-          {/* Team Section */}
-          <section className="team-section">
-            <h2 className="section-title">Đội ngũ lãnh đạo</h2>
-            <p className="section-subtitle">
-              Những con người tài năng và đam mê đằng sau thành công của
-              BookZone
-            </p>
-            <div className="team-grid">
-              {teamMembers.map((member) => (
-                <div key={member.id} className="team-member">
-                  <div className="member-image">
-                    <img src={member.image} alt={member.name} />
-                  </div>
-                  <div className="member-info">
-                    <h3 className="member-name">{member.name}</h3>
-                    <p className="member-role">{member.role}</p>
-                    <p className="member-description">{member.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
 
           {/* Features Section */}
           <section className="features-section">

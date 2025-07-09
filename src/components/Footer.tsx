@@ -40,20 +40,18 @@ const Footer: React.FC = () => {
                 <a href="/">Trang chủ</a>
               </li>
               <li>
+                <a href="/about">Giới thiệu</a>
+              </li>
+              <li>
                 <a href="/bestsellers">Sách bán chạy</a>
               </li>
               <li>
-                <a href="/categories">Danh mục</a>
+                <a href="/category/tat-ca">Danh mục</a>
               </li>
               <li>
                 <a href="/cart">Giỏ hàng</a>
               </li>
-              <li>
-                <a href="/account">Tài khoản</a>
-              </li>
-              <li>
-                <a href="/contact">Liên hệ</a>
-              </li>
+
             </ul>
           </div>
 
@@ -72,6 +70,9 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="/faq">Câu hỏi thường gặp</a>
+              </li>
+              <li>
+                <a href="/contact">Liên hệ</a>
               </li>
             </ul>
           </div>

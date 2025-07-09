@@ -1,6 +1,24 @@
+:root {
+  --color-primary: #E64023;
+  /* Đỏ tươi */
+  --color-secondary: #F472B6;
+  /* Hồng */
+  --color-accent: #F59E42;
+  /* Cam */
+  --color-highlight: #FACC15;
+  /* Vàng */
+  --color-bg: #FFF9F5;
+  /* Nền ấm */
+  --color-surface: #FFFFFF;
+  /* Card trắng */
+  --color-text: #1E293B;
+  --color-text-secondary: #64748B;
+  --color-danger: #E64023;
+}
+
 /* About Page Styles */
 .about-page {
-  background-color: #f7fafa;
+  background: var(--color-bg);
   min-height: 100vh;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
@@ -13,7 +31,7 @@
 
 /* Section Titles */
 .section-title {
-  color: #141c24;
+  color: black;
   font-size: 32px;
   font-weight: 700;
   line-height: 40px;
@@ -22,7 +40,7 @@
 }
 
 .section-subtitle {
-  color: #405473;
+  color: rgb(243, 65, 10);
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
@@ -48,7 +66,7 @@
 }
 
 .about-title {
-  color: #141c24;
+  color: var(--color-primary);
   font-size: 48px;
   font-weight: 800;
   line-height: 56px;
@@ -57,7 +75,7 @@
 }
 
 .hero-subtitle {
-  color: #405473;
+  color: var(--color-secondary);
   font-size: 18px;
   font-weight: 400;
   line-height: 28px;
@@ -72,10 +90,39 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
+.about-hero-left {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  color: #fff;
+  overflow: hidden;
+}
+
+.about-hero-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 20px;
+  z-index: 1;
+}
+
+.about-hero-title,
+.about-hero-desc {
+  position: relative;
+  z-index: 2;
+}
+
 /* Mission Section */
 .mission-section {
-  background: #fff;
-  padding: 80px 40px;
+  background: #FAFAFA;
+  padding: 40px;
   border-radius: 12px;
   margin-bottom: 80px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
@@ -96,28 +143,28 @@
 .mission-item {
   text-align: center;
   padding: 32px 24px;
-  background: #f7fafa;
-  border-radius: 12px;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f3f3f3;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .mission-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(230, 64, 35, 0.1);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(230, 64, 35, 0.10);
 }
 
 .mission-item h3 {
-  color: #e64023;
-  font-size: 20px;
+  color: #E64023;
+  font-size: 22px;
   font-weight: 700;
   margin-bottom: 16px;
 }
 
 .mission-item p {
-  color: #405473;
-  font-size: 14px;
+  color: #444;
+  font-size: 15px;
   font-weight: 400;
   line-height: 22px;
 }
@@ -136,7 +183,7 @@
 }
 
 .team-member {
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 32px;
   display: flex;
@@ -169,14 +216,14 @@
 }
 
 .member-name {
-  color: #141c24;
+  color: var(--color-text);
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 8px;
 }
 
 .member-role {
-  color: #e64023;
+  color: var(--color-secondary);
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 12px;
@@ -185,7 +232,7 @@
 }
 
 .member-description {
-  color: #405473;
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -193,8 +240,8 @@
 
 /* Features Section */
 .features-section {
-  background: #fff;
-  padding: 80px 40px;
+  background: var(--color-surface);
+  padding: 40px;
   border-radius: 12px;
   margin-bottom: 80px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
@@ -218,24 +265,25 @@
 
 .feature-item:hover {
   transform: translateY(-4px);
-  background-color: #f7fafa;
+  background-color: var(--color-bg);
 }
 
 .feature-icon {
   font-size: 48px;
   margin-bottom: 20px;
   line-height: 1;
+  color: var(--color-accent);
 }
 
 .feature-title {
-  color: #141c24;
+  color: var(--color-primary);
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 12px;
 }
 
 .feature-description {
-  color: #405473;
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -243,8 +291,8 @@
 
 /* Timeline Section */
 .timeline-section {
-  padding: 80px 0;
-  margin-bottom: 80px;
+  padding-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 .timeline {
@@ -260,7 +308,7 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom, #e64023, #d84a35);
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-accent), var(--color-highlight));
   transform: translateX(-50%);
 }
 
@@ -288,19 +336,19 @@
 .timeline-marker {
   width: 16px;
   height: 16px;
-  background: #e64023;
-  border: 4px solid #fff;
+  background: var(--color-highlight);
+  border: 4px solid var(--color-surface);
   border-radius: 50%;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 0 4px #e6402320;
+  box-shadow: 0 0 0 4px #F59E4220;
   z-index: 2;
 }
 
 .timeline-content {
   flex: 1;
-  background: #fff;
+  background: var(--color-surface);
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
@@ -316,7 +364,7 @@
 
 .timeline-year {
   display: inline-block;
-  background: linear-gradient(135deg, #e64023, #d84a35);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-highlight));
   color: #fff;
   font-size: 14px;
   font-weight: 700;
@@ -326,14 +374,14 @@
 }
 
 .timeline-title {
-  color: #141c24;
+  color: var(--color-primary);
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 8px;
 }
 
 .timeline-description {
-  color: #405473;
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -341,7 +389,7 @@
 
 /* CTA Section */
 .cta-section {
-  background: linear-gradient(135deg, #e64023, #d84a35);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-highlight));
   color: #fff;
   padding: 80px 40px;
   border-radius: 12px;
@@ -389,26 +437,26 @@
 }
 
 .btn-primary {
-  background: #fff;
-  color: #e64023;
-  border: 2px solid #fff;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
 }
 
 .btn-primary:hover {
-  background: transparent;
+  background: var(--color-accent);
   color: #fff;
   transform: translateY(-2px);
 }
 
 .btn-secondary {
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
+  background: #fff;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
 }
 
 .btn-secondary:hover {
-  background: #fff;
-  color: #e64023;
+  background: var(--color-primary);
+  color: #fff;
   transform: translateY(-2px);
 }
 
