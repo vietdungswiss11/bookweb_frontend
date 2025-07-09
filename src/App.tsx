@@ -29,6 +29,7 @@ import CategoriesPage from "./admin/CategoriesPage";
 import OrdersPage from "./admin/OrdersPage";
 import UsersPage from "./admin/UsersPage";
 import RequireAdmin from "./admin/components/RequireAdmin";
+import VnpayReturnPage from "./components/VnpayReturnPage";
 
 function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -101,6 +102,10 @@ function App() {
           <Route
             path="/order-success/:orderId"
             element={<OrderSuccessPage />}
+          />
+          <Route
+            path="/vnpay-payment-return"
+            element={<VnpayReturnPage />}
           />
           <Route
             path="/admin/*"

@@ -71,7 +71,7 @@ const FlashSale: React.FC = () => {
   // Countdown giả lập
   const [countdown, setCountdown] = useState({ hours: 0, minutes: 28, seconds: 36 });
   React.useEffect(() => {
-    const endTime = Date.now() + (28 * 60 + 36) * 1000; // Start from 28:36
+    const endTime = Date.now() + (59 * 60 + 36) * 1000; // Start from 28:36
     const timer = setInterval(() => {
       const timeLeft = endTime - Date.now();
       if (timeLeft > 0) {

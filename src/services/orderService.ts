@@ -18,6 +18,7 @@ export interface CreateOrderRequestDTO {
 
 export interface OrderResponse {
   id: string;
+  orderNumber: string;
   status:
   | "PENDING"
   | "CONFIRMED"
@@ -50,7 +51,7 @@ const getAuthHeaders = (): Record<string, string> => {
 
 export async function createOrder(
   orderData: CreateOrderRequestDTO,
-): Promise<OrderResponse> {
+): Promise<OrderResponse & { paymentUrl?: string }> {
   const response = await authFetch(`${API_BASE_URL}/orders`, {
     method: "POST",
     headers: getAuthHeaders(),
@@ -61,7 +62,13 @@ export async function createOrder(
     throw new Error(`Order creation failed: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  // Nếu có paymentUrl (VNPAY), trả về order + paymentUrl
+  if (data.paymentUrl && data.order) {
+    return { ...data.order, paymentUrl: data.paymentUrl };
+  }
+  // Nếu chỉ trả về order như cũ
+  return data;
 }
 
 export async function getOrderById(orderId: string): Promise<OrderResponse> {
@@ -110,4 +117,14 @@ export async function getOrdersByUserId(userId: string | number) {
   if (!res.ok) throw new Error("Failed to fetch orders");
   const data = await res.json();
   return Array.isArray(data.orders) ? data.orders : [];
+}
+
+export async function getOrderByOrderNumber(orderNumber: string): Promise<OrderResponse> {
+  const response = await authFetch(`${API_BASE_URL}/orders/by-number/${orderNumber}`, {
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch order by orderNumber: ${response.status}`);
+  }
+  return response.json();
 }

@@ -4,6 +4,7 @@ import "./OrderSuccessPage.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import { getOrderById, OrderResponse } from "../services/orderService";
+import { useCart } from "../store/CartContext";
 
 const OrderSuccessPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -108,6 +109,23 @@ const OrderSuccessPage: React.FC = () => {
     );
   }
 
+  // Nếu trạng thái đơn hàng là CANCELLED, hiển thị trang thất bại
+  if (order.status === "CANCELLED") {
+    return (
+      <div className="order-success-page">
+        <Header />
+        <div className="order-not-found">
+          <h2>Thanh toán thất bại</h2>
+          <p>Đơn hàng của bạn chưa được thanh toán thành công hoặc đã bị hủy.</p>
+          <button onClick={() => navigate("/")} className="back-home-btn">
+            Về trang chủ
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Các trạng thái thành công: PAID, DELIVERED, CONFIRMED, SHIPPED
   return (
     <div className="order-success-page">
       <Header />
@@ -142,7 +160,7 @@ const OrderSuccessPage: React.FC = () => {
               <div className="order-info-grid">
                 <div className="info-item">
                   <span className="info-label">Mã đơn hàng:</span>
-                  <span className="info-value order-id">#{order.id}</span>
+                  <span className="info-value order-id">#{order.orderNumber}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Ngày đặt:</span>
@@ -205,7 +223,7 @@ const OrderSuccessPage: React.FC = () => {
                     </p>
                   </div>
                   <div className="qr-code-section">
-                    <p>Ho���c quét mã QR để chuyển khoản:</p>
+                    <p>Hoặc quét mã QR để chuyển khoản:</p>
                     <div className="qr-code-placeholder">
                       <svg
                         width="150"
