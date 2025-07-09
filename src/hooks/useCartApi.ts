@@ -17,7 +17,7 @@ export function useCartApi(userId: string) {
             ...getAuthHeaders(),
             'Content-Type': 'application/json',
         };
-        const res = await fetch(`/users/${userId}/cart`, {
+        const res = await fetch(`${API_BASE_URL}/users/${userId}/cart`, {
             headers
         });
         const data = await res.json();

@@ -1,10 +1,11 @@
-const API_URL = "http://localhost:8080";
+import API_BASE_URL from "../services/apiConfig";
+
 
 async function refreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) throw new Error("No refresh token");
 
-    const res = await fetch(`${API_URL}/auth/refresh`, {
+    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refreshToken }),
