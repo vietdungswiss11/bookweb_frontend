@@ -1,0 +1,239 @@
+/* Footer styles */
+.footer {
+  background-color: #f7fafa;
+  border-top: 1px solid #e5e8eb;
+  margin-top: auto;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.footer-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding: 60px 0 40px;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Logo section */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.footer-logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.footer-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e64023;
+  letter-spacing: 0.5px;
+}
+
+.footer-description {
+  color: #405473;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  margin: 0;
+}
+
+.footer-home-link {
+  color: #e64023;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: color 0.2s ease;
+}
+
+.footer-home-link:hover {
+  color: #d13a1f;
+  text-decoration: underline;
+}
+
+/* Section titles */
+.footer-title {
+  color: #141c24;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0 0 4px 0;
+}
+
+/* Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links a {
+  color: #405473;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #e64023;
+}
+
+/* Contact section */
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #405473;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+.contact-icon {
+  width: 16px;
+  height: 16px;
+  color: #e64023;
+  flex-shrink: 0;
+}
+
+/* Social media */
+.footer-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #e3e8f2;
+  border-radius: 20px;
+  color: #405473;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background-color: #e64023;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Footer bottom */
+.footer-bottom {
+  border-top: 1px solid #e5e8eb;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.footer-copyright {
+  color: #405473;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .footer-container {
+    padding: 0 20px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 48px 0 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 40px 0 24px;
+  }
+
+  .footer-section {
+    gap: 16px;
+  }
+
+  .footer-logo-text {
+    font-size: 1.1rem;
+  }
+
+  .footer-description {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .footer-social {
+    justify-content: flex-start;
+  }
+
+  .social-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+  }
+
+  .social-link svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 0 16px;
+  }
+
+  .footer-content {
+    padding: 32px 0 20px;
+    gap: 24px;
+  }
+
+  .footer-bottom {
+    padding: 20px 0;
+  }
+
+  .footer-copyright {
+    font-size: 12px;
+  }
+}

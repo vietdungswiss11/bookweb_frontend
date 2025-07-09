@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CheckoutPage.css";
 import Header from "./Header";
+import Footer from "./Footer";
 import Breadcrumbs from "./Breadcrumbs";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import { useCartApi } from "../hooks/useCartApi";
@@ -42,7 +43,7 @@ const CheckoutPage: React.FC = () => {
     if (userId) {
       fetchCart();
       console.log("userId khi lấy địa chỉ:", userId);
-      getAddresses(userId).then(data => {
+      getAddresses(userId).then((data) => {
         console.log("DANH SÁCH ĐỊA CHỈ TRẢ VỀ:", data);
         setAddresses(data);
         setSelectedAddressIdx(0);
@@ -117,7 +118,7 @@ const CheckoutPage: React.FC = () => {
 
       const selectedAddress = addresses[selectedAddressIdx];
 
-      if (!selectedAddress || typeof selectedAddress.id !== 'number') {
+      if (!selectedAddress || typeof selectedAddress.id !== "number") {
         setOrderError("Địa chỉ giao hàng không hợp lệ.");
         setOrderLoading(false);
         return;
@@ -207,11 +208,16 @@ const CheckoutPage: React.FC = () => {
             <div className="checkout-section">
               <h2 className="section-title">Chọn địa chỉ giao hàng</h2>
               {addresses.length === 0 ? (
-                <div>Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ trong trang cá nhân.</div>
+                <div>
+                  Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ trong trang cá nhân.
+                </div>
               ) : (
                 <div className="address-list">
                   {addresses.map((addr, idx) => (
-                    <label key={addr.id} style={{ display: 'block', marginBottom: 8 }}>
+                    <label
+                      key={addr.id}
+                      style={{ display: "block", marginBottom: 8 }}
+                    >
                       <input
                         type="radio"
                         name="shippingAddress"
@@ -219,13 +225,20 @@ const CheckoutPage: React.FC = () => {
                         checked={selectedAddressIdx === idx}
                         onChange={() => setSelectedAddressIdx(idx)}
                       />
-                      {addr.recipientName} - {addr.phoneNumber} - {addr.addressLine}
+                      {addr.recipientName} - {addr.phoneNumber} -{" "}
+                      {addr.addressLine}
                       {addr.default && (
-                        <span style={{ color: 'green', marginLeft: 8 }}>(Mặc định)</span>
+                        <span style={{ color: "green", marginLeft: 8 }}>
+                          (Mặc định)
+                        </span>
                       )}
                     </label>
                   ))}
-                  <button className="btn btn-primary" onClick={() => navigate('/account/addresses')} style={{ marginTop: 12 }}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => navigate("/account/addresses")}
+                    style={{ marginTop: 12 }}
+                  >
                     Quản lý địa chỉ
                   </button>
                 </div>
@@ -307,7 +320,7 @@ const CheckoutPage: React.FC = () => {
                 disabled={orderLoading}
                 className="place-order-btn"
               >
-                {orderLoading ? "Đang xử lý..." : "Đặt hàng"}
+                {orderLoading ? "Đang x�� lý..." : "Đặt hàng"}
               </button>
 
               <p className="order-note">
@@ -319,6 +332,7 @@ const CheckoutPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

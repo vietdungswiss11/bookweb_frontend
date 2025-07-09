@@ -4,6 +4,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import Header from "./Header";
+import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { useCartApi } from "../hooks/useCartApi";
 import AuthModal from "./AuthModal";
@@ -78,7 +79,7 @@ const ShoppingCartPage: React.FC = () => {
       } else if (couponCode.toLowerCase() === "free5") {
         discount = 5; // $5 off
       }
-      // Chỉ hiển thị, không update lên server vì API chưa hỗ trợ coupon
+      // Chỉ hiển thị, kh��ng update lên server vì API chưa hỗ trợ coupon
       // Nếu muốn lưu coupon lên server, cần bổ sung API
       alert(
         discount > 0
@@ -262,6 +263,7 @@ const ShoppingCartPage: React.FC = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

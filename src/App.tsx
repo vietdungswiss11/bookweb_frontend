@@ -3,12 +3,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import {
   Header,
+  Footer,
   HeroSection,
   CategoryGrid,
   BookSection,
   FlashSale,
   Newsletter,
   CategorySection,
+  AboutPage,
 } from "./components";
 import ProductDetailPage from "./components/ProductDetailPage";
 import ProductListingPage from "./components/ProductListingPage";
@@ -57,6 +59,7 @@ function HomePage() {
           <Newsletter />
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
@@ -85,6 +88,7 @@ function App() {
         />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/product/:bookId" element={<ProductDetailPage />} />
           <Route
             path="/category/:categoryName"

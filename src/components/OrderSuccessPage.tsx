@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./OrderSuccessPage.css";
 import Header from "./Header";
+import Footer from "./Footer";
 import { getOrderById, OrderResponse } from "../services/orderService";
 
 const OrderSuccessPage: React.FC = () => {
@@ -204,7 +205,7 @@ const OrderSuccessPage: React.FC = () => {
                     </p>
                   </div>
                   <div className="qr-code-section">
-                    <p>Hoặc quét mã QR để chuyển khoản:</p>
+                    <p>Ho���c quét mã QR để chuyển khoản:</p>
                     <div className="qr-code-placeholder">
                       <svg
                         width="150"
@@ -268,6 +269,7 @@ const OrderSuccessPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

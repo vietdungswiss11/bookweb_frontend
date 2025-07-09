@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./UserAccountPage.css";
 import { AccountSidebar } from "./AccountSidebar";
 import { AccountMainContent } from "./AccountMainContent";
-import { Header } from "./index";
-import { getUserById } from '../services/userService';
-import { getOrdersByUserId } from '../services/orderService';
+import { Header, Footer } from "./index";
+import { getUserById } from "../services/userService";
+import { getOrdersByUserId } from "../services/orderService";
 import { useNavigate } from "react-router-dom";
 
 export type AccountSection =
@@ -69,28 +69,30 @@ export const UserAccountPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
     if (!userId || !token) {
-      window.dispatchEvent(new Event('show-auth-modal'));
+      window.dispatchEvent(new Event("show-auth-modal"));
       return;
     }
     getUserById(userId)
-      .then(data => {
+      .then((data) => {
         if (data.error) {
-          window.dispatchEvent(new Event('show-auth-modal'));
+          window.dispatchEvent(new Event("show-auth-modal"));
         } else {
           setUser(data);
-          getOrdersByUserId(userId).then(setOrders).catch(() => setOrders([]));
+          getOrdersByUserId(userId)
+            .then(setOrders)
+            .catch(() => setOrders([]));
         }
       })
       .catch(() => {
-        window.dispatchEvent(new Event('show-auth-modal'));
+        window.dispatchEvent(new Event("show-auth-modal"));
       });
   }, []);
 
   const refreshUser = () => {
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem("userId");
     if (userId) {
       getUserById(userId).then(setUser);
     }
@@ -151,6 +153,7 @@ export const UserAccountPage: React.FC = () => {
           />
         </div>
       </div>
+      <Footer />
     </>
   );
 };
