@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './AuthModal.css';
 import { signin, signup, forgotPassword } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import API_BASE_URL from '../services/apiConfig';
 
 interface AuthModalProps {
     open: boolean;
@@ -101,6 +103,38 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
         }
         setLoading(false);
     };
+    //google login (oauth login)
+    const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/auth/google`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idToken: credentialResponse.credential }),
+            });
+            const data = await res.json();
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                if (data.refreshToken) localStorage.setItem('refreshToken', data.refreshToken);
+                if (data.id) localStorage.setItem('userId', data.id);
+                localStorage.setItem('user', JSON.stringify({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    roles: data.roles
+                }));
+                setSuccess('Đăng nhập Google thành công!');
+                setTimeout(() => {
+                    setSuccess(null);
+                    onClose();
+                    navigate('/');
+                }, 1000);
+            } else {
+                setError(data.message || 'Đăng nhập Google thất bại!');
+            }
+        } catch (err) {
+            setError('Lỗi kết nối server!');
+        }
+    };
 
     return (
         <div className="auth-modal-overlay" onClick={onClose}>
@@ -135,6 +169,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
                             {error && <div style={{ color: 'red', fontSize: 14 }}>{error}</div>}
                             {success && <div style={{ color: 'green', fontSize: 14 }}>{success}</div>}
                             <button type="submit" className="auth-submit" disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>
+                            <div style={{ margin: '16px 0', textAlign: 'center' }}>
+                                <GoogleLogin
+                                    onSuccess={handleGoogleLoginSuccess}
+                                    onError={() => setError('Đăng nhập Google thất bại!')}
+                                    width="100%"
+                                />
+                            </div>
                         </form>
                     )
                 ) : (
