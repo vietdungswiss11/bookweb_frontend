@@ -100,8 +100,8 @@ const ShoppingCartPage: React.FC = () => {
 
   // Generate breadcrumb items
   const breadcrumbItems = [
-    { label: "Home", href: "/" },
-    { label: "Shopping Cart" },
+    { label: "Trang chủ", href: "/" },
+    { label: "Giỏ hàng" },
   ];
 
   if (loading && !cart) {

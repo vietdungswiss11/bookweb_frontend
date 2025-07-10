@@ -1,0 +1,92 @@
+:root {
+    --color-primary: #E64023;
+    /* Đỏ tươi */
+    --color-secondary: #F472B6;
+    /* Hồng */
+    --color-accent: #F59E42;
+    /* Cam */
+    --color-highlight: #FACC15;
+    /* Vàng */
+    --color-bg: #FFF9F5;
+    /* Nền ấm */
+    --color-surface: #FFFFFF;
+    /* Card trắng */
+    --color-text: #1E293B;
+    --color-text-secondary: #64748B;
+    --color-danger: #E64023;
+  }
+
+  /* Section Titles */
+.section-title {
+    color: black;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  
+  .section-subtitle {
+    color: #E64023;
+    font-family:  'Montserrat', 'Poppins', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: center;
+    margin-bottom: 48px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+/* Features Section */
+.features-section {
+    background: var(--color-surface);
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 80px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 48px;
+  }
+  
+  .feature-item {
+    text-align: center;
+    padding: 32px 24px;
+    border-radius: 12px;
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease;
+  }
+  
+  .feature-item:hover {
+    transform: translateY(-4px);
+    background-color: var(--color-bg);
+  }
+  
+  .feature-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+  
+  .feature-title {
+    color: var(--color-primary);
+   
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  
+  .feature-description {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+  }

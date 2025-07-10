@@ -1,1 +1,0 @@
-import VnpayReturnPage from "./VnpayReturnPage";

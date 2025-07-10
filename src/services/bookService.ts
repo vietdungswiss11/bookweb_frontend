@@ -27,8 +27,16 @@ export async function searchBooks(params: any) {
     return res.json();
 }
 
-export async function getBooksOnSale() {
-    const res = await fetch(`${API_URL}/sale`);
+export async function getBooksOnSale(params?: any) {
+    let url = `${API_URL}/sale`;
+    if (params) {
+        const query = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) query.append(key, String(value));
+        });
+        url += `?${query.toString()}`;
+    }
+    const res = await fetch(url);
     return res.json();
 }
 

@@ -51,7 +51,7 @@ export interface Product {
 }
 
 const sortOptions = [
-  { value: "relevance", label: "Mặc định (ID tăng dần)" },
+  { value: "relevance", label: "Mặc định" },
   { value: "price_low", label: "Price: Low to High" },
   { value: "price_high", label: "Price: High to Low" },
   { value: "newest", label: "Newest First" },
@@ -101,10 +101,10 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
       let sortBy = "id";
       let sortDir = "asc";
       if (filters.sortBy === "price_low") {
-        sortBy = "price";
+        sortBy = "discountPrice";
         sortDir = "asc";
       } else if (filters.sortBy === "price_high") {
-        sortBy = "price";
+        sortBy = "discountPrice";
         sortDir = "desc";
       } else if (filters.sortBy === "newest") {
         sortBy = "createdAt"; // hoặc trường ngày tạo thực tế của bạn
@@ -138,7 +138,12 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
       // Nếu chọn Sale thì luôn gọi getBooksOnSale
       let fetchBooks;
       if (filters.sale) {
-        fetchBooks = getBooksOnSale();
+        fetchBooks = getBooksOnSale({
+          page: currentPage - 1, // hoặc currentPage nếu backend bắt đầu từ 0
+          size: itemsPerPage,
+          sortBy,
+          sortDir
+      });
       } else if (filters.bestSeller) {
         fetchBooks = getAllBooks({ ...params, sortBy: 'sold', sortDir: 'desc' });
       } else if (filters.sortBy === "sale") {
@@ -204,8 +209,8 @@ const ProductListingPage: React.FC<ProductListingPageProps> = ({
 
   // Generate breadcrumb items
   const breadcrumbItems: Array<{ label: string; href?: string }> = [
-    { label: "Home", href: "/" },
-    { label: "All Books", href: "/category/tat-ca" },
+    { label: "Trang chủ", href: "/" },
+    { label: "Tất cả sách", href: "/category/tat-ca" },
   ];
 
   // Nếu có categoryId là số, tìm tên danh mục active để thêm vào breadcrumbs

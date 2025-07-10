@@ -37,14 +37,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     { id: 3, name: "4 stars & up" },
   ];
 
-  const sortOptions = [
-    { value: "relevance", label: "Relevance" },
-    { value: "price_low", label: "Price: Low to High" },
-    { value: "price_high", label: "Price: High to Low" },
-    { value: "newest", label: "Newest First" },
-    { value: "bestseller", label: "Best Sellers" },
-    { value: "rating", label: "Highest Rated" },
-  ];
 
   const priceRanges = [
     { id: '0-150000', label: '0đ - 150,000đ', value: [0, 150000] as [number, number] },
@@ -63,13 +55,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   const handleRatingChange = (rating: number) => {
     onFilterChange({ rating: filters.rating === rating ? 0 : rating });
-  };
-
-  const handleLanguageChange = (languageId: string) => {
-    const newLanguages = filters.language.includes(languageId)
-      ? filters.language.filter((id) => id !== languageId)
-      : [...filters.language, languageId];
-    onFilterChange({ language: newLanguages });
   };
 
   const handlePriceRangeChange = (rangeValue: [number, number]) => {

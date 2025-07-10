@@ -111,81 +111,6 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
 
   if (!product) return <div>Loading...</div>;
 
-  const allReviews: Review[] = [
-    {
-      id: 1,
-      userName: "Minh Tuấn",
-      date: "10 tháng 3, 2024",
-      rating: 5,
-      avatar: "https://placehold.co/40x40/E8DECF/E8DECF",
-      comment:
-        "Sức Mạnh Của Một Cây là một câu chuyện cuộc đời được kể một cách tuyệt đẹp v��� một giáo viên đã truyền cảm hứng cho học sinh và cộng đồng của mình. Tôi thích đọc về sự biến đổi và động lực mà một giáo viên có để làm cho thế giới trở nên tốt đẹp hơn.",
-      likes: 24,
-      dislikes: 2,
-      verified: true,
-    },
-    {
-      id: 2,
-      userName: "Thu Hương",
-      date: "20 tháng 2, 2024",
-      rating: 5,
-      avatar: "https://placehold.co/40x40/D1BA94/D1BA94",
-      comment:
-        "Câu chuyện của Stephen Ritz là lời nhắc nhở tuyệt vời về tầm quan trọng của giáo dục và tiềm năng của mọi đứa trẻ. Stephen chia sẻ câu chuyện của mình theo cách vừa truyền cảm hứng vừa thực tế. Một cuốn sách phải đọc cho bất kỳ ai thích những câu chuyện về hy vọng và khả năng phục hồi.",
-      likes: 18,
-      dislikes: 0,
-      verified: true,
-    },
-    {
-      id: 3,
-      userName: "Đức Anh",
-      date: "15 tháng 1, 2024",
-      rating: 4,
-      avatar: "https://placehold.co/40x40/C4A373/C4A373",
-      comment:
-        "Cuốn sách hay, nội dung bổ ích. Tác giả viết rất chân thành và có nhiều bài học quý giá. Tuy nhiên, một số phần hơi dài dòng.",
-      likes: 12,
-      dislikes: 1,
-      verified: false,
-    },
-    {
-      id: 4,
-      userName: "Lan Anh",
-      date: "8 tháng 1, 2024",
-      rating: 5,
-      avatar: "https://placehold.co/40x40/8FA663/8FA663",
-      comment:
-        "Tuyệt vời! Đây là cuốn sách mọi người trong lĩnh vực giáo dục nên đọc. Rất truyền cảm hứng và thiết thực.",
-      likes: 31,
-      dislikes: 0,
-      verified: true,
-    },
-    {
-      id: 5,
-      userName: "Hoàng Nam",
-      date: "28 tháng 12, 2023",
-      rating: 4,
-      avatar: "https://placehold.co/40x40/7A9B57/7A9B57",
-      comment:
-        "Nội dung tốt, cách trình bày dễ hiểu. Sản phẩm đóng gói cẩn thận, giao hàng nhanh.",
-      likes: 8,
-      dislikes: 0,
-      verified: true,
-    },
-    {
-      id: 6,
-      userName: "Mai Phương",
-      date: "15 tháng 12, 2023",
-      rating: 3,
-      avatar: "https://placehold.co/40x40/6B8E4A/6B8E4A",
-      comment:
-        "Cuốn sách ổn, nhưng không như mong đợi. Một số ý tưởng hay nhưng chưa thực sự thuyết phục.",
-      likes: 5,
-      dislikes: 3,
-      verified: false,
-    },
-  ];
-
   const ratingDistribution = [
     { stars: 5, count: 473, percentage: 71 },
     { stars: 4, count: 115, percentage: 17 },
@@ -226,8 +151,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   };
 
   const breadcrumbItems = [
-    { label: "Home", href: "/" },
-    { label: "Books", href: "/category/tat-ca" },
+    { label: "Trang chủ", href: "/" },
+    { label: "Tất cả sách", href: "/category/tat-ca" },
     { label: product.title },
   ];
 
@@ -302,7 +227,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                 <div className="product-main-info">
                   <h1 className="product-title">{product.title}</h1>
                   <p className="product-author-date">
-                    By {product.author} | Published {product.publicationDate}
+                      Tác giả {product.author} | Xuất bản {product.publicationDate}
                   </p>
                 </div>
               </div>
@@ -441,11 +366,11 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
 
           {/* Book Details */}
           <section className="book-details-section">
-            <h2 className="section-title">Book Details</h2>
+            <h2 className="section-title">Chi tiết sản phẩm</h2>
             <div className="book-details">
               <div className="detail-row">
-                <span className="detail-label">Publisher</span>
-                <span className="detail-value">{product.publisher}</span>
+                <span className="detail-label">Nhà xuất bản</span>
+                <span className="detail-value">{product.publisher ? product.publisher : "Không có"}</span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">Giá bán</span>
@@ -471,8 +396,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                 </span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">Page Count</span>
-                <span className="detail-value">{product.pageCount} pages</span>
+                <span className="detail-label">Số trang</span>
+                <span className="detail-value">{product.pageCount ? product.pageCount : "Chưa cập nhật "}</span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">ISBN</span>
@@ -487,9 +412,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
 
           {/* About the Author */}
           <section className="author-section">
-            <h2 className="section-title">About the Author</h2>
+            <h2 className="section-title">Tiểu sử về tác giả</h2>
             <div className="author-content">
-              <p>{product.authorBio}</p>
+              <p>{product.authorBio ? product.authorBio : "Tác giả sinh ra và lớn lên ở một làng quê nhỏ nông thôn và là một người đam mê viết lách, với mong muốn mãnh liệt"
+               +" lan toả tri thức và truyền cảm hứng đến các độc giả qua từng trang sách"}</p>
             </div>
           </section>
 

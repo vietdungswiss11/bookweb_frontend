@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./BookSection.css";
 import { Star } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -60,8 +61,12 @@ const BookSection: React.FC<BookSectionProps> = ({
 
   return (
     <section className={`book-section ${variant}`}>
-      <div className="section-title-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 className="section-title">{title}</h2>
+      <div className="section-title-container" >
+        <div className="section-title-sparkle">
+          <Sparkles className="sparkle-icon" />
+          <h2 className="section-title">{title}</h2>
+          <Sparkles className="sparkle-icon" />
+      </div>
         {title === 'Danh mục sản phẩm' && (
           <button
             className="see-all-btn"

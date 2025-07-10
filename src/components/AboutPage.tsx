@@ -10,41 +10,6 @@ const AboutPage: React.FC = () => {
     { label: "Về chúng tôi", href: "/about" },
   ];
 
-  const teamMembers = [
-    {
-      id: 1,
-      name: "Nguyễn Văn An",
-      role: "Giám đốc điều hành",
-      image: "https://placehold.co/200x200/e64023/ffffff?text=CEO",
-      description:
-        "Với hơn 10 năm kinh nghiệm trong ngành xuất bản, An đã dẫn dắt BookZone trở thành một trong những nhà sách trực tuyến hàng đầu Việt Nam.",
-    },
-    {
-      id: 2,
-      name: "Trần Thị Bình",
-      role: "Giám đốc Marketing",
-      image: "https://placehold.co/200x200/d84a35/ffffff?text=CMO",
-      description:
-        "Bình chuyên về chiến lược marketing số và có đam mê lớn với văn học, giúp kết nối độc giả với những cuốn sách hay nhất.",
-    },
-    {
-      id: 3,
-      name: "Lê Hoàng Cường",
-      role: "Giám đốc Công nghệ",
-      image: "https://placehold.co/200x200/b73e2e/ffffff?text=CTO",
-      description:
-        "Cường đảm bảo website luôn hoạt động mượt mà và mang đến trải nghiệm mua sắm tuyệt vời cho khách hàng.",
-    },
-    {
-      id: 4,
-      name: "Phạm Thu Hương",
-      role: "Giám đốc Dịch vụ khách hàng",
-      image: "https://placehold.co/200x200/a3342a/ffffff?text=CS",
-      description:
-        "Hương và đội ngũ chăm sóc khách hàng luôn sẵn sàng hỗ trợ 24/7 để đảm bảo sự hài lòng của khách hàng.",
-    },
-  ];
-
   const features = [
     {
       icon: "📚",
@@ -230,10 +195,10 @@ const AboutPage: React.FC = () => {
                 BookZone làm người bạn đồng hành trên hành trình tri thức.
               </p>
               <div className="cta-buttons">
-                <a href="/" className="btn-primary">
+                <a href="/category/tat-ca" className="btn-primary">
                   Khám phá sách
                 </a>
-                <a href="/contact" className="btn-secondary">
+                <a href="/about" className="btn-secondary">
                   Liên hệ với chúng tôi
                 </a>
               </div>

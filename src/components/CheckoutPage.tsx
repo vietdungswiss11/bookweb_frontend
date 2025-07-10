@@ -55,48 +55,6 @@ const CheckoutPage: React.FC = () => {
     return <AuthModal open={true} onClose={() => navigate("/")} />;
   }
 
-  const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
-    setShippingAddress((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const validateForm = (): boolean => {
-    const requiredFields: (keyof ShippingAddress)[] = [
-      "fullName",
-      "phone",
-      "address",
-      "city",
-    ];
-
-    for (const field of requiredFields) {
-      if (!shippingAddress[field].trim()) {
-        setOrderError(`Vui lòng nhập ${getFieldLabel(field)}`);
-        return false;
-      }
-    }
-
-    if (!/^[0-9]{10,11}$/.test(shippingAddress.phone.replace(/\s/g, ""))) {
-      setOrderError("Số điện thoại không hợp lệ");
-      return false;
-    }
-
-    return true;
-  };
-
-  const getFieldLabel = (field: keyof ShippingAddress): string => {
-    const labels = {
-      fullName: "họ tên",
-      phone: "số điện thoại",
-      address: "địa chỉ",
-      city: "thành phố",
-      district: "quận/huyện",
-      ward: "phường/xã",
-    };
-    return labels[field];
-  };
-
   const handlePlaceOrder = async () => {
     setOrderError(null);
 

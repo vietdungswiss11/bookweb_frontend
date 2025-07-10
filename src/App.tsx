@@ -53,7 +53,7 @@ function HomePage() {
           <FlashSale />
           <CategorySection categories={categories} />
           <BookSection
-            title="New Releases"
+            title="Gợi ý cho bạn"
             books={[newReleases]}
             variant="new-releases"
           />

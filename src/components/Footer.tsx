@@ -26,6 +26,7 @@ const Footer: React.FC = () => {
             <p className="footer-description">
               BookZone - Thế giới sách đa dạng với hàng nghìn đầu sách chất
               lượng. Nơi khơi nguồn tri thức và nuôi dưỡng đam mê đọc của bạn.
+              BookZone.com nhận đặt hàng trực tuyến và giao hàng tận nơi.
             </p>
             <a href="/" className="footer-home-link">
               Về trang chủ
