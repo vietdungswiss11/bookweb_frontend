@@ -1,46 +1,122 @@
-# Getting Started with Create React App
+# BookWeb Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the **frontend** for the BookWeb online bookstore system, built with React and TypeScript. It provides a complete shopping experience for users and a powerful admin dashboard for management.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Table of Contents
+- [Features](#features)
+- [Installation & Getting Started](#installation--getting-started)
+- [Project Structure](#project-structure)
+- [Main Components](#main-components)
+- [Admin Dashboard](#admin-dashboard)
+- [Configuration & Environment](#configuration--environment)
+- [Contributing](#contributing)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### For Users
+- Register, login (with Google OAuth support)
+- Browse book categories, view book details, search, and filter by category
+- Add to cart, update quantity, remove items
+- Checkout (COD, Momo, VNPAY), manage shipping addresses
+- View order history, review purchased books
+- Personal account page: update info, manage addresses, orders, reviews
 
-### `npm test`
+### For Admins
+- Dashboard with overall statistics (orders, revenue, users, books)
+- Book management: add, edit, delete, search, pagination
+- Order management: update status, view details, delete orders
+- User management: add, edit, lock/unlock accounts, search
+- Category management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Installation & Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Requirements
+- Node.js >= 16
+- npm >= 8
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Install dependencies
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Run in development mode
+```bash
+npm start
+```
+Visit [http://localhost:3000](http://localhost:3000)
 
-### `npm run eject`
+### Build for production
+```bash
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Run tests
+```bash
+npm test
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+> **Note:** The frontend proxies API requests to `http://localhost:8080` (see `package.json`).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Project Structure
 
-## Learn More
+```
+src/
+  components/      # User-facing UI components (Header, Footer, Product, Cart, Auth, ...)
+  admin/           # Admin pages and components (Dashboard, Books, Orders, Users, ...)
+  services/        # API calls and data logic (bookService, orderService, userService, ...)
+  hooks/           # Custom React hooks (useCartApi, ...)
+  store/           # Global state management (CartContext, ...)
+  App.tsx          # Main app layout and routing
+  index.tsx        # App entry point
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Main Components
+
+- **Home Page:** Banner, categories, new releases, flash sale, recommendations, newsletter
+- **Book Detail Page:** Images, description, reviews, add to cart, buy now, related books
+- **Shopping Cart:** View, update, remove items, apply promo code
+- **Checkout:** Select address, payment method, confirm order
+- **Account:** Profile, change password, manage addresses, orders, reviews
+- **Authentication:** Modal for login/register, Google OAuth support
+
+---
+
+## Admin Dashboard
+
+- **Dashboard:** Overview stats, revenue chart, order status pie, recent activity
+- **Book Management:** Add/edit/delete, search, pagination, view details
+- **Order Management:** View, update status, delete, statistics
+- **User Management:** Add/edit/delete, lock/unlock, search
+- **Category Management:** Add/edit/delete book categories
+
+> Access `/admin` for the admin dashboard (admin account required).
+- **admin acount:** admin@gmail.com, pass: 123456
+
+---
+
+## Configuration & Environment
+
+- **API Proxy:** Configured in `package.json` (`proxy: "http://localhost:8080"`)
+- **Environment Variables:** You can add a `.env` file for API endpoints, OAuth keys, etc.
+- **Main Libraries:** React, React Router, TypeScript, FontAwesome, Lucide, react-slick, Google OAuth, etc.
+
+---
+
+## Contributing
+
+- Fork and create pull requests to contribute code
+- For feedback, bug reports, or feature requests, please open an issue on the repository
+
+---
+
+**Copyright & Developed by BookWeb Team**
